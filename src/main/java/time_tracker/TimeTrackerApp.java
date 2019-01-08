@@ -9,12 +9,15 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,6 +29,9 @@ public class TimeTrackerApp extends Application {
 
     private DoubleProperty total = new SimpleDoubleProperty(0);
     private Text totalText = new Text();
+
+    private ClipboardContent clipboardContent = new ClipboardContent();
+    private Clipboard clipboard = Clipboard.getSystemClipboard();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -54,13 +60,36 @@ public class TimeTrackerApp extends Application {
             createTimeRow();
         });
 
+        Button copyBtn = new Button("Copy");
+        copyBtn.setOnAction(e ->{
+
+            String stringForCopy = createStringForCopy();
+            System.out.println(stringForCopy);
+            clipboardContent.putString(stringForCopy);
+            clipboard.setContent(clipboardContent);
+        });
+
         createTimeRow();
 
-        VBox root = new VBox(totalText, entriesTable);
+        VBox root = new VBox(totalText, entriesTable, copyBtn);
         Scene scene = new Scene(root, 300, 400);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private String createStringForCopy() {
+        String rangeString = entriesTable.getChildren()
+                .subList(1, entriesTable.getChildren().size() - 1)
+                .stream()
+                .map(node -> (HBox) node)
+                .map(HBox::getChildren)
+                .map(children -> {
+                    String start = ((TextField) children.get(0)).getText() + ":" + ((TextField) children.get(1)).getText();
+                    String end = ((TextField) children.get(2)).getText() + ":" + ((TextField) children.get(3)).getText();
+                    return start + "\t" + end;
+                }).collect(Collectors.joining("\t"));
+        return total.getValue().toString().replace(".", ",") + "\t" + rangeString;
     }
 
     private void addCurrentRow() {
