@@ -1,7 +1,7 @@
 package time_tracker;
 
 import javafx.application.Application;
-import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
@@ -36,17 +36,7 @@ public class TimeTrackerApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        StringBinding totalBinding = new StringBinding() {
-            {
-                this.bind(total);
-            }
-            @Override
-            protected String computeValue() {
-                return "Total : " + total.getValue();
-            }
-        };
-
-        totalText.textProperty().bind(totalBinding);
+        totalText.textProperty().bind(Bindings.concat("Total : ", total.asString("%.2f")));
 
         Text startTitle = new Text("Start");
         Text endTitle = new Text("End");
@@ -61,7 +51,7 @@ public class TimeTrackerApp extends Application {
         });
 
         Button copyBtn = new Button("Copy");
-        copyBtn.setOnAction(e ->{
+        copyBtn.setOnAction(e -> {
 
             String stringForCopy = createStringForCopy();
             System.out.println(stringForCopy);
@@ -115,7 +105,7 @@ public class TimeTrackerApp extends Application {
         int startMinutes = startHour * 60 + startMinute;
         int endMinutes = endHour * 60 + endMinute;
 
-        return (double)(endMinutes - startMinutes) / 60;
+        return (double) (endMinutes - startMinutes) / 60;
     }
 
     private void removeAddBtn(HBox row) {
