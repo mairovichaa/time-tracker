@@ -59,9 +59,17 @@ public class TimeTrackerApp extends Application {
             clipboard.setContent(clipboardContent);
         });
 
+        Button refreshBtn = new Button("Refresh");
+        refreshBtn.setOnAction(e -> {
+            entriesTable.getChildren().clear();
+            entriesTable.getChildren().add(entriesTitleRow);
+            total.setValue(0.0);
+            createTimeRow();
+        });
+
         createTimeRow();
 
-        VBox root = new VBox(totalText, entriesTable, copyBtn);
+        VBox root = new VBox(totalText, entriesTable, copyBtn, refreshBtn);
         Scene scene = new Scene(root, 300, 400);
 
         primaryStage.setScene(scene);
