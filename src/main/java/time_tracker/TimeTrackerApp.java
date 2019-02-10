@@ -69,7 +69,12 @@ public class TimeTrackerApp extends Application {
 
         createTimeRow();
 
-        VBox root = new VBox(totalText, entriesTable, copyBtn, refreshBtn);
+        HBox controls = new HBox(addBtn, copyBtn);
+        controls.setSpacing(5);
+
+        VBox root = new VBox(totalText, entriesTable, controls);
+        root.setSpacing(5);
+
         Scene scene = new Scene(root, 300, 400);
 
         primaryStage.setScene(scene);
@@ -92,7 +97,6 @@ public class TimeTrackerApp extends Application {
 
     private void addCurrentRow() {
         HBox current = retrieveCurrent();
-        removeAddBtn(current);
         disableInputs(current);
         double diff = calculateTime(current);
         total.setValue(total.doubleValue() + diff);
@@ -114,11 +118,6 @@ public class TimeTrackerApp extends Application {
         int endMinutes = endHour * 60 + endMinute;
 
         return (double) (endMinutes - startMinutes) / 60;
-    }
-
-    private void removeAddBtn(HBox row) {
-        int ADD_BTN_POS = 4;
-        row.getChildren().remove(ADD_BTN_POS);
     }
 
     private void disableInputs(HBox current) {
@@ -144,7 +143,7 @@ public class TimeTrackerApp extends Application {
         TextField endMinute = new TextField();
         endMinute.setPrefColumnCount(2);
 
-        HBox timeRow = new HBox(startHour, startMinute, endHour, endMinute, addBtn);
+        HBox timeRow = new HBox(startHour, startMinute, endHour, endMinute);
         timeRow.setSpacing(5);
 
         entriesTable.getChildren().add(timeRow);
