@@ -65,7 +65,7 @@ public class TimeTrackerApp extends Application {
 
         createTimeRow();
 
-        HBox controls = new HBox(addBtn, copyBtn);
+        HBox controls = new HBox(addBtn, copyBtn, refreshBtn);
         controls.setSpacing(5);
 
         VBox root = new VBox(totalText, entriesTable, controls);
