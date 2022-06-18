@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'org.openjfx.javafxplugin' version '0.0.12'
 }
 
 group 'amairovi'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 repositories {
     mavenCentral()
@@ -21,6 +22,12 @@ jar {
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+javafx {
+    version = '18'
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.swing', 'javafx.web']
 }
