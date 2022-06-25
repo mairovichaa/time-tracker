@@ -1,6 +1,5 @@
 package time_tracker.component.stopwatch;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -11,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
 public class StopWatchTab extends Tab {
@@ -20,8 +18,6 @@ public class StopWatchTab extends Tab {
     private final ObservableList<StopwatchRecord> stopwatchRecords;
     @NonNull
     private final StopwatchRecordService stopwatchRecordService;
-    @NonNull
-    private final ObservableList<StopwatchRecordVBox> records = FXCollections.observableArrayList();
     @NonNull
     private final VBox contentWrapper;
     @NonNull
@@ -43,15 +39,7 @@ public class StopWatchTab extends Tab {
             redrawList();
         });
 
-        printButton.setOnMouseClicked(e -> {
-            for (StopwatchRecord record : stopwatchRecords) {
-                System.out.println(record.getName());
-                for (StopwatchRecordMeasurement measurement : record.getMeasurementsProperty()) {
-                    System.out.println(measurement.getStopwatchStringProperty().get());
-                }
-                System.out.println("---");
-            }
-        });
+        printButton.setOnMouseClicked(e -> stopwatchRecordService.store());
 
         addStopwatchButton.setOnMouseClicked(e -> {
             System.out.println("addStopwatchButton is clicked");

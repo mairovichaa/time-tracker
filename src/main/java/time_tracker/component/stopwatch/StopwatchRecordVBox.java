@@ -52,7 +52,7 @@ public class StopwatchRecordVBox extends VBox {
 
         stopwatchStartButton.setOnMouseClicked(e -> {
             System.out.println("stopwatchStartButton is clicked");
-            stopwatchRecordService.startNewMeasurement(stopwatchRecord);
+            var measurement = stopwatchRecordService.startNewMeasurement(stopwatchRecord);
             rebindTotalTimeCalc();
             redrawMeasurements();
         });
@@ -112,8 +112,8 @@ public class StopwatchRecordVBox extends VBox {
 
         var measurementInProgress = stopwatchRecord.getMeasurementInProgress();
         if (measurementInProgress != null) {
-            var text = new StopwatchRecordMeasurementText(measurementInProgress);
-            children.add(text);
+            var hBox = new StopwatchRecordMeasurementInProgressVBox(measurementInProgress);
+            children.add(hBox);
         }
 
         children.addAll(stopwatchButtonsWrapper, separatorText);

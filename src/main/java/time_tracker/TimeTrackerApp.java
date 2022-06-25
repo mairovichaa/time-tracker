@@ -14,15 +14,11 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import time_tracker.component.Interval;
-import time_tracker.component.stopwatch.StopWatchTab;
 import time_tracker.config.StopwatchConfiguration;
-import time_tracker.service.StopwatchRecordService;
 
-import java.awt.*;
 import java.util.stream.Collectors;
 
 public class TimeTrackerApp extends Application {
@@ -44,7 +40,8 @@ public class TimeTrackerApp extends Application {
         tab.setText("Interval counter");
 
         var stopwatchConfiguration = new StopwatchConfiguration();
-        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService();
+        var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository();
+        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopwatchRecordRepository);
         var stopWatchTab = stopwatchConfiguration.stopWatchTab(stopwatchRecordService);
         tabPane.getTabs().addAll(stopWatchTab, tab);
 
