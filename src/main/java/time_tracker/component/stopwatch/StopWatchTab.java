@@ -11,8 +11,11 @@ import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
+import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 public class StopWatchTab extends Tab {
+    // TODO move to configs
+    private final boolean devMode = true;
 
     @NonNull
     private final ObservableList<StopwatchRecord> stopwatchRecords;
@@ -23,12 +26,17 @@ public class StopWatchTab extends Tab {
     @NonNull
     private final Button printButton = new Button("Print");
     @NonNull
+    private final Button generateRandomButton = new Button("Generate random");
+    @NonNull
     private final Button addStopwatchButton = new Button("Add");
     @NonNull
     private final TextField stopwatchNameTextField = new TextField();
     private final HBox createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
 
-    public StopWatchTab(@NonNull final StopwatchRecordService stopwatchRecordService) {
+    public StopWatchTab(
+            @NonNull final StopwatchRecordService stopwatchRecordService,
+            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory
+    ) {
         super("Stopwatch");
 
         this.stopwatchRecordService = stopwatchRecordService;
@@ -40,6 +48,7 @@ public class StopWatchTab extends Tab {
         });
 
         printButton.setOnMouseClicked(e -> stopwatchRecordService.store());
+        generateRandomButton.setOnMouseClicked(e -> randomStopwatchRecordFactory.create());
 
         addStopwatchButton.setOnMouseClicked(e -> {
             System.out.println("addStopwatchButton is clicked");
@@ -62,8 +71,10 @@ public class StopWatchTab extends Tab {
                 // TODO introduce a factory for it
                 .map(it -> new StopwatchRecordVBox(it, stopwatchRecordService))
                 .forEach(children::add);
-
         children.addAll(printButton, createStopwatchWrapper);
+        if (devMode) {
+            children.addAll(generateRandomButton);
+        }
     }
 
 }

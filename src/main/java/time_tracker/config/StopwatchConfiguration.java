@@ -7,6 +7,7 @@ import time_tracker.repository.StopwatchRecordFileRepository;
 import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.DefaultStopwatchRecordService;
 import time_tracker.service.StopwatchRecordService;
+import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 import java.nio.file.Paths;
 
@@ -38,10 +39,11 @@ public class StopwatchConfiguration {
     }
 
     public StopWatchTab stopWatchTab(
-            @NonNull final StopwatchRecordService stopwatchRecordService
+            @NonNull final StopwatchRecordService stopwatchRecordService,
+            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory
     ) {
         System.out.println("Creating stopwatch tab");
-        return new StopWatchTab(stopwatchRecordService);
+        return new StopWatchTab(stopwatchRecordService, randomStopwatchRecordFactory);
     }
 
 }
