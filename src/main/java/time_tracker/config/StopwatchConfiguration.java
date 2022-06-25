@@ -1,8 +1,6 @@
 package time_tracker.config;
 
 import lombok.NonNull;
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import time_tracker.component.stopwatch.StopWatchTab;
 import time_tracker.service.DefaultStopwatchRecordService;
 import time_tracker.service.StopwatchRecordService;
@@ -10,7 +8,9 @@ import time_tracker.service.StopwatchRecordService;
 public class StopwatchConfiguration {
 
     public StopwatchRecordService stopwatchRecordService() {
-        return new DefaultStopwatchRecordService();
+        var defaultStopwatchRecordService = new DefaultStopwatchRecordService();
+        defaultStopwatchRecordService.create("Всякое");
+        return defaultStopwatchRecordService;
     }
 
     public StopWatchTab stopWatchTab(

@@ -1,6 +1,7 @@
 package time_tracker.component.stopwatch;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -10,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
 public class StopWatchTab extends Tab {
@@ -20,45 +22,60 @@ public class StopWatchTab extends Tab {
     private final StopwatchRecordService stopwatchRecordService;
     @NonNull
     private final ObservableList<StopwatchRecordVBox> records = FXCollections.observableArrayList();
+    @NonNull
+    private final VBox contentWrapper;
+    @NonNull
+    private final Button printButton = new Button("Print");
+    @NonNull
+    private final Button addStopwatchButton = new Button("Add");
+    @NonNull
+    private final TextField stopwatchNameTextField = new TextField();
+    private final HBox createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
+
     public StopWatchTab(@NonNull final StopwatchRecordService stopwatchRecordService) {
         super("Stopwatch");
 
         this.stopwatchRecordService = stopwatchRecordService;
         this.stopwatchRecords = stopwatchRecordService.findAll();
 
-        var stopwatchNameTextField = new TextField();
-        var addStopwatchButton = new Button("Add");
-        var createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
-        var printButton = new Button("Print");
+        this.stopwatchRecords.addListener((ListChangeListener<StopwatchRecord>) c -> {
+            System.out.println("StopWatchTab: stopwatchRecords's listener");
+            redrawList();
+        });
 
         printButton.setOnMouseClicked(e -> {
-            for (StopwatchRecordVBox record : records) {
+            for (StopwatchRecord record : stopwatchRecords) {
                 System.out.println(record.getName());
-                for (StopwatchRecordMeasurementHBox measurement : record.getMeasurements()) {
-                    System.out.println(measurement.getMeasurementString());
+                for (StopwatchRecordMeasurement measurement : record.getMeasurementsProperty()) {
+                    System.out.println(measurement.getStopwatchStringProperty().get());
                 }
                 System.out.println("---");
             }
         });
 
-        VBox contentWrapper = new VBox(printButton, createStopwatchWrapper);
-
         addStopwatchButton.setOnMouseClicked(e -> {
             System.out.println("addStopwatchButton is clicked");
             var stopwatchName = stopwatchNameTextField.getText();
-            var stopwatchRecord = stopwatchRecordService.create(stopwatchName);
-
-            var stopwatchRecordVBox = new StopwatchRecordVBox(stopwatchName);
-            records.add(stopwatchRecordVBox);
-
-            var children = contentWrapper.getChildren();
-            children.add(children.size() - 1, stopwatchRecordVBox);
-
+            stopwatchRecordService.create(stopwatchName);
             stopwatchNameTextField.clear();
         });
 
+        contentWrapper = new VBox();
         var scrollPane = new ScrollPane(contentWrapper);
         this.setContent(scrollPane);
+        redrawList();
+    }
+
+    private void redrawList() {
+        var children = contentWrapper.getChildren();
+        children.clear();
+
+        stopwatchRecords.stream()
+                // TODO introduce a factory for it
+                .map(it -> new StopwatchRecordVBox(it, stopwatchRecordService))
+                .forEach(children::add);
+
+        children.addAll(printButton, createStopwatchWrapper);
     }
 
 }
