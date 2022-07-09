@@ -1,80 +1,38 @@
 package time_tracker.component.stopwatch;
 
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import lombok.NonNull;
-import time_tracker.model.StopwatchRecord;
+import time_tracker.model.StopWatchAppState;
+import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.StopwatchRecordService;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 public class StopWatchTab extends Tab {
-    // TODO move to configs
-    private final boolean devMode = true;
-
-    @NonNull
-    private final ObservableList<StopwatchRecord> stopwatchRecords;
-    @NonNull
-    private final StopwatchRecordService stopwatchRecordService;
-    @NonNull
-    private final VBox contentWrapper;
-    @NonNull
-    private final Button printButton = new Button("Print");
-    @NonNull
-    private final Button generateRandomButton = new Button("Generate random");
-    @NonNull
-    private final Button addStopwatchButton = new Button("Add");
-    @NonNull
-    private final TextField stopwatchNameTextField = new TextField();
-    private final HBox createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
 
     public StopWatchTab(
+            @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordService stopwatchRecordService,
+            @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
             @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory
     ) {
         super("Stopwatch");
 
-        this.stopwatchRecordService = stopwatchRecordService;
-        this.stopwatchRecords = stopwatchRecordService.findAll();
+        // TODO introduce a factory for it
+        var stopwatchDatesVbox = new StopwatchDatesVbox(stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository);
 
-        this.stopwatchRecords.addListener((ListChangeListener<StopwatchRecord>) c -> {
-            System.out.println("StopWatchTab: stopwatchRecords's listener");
-            redrawList();
-        });
+        // TODO introduce a factory for it
+        var stopwatchPanelVBox = new StopwatchPanelVBox(stopwatchRecordService, randomStopwatchRecordFactory);
+        var scrollPane = new ScrollPane(stopwatchPanelVBox);
 
-        printButton.setOnMouseClicked(e -> stopwatchRecordService.store());
-        generateRandomButton.setOnMouseClicked(e -> randomStopwatchRecordFactory.create());
+        var hBoxWrapper = new HBox();
 
-        addStopwatchButton.setOnMouseClicked(e -> {
-            System.out.println("addStopwatchButton is clicked");
-            var stopwatchName = stopwatchNameTextField.getText();
-            stopwatchRecordService.create(stopwatchName);
-            stopwatchNameTextField.clear();
-        });
+        hBoxWrapper.getChildren()
+                .addAll(stopwatchDatesVbox, scrollPane);
 
-        contentWrapper = new VBox();
-        var scrollPane = new ScrollPane(contentWrapper);
-        this.setContent(scrollPane);
-        redrawList();
+        this.setContent(hBoxWrapper);
     }
 
-    private void redrawList() {
-        var children = contentWrapper.getChildren();
-        children.clear();
-
-        stopwatchRecords.stream()
-                // TODO introduce a factory for it
-                .map(it -> new StopwatchRecordVBox(it, stopwatchRecordService))
-                .forEach(children::add);
-        children.addAll(printButton, createStopwatchWrapper);
-        if (devMode) {
-            children.addAll(generateRandomButton);
-        }
-    }
 
 }

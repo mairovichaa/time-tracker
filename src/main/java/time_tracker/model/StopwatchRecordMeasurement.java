@@ -26,11 +26,21 @@ public class StopwatchRecordMeasurement {
     public void setStartedAt(@NonNull final LocalTime startedAt) {
         this.startedAt = startedAt;
         this.startedAtProperty.set(startedAt);
+
+        if (stoppedAt != null) {
+            var duration = getDuration();
+            getDurationProperty().set(duration.getSeconds());
+        }
     }
 
     public void setStoppedAt(@NonNull final LocalTime stoppedAt) {
         this.stoppedAt = stoppedAt;
         this.stoppedAtProperty.set(stoppedAt);
+
+        if (startedAt != null) {
+            var duration = getDuration();
+            getDurationProperty().set(duration.getSeconds());
+        }
     }
 
     public String getNote() {

@@ -27,7 +27,6 @@ public class StopwatchRecordMeasurementText extends Text {
                 var formattedStoppedAt = DATA_TIME_FORMATTER.format(stoppedAt);
 
                 var duration = measurement.getDuration();
-                measurement.getDurationProperty().set(duration.getSeconds());
                 var formattedDuration = Utils.formatDuration(duration);
 
                 var note = measurement.getNoteProperty()

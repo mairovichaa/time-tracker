@@ -4,17 +4,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.repository.StopwatchRecordRepository;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
 @RequiredArgsConstructor
 public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
+    @NonNull
+    private final StopWatchAppState stopWatchAppState;
     @NonNull
     private final ObservableList<StopwatchRecord> stopwatchRecords = FXCollections.observableList(new ArrayList<>());
 
@@ -24,6 +26,12 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @Override
     public ObservableList<StopwatchRecord> findAll() {
         return stopwatchRecords;
+    }
+
+    @Override
+    public void setRecords(List<StopwatchRecord> records) {
+        stopwatchRecords.clear();
+        stopwatchRecords.addAll(records);
     }
 
     @Override
@@ -84,7 +92,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @Override
     public void store() {
-        var date = LocalDate.now();
+        var date = stopWatchAppState.getChosenDate();
         stopwatchRecordRepository.store(stopwatchRecords, date);
     }
 }

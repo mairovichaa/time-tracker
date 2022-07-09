@@ -9,6 +9,7 @@ import java.util.List;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 
+// TODO get rid of it completely or turn it into some kind of printer object
 public class StopwatchRecordConsoleRepository implements StopwatchRecordRepository {
 
     private final static String MEASUREMENT_PATTERN = "%s;%s;%s%n";
@@ -27,6 +28,11 @@ public class StopwatchRecordConsoleRepository implements StopwatchRecordReposito
             }
             System.out.println("---");
         }
+    }
+
+    @Override
+    public List<StopwatchRecord> load(LocalDate date) {
+        throw new UnsupportedOperationException();
     }
 
 }

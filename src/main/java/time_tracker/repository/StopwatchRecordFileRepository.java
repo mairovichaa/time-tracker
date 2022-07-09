@@ -11,8 +11,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalQueries;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 
@@ -28,9 +32,7 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
 
     @Override
     public void store(@NonNull final List<StopwatchRecord> records, @NonNull final LocalDate date) {
-        var dateFormatted = DATE_FORMAT.format(date);
-        var filename = String.format(FILENAME_PATTERN, dateFormatted);
-        var pathToFile = pathToDirWithData.resolve(filename);
+        Path pathToFile = getPathToFile(date);
         List<String> data = new ArrayList<>();
         for (StopwatchRecord record : records) {
             data.add(record.getName());
@@ -50,6 +52,70 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
         } catch (IOException e) {
             System.out.println("Can't store data " + e.getMessage());
         }
+    }
+
+    @Override
+    @NonNull
+    public List<StopwatchRecord> load(@NonNull final LocalDate date) {
+        var pathToFile = getPathToFile(date);
+        if (!Files.exists(pathToFile)) {
+            return Collections.emptyList();
+        }
+        try {
+            var result = new ArrayList<StopwatchRecord>();
+            var data = Files.readAllLines(pathToFile)
+                    .stream()
+                    .map(String::strip)
+                    .filter(Predicate.not(String::isBlank))
+                    .collect(Collectors.toList());
+            String name = null;
+            List<StopwatchRecordMeasurement> measurements = new ArrayList<>();
+            for (String line : data) {
+                if (line.equals(DELIMITER)) {
+                    var record = new StopwatchRecord(name);
+                    record.getMeasurementsProperty().addAll(measurements);
+                    result.add(record);
+
+                    name = null;
+                    measurements.clear();
+                    continue;
+                }
+
+                if (name == null) {
+                    name = line;
+                    continue;
+                }
+
+                var measurement = new StopwatchRecordMeasurement();
+                var split = line.split(";");
+
+                var startedAtStr = split[0];
+                var startedAt = DATA_TIME_FORMATTER.parse(startedAtStr, TemporalQueries.localTime());
+                measurement.setStartedAt(startedAt);
+
+                var stoppedAtStr = split[1];
+                var stoppedAt = DATA_TIME_FORMATTER.parse(stoppedAtStr, TemporalQueries.localTime());
+                measurement.setStoppedAt(stoppedAt);
+
+                if (split.length == 3) {
+                    var note = split[2];
+                    measurement.getNoteProperty().setValue(note);
+                }
+
+                measurements.add(measurement);
+            }
+            return result;
+
+        } catch (IOException e) {
+            System.out.println("Can't read data " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    private Path getPathToFile(LocalDate date) {
+        var dateFormatted = DATE_FORMAT.format(date);
+        var filename = String.format(FILENAME_PATTERN, dateFormatted);
+        return pathToDirWithData.resolve(filename);
     }
 
 }

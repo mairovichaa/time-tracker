@@ -18,8 +18,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import time_tracker.component.Interval;
 import time_tracker.config.StopwatchConfiguration;
+import time_tracker.model.StopWatchAppState;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
+import java.time.LocalDate;
 import java.util.stream.Collectors;
 
 public class TimeTrackerApp extends Application {
@@ -40,11 +42,14 @@ public class TimeTrackerApp extends Application {
         Tab tab = new Tab();
         tab.setText("Interval counter");
 
+
         var stopwatchConfiguration = new StopwatchConfiguration();
         var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository();
-        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopwatchRecordRepository);
+        var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
+        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = new RandomStopwatchRecordFactory(stopwatchRecordService);
-        var stopWatchTab = stopwatchConfiguration.stopWatchTab(stopwatchRecordService, randomStopwatchRecordFactory);
+        var stopWatchTab = stopwatchConfiguration.stopWatchTab(
+                stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory);
         tabPane.getTabs().addAll(stopWatchTab, tab);
 
         totalText.textProperty().bind(Bindings.concat("Total : ", total.asString("%.2f")));
@@ -87,7 +92,7 @@ public class TimeTrackerApp extends Application {
 
         tab.setContent(root);
         Scene scene = new Scene(tabPane, 600, 600);
-
+        scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

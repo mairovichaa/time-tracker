@@ -1,0 +1,4 @@
+.stopwatch-date-text:hover {
+    -fx-cursor: hand;
+    -fx-fill: red;
+}
