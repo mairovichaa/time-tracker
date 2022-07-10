@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.component.Interval;
 import time_tracker.config.StopwatchConfiguration;
@@ -26,8 +27,10 @@ import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+@Log
 public class TimeTrackerApp extends Application {
 
     private VBox entriesTable;
@@ -42,6 +45,8 @@ public class TimeTrackerApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        log.log(Level.INFO, "Starting application");
+        // TODO move to a separate Tab component
         TabPane tabPane = new TabPane();
         Tab tab = new Tab();
         tab.setText("Interval counter");
@@ -77,7 +82,7 @@ public class TimeTrackerApp extends Application {
         Button copyBtn = new Button("Copy");
         copyBtn.setOnAction(e -> {
             String stringForCopy = createStringForCopy();
-            System.out.println(stringForCopy);
+            log.log(Level.INFO, () -> "String for copy: " + stringForCopy);
             clipboardContent.putString(stringForCopy);
             clipboard.setContent(clipboardContent);
         });
@@ -111,7 +116,8 @@ public class TimeTrackerApp extends Application {
             var propertiesFile = new File(pathToPropertiesFile);
             return objectMapper.readValue(propertiesFile, AppProperties.class);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read properties ", e);
+            log.severe("Can't read properties by path: " + pathToPropertiesFile);
+            throw new RuntimeException(e);
         }
     }
 

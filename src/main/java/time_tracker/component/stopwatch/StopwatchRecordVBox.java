@@ -10,13 +10,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+@Log
 public class StopwatchRecordVBox extends VBox {
 
     private final static String START_BUTTON_TEXT_VALUE = "Start";
@@ -40,7 +43,7 @@ public class StopwatchRecordVBox extends VBox {
             @NonNull final StopwatchRecord stopwatchRecord,
             @NonNull final StopwatchRecordService stopwatchRecordService
     ) {
-        System.out.println("Create StopwatchRecord");
+        log.log(Level.FINE, "Create StopwatchRecord");
         this.name = stopwatchRecord.getName();
         this.stopwatchRecord = stopwatchRecord;
 
@@ -51,14 +54,14 @@ public class StopwatchRecordVBox extends VBox {
                 .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgress()));
 
         stopwatchStartButton.setOnMouseClicked(e -> {
-            System.out.println("stopwatchStartButton is clicked");
+            log.log(Level.FINE, "stopwatchStartButton is clicked");
             stopwatchRecordService.startNewMeasurement(stopwatchRecord);
             rebindTotalTimeCalc();
             redrawMeasurements();
         });
 
         stopwatchStopButton.setOnMouseClicked(e -> {
-            System.out.println("stopwatchStopButton is clicked");
+            log.log(Level.FINE, "stopwatchStopButton is clicked");
             stopwatchRecordService.stopMeasurement(stopwatchRecord);
             redrawMeasurements();
         });

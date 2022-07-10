@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -11,8 +12,10 @@ import time_tracker.repository.StopwatchRecordRepository;
 
 import java.time.LocalTime;
 import java.util.*;
+import java.util.logging.Level;
 
 @RequiredArgsConstructor
+@Log
 public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @NonNull
@@ -46,7 +49,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @Override
     public StopwatchRecordMeasurement startNewMeasurement(@NonNull StopwatchRecord record) {
-        System.out.println("DefaultStopwatchRecordService#startNewMeasurement");
+        log.log(Level.FINE, () -> "start new measurement " + record);
         var now = LocalTime.now();
         var measurement = new StopwatchRecordMeasurement();
         measurement.setStartedAt(now);
@@ -77,7 +80,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @Override
     public void stopMeasurement(@NonNull StopwatchRecord record) {
-        System.out.println("DefaultStopwatchRecordService#stopMeasurement");
+        log.log(Level.FINE, () -> "stop measurement: " + record);
         var timer = recordToTimer.get(record.getName());
         timer.cancel();
 

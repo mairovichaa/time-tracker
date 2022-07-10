@@ -7,12 +7,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
+@Log
 @RequiredArgsConstructor
 public class StopwatchPanelVBox extends VBox {
 
@@ -43,7 +45,7 @@ public class StopwatchPanelVBox extends VBox {
         this.stopwatchProperties = stopwatchProperties;
 
         this.stopwatchRecords.addListener((ListChangeListener<StopwatchRecord>) c -> {
-            System.out.println("StopWatchTab: stopwatchRecords's listener");
+            log.fine(() -> "stopwatch records have been changed");
             redrawList();
         });
 
@@ -51,7 +53,7 @@ public class StopwatchPanelVBox extends VBox {
         generateRandomButton.setOnMouseClicked(e -> randomStopwatchRecordFactory.create());
 
         addStopwatchButton.setOnMouseClicked(e -> {
-            System.out.println("addStopwatchButton is clicked");
+            log.fine(() -> "addStopwatchButton is clicked");
             var stopwatchName = stopwatchNameTextField.getText();
             stopwatchRecordService.create(stopwatchName);
             stopwatchNameTextField.clear();

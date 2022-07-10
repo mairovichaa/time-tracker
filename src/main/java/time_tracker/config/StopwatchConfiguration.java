@@ -1,5 +1,6 @@
 package time_tracker.config;
 
+import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.component.stopwatch.StopWatchTab;
 import time_tracker.config.properties.StopwatchProperties;
@@ -12,19 +13,23 @@ import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.logging.Level;
 
+@Log
 public class StopwatchConfiguration {
 
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository
     ) {
+        log.log(Level.FINE, "Creating stopwatchRecordService");
         var defaultStopwatchRecordService = new DefaultStopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         defaultStopwatchRecordService.create("Всякое");
         return defaultStopwatchRecordService;
     }
 
     public StopWatchAppState stopWatchAppState() {
+        log.log(Level.FINE, "Creating stopWatchAppState");
         var stopWatchAppState = new StopWatchAppState();
         var today = LocalDate.now();
         stopWatchAppState.setChosenDate(today);
@@ -34,6 +39,7 @@ public class StopwatchConfiguration {
     public StopwatchRecordRepository stopwatchRecordRepository(
             @NonNull final StopwatchProperties stopwatchProperties
     ) {
+        log.log(Level.FINE, "Creating stopwatchRecordRepository");
         var folderWithData = stopwatchProperties.getFolderWithData();
         var path = Paths.get(folderWithData);
         return new StopwatchRecordFileRepository(path);
@@ -46,7 +52,7 @@ public class StopwatchConfiguration {
             @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory,
             @NonNull final StopwatchProperties stopwatchProperties
     ) {
-        System.out.println("Creating stopwatch tab");
+        log.log(Level.FINE, "Creating stopWatchTab");
         return new StopWatchTab(stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory, stopwatchProperties);
     }
 

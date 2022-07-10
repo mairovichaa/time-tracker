@@ -1,6 +1,7 @@
 package time_tracker.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 
+@Log
 @RequiredArgsConstructor
 public class StopwatchRecordFileRepository implements StopwatchRecordRepository {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy_MM_dd");
@@ -50,8 +52,9 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
         try {
             Files.write(pathToFile, data, StandardOpenOption.CREATE);
         } catch (IOException e) {
-            System.out.println("Can't store data " + e.getMessage());
-         }
+            log.severe(() -> "Can't write data to file: " + pathToFile);
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -107,7 +110,8 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
             return result;
 
         } catch (IOException e) {
-            System.out.println("Can't read data " + e.getMessage());
+            log.severe(() -> "Can't load data from: " + pathToFile);
+            e.printStackTrace();
             return Collections.emptyList();
         }
     }

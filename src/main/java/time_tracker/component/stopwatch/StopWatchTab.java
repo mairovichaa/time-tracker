@@ -3,6 +3,7 @@ package time_tracker.component.stopwatch;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
+import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
@@ -10,6 +11,9 @@ import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.StopwatchRecordService;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
+import java.util.logging.Level;
+
+@Log
 public class StopWatchTab extends Tab {
 
     public StopWatchTab(
@@ -20,6 +24,7 @@ public class StopWatchTab extends Tab {
             @NonNull final StopwatchProperties stopwatchProperties
     ) {
         super("Stopwatch");
+        log.log(Level.FINE, "Create StopWatchTab");
 
         // TODO introduce a factory for it
         var stopwatchDatesProperties = stopwatchProperties.getDates();
