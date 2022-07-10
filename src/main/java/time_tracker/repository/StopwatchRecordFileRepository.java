@@ -51,7 +51,7 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
             Files.write(pathToFile, data, StandardOpenOption.CREATE);
         } catch (IOException e) {
             System.out.println("Can't store data " + e.getMessage());
-        }
+         }
     }
 
     @Override

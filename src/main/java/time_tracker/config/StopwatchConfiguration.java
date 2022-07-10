@@ -2,6 +2,7 @@ package time_tracker.config;
 
 import time_tracker.annotation.NonNull;
 import time_tracker.component.stopwatch.StopWatchTab;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.repository.StopwatchRecordConsoleRepository;
 import time_tracker.repository.StopwatchRecordFileRepository;
@@ -21,8 +22,6 @@ public class StopwatchConfiguration {
     // TODO move to configuration file
     private final String typeOfRepository = FILE_REPOSITORY_TYPE;
 
-    private final String pathToFolderWithData = "/home/andrey/Documents/time-tracker-dev";
-
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository
@@ -39,9 +38,12 @@ public class StopwatchConfiguration {
         return stopWatchAppState;
     }
 
-    public StopwatchRecordRepository stopwatchRecordRepository() {
+    public StopwatchRecordRepository stopwatchRecordRepository(
+            @NonNull final StopwatchProperties stopwatchProperties
+    ) {
         if (typeOfRepository.equals(FILE_REPOSITORY_TYPE)) {
-            var path = Paths.get(pathToFolderWithData);
+            var folderWithData = stopwatchProperties.getFolderWithData();
+            var path = Paths.get(folderWithData);
             return new StopwatchRecordFileRepository(path);
         }
         if (typeOfRepository.equals(CONSOLE_REPOSITORY_TYPE)) {
@@ -54,10 +56,11 @@ public class StopwatchConfiguration {
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordService stopwatchRecordService,
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
-            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory
+            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory,
+            @NonNull final StopwatchProperties stopwatchProperties
     ) {
         System.out.println("Creating stopwatch tab");
-        return new StopWatchTab(stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory);
+        return new StopWatchTab(stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory, stopwatchProperties);
     }
 
 }

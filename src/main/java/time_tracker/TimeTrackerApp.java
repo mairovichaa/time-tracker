@@ -1,5 +1,7 @@
 package time_tracker;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -16,12 +18,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import time_tracker.annotation.NonNull;
 import time_tracker.component.Interval;
 import time_tracker.config.StopwatchConfiguration;
-import time_tracker.model.StopWatchAppState;
+import time_tracker.config.properties.AppProperties;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class TimeTrackerApp extends Application {
@@ -42,14 +46,18 @@ public class TimeTrackerApp extends Application {
         Tab tab = new Tab();
         tab.setText("Interval counter");
 
+        var pathToPropertiesFile = System.getenv("pathToPropertiesFile");
+        var appProperties = readAppProperties(pathToPropertiesFile);
+        var stopwatchProperties = appProperties.getStopwatch();
 
         var stopwatchConfiguration = new StopwatchConfiguration();
-        var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository();
+        var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(stopwatchProperties);
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
         var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = new RandomStopwatchRecordFactory(stopwatchRecordService);
         var stopWatchTab = stopwatchConfiguration.stopWatchTab(
-                stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory);
+                stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory, stopwatchProperties
+        );
         tabPane.getTabs().addAll(stopWatchTab, tab);
 
         totalText.textProperty().bind(Bindings.concat("Total : ", total.asString("%.2f")));
@@ -95,6 +103,16 @@ public class TimeTrackerApp extends Application {
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private AppProperties readAppProperties(@NonNull final String pathToPropertiesFile) {
+        var objectMapper = new ObjectMapper(new YAMLFactory());
+        try {
+            var propertiesFile = new File(pathToPropertiesFile);
+            return objectMapper.readValue(propertiesFile, AppProperties.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read properties ", e);
+        }
     }
 
     private String createStringForCopy() {

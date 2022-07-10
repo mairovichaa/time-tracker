@@ -1,0 +1,5 @@
+stopwatch:
+  dates:
+    amountOfDaysToShow: 30
+  devMode: true
+  folderWithData: <replace-with-folder-where-you-want-to-store-data>

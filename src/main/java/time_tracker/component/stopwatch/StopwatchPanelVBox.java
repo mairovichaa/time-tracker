@@ -6,17 +6,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import time_tracker.annotation.NonNull;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 @RequiredArgsConstructor
 public class StopwatchPanelVBox extends VBox {
-
-    // TODO move to configs
-    private final boolean devMode = true;
 
     @NonNull
     private final ObservableList<StopwatchRecord> stopwatchRecords;
@@ -31,14 +29,18 @@ public class StopwatchPanelVBox extends VBox {
     @NonNull
     private final TextField stopwatchNameTextField = new TextField();
     private final HBox createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
+    @NonNull
+    private final StopwatchProperties stopwatchProperties;
 
     public StopwatchPanelVBox(
             @NonNull final StopwatchRecordService stopwatchRecordService,
-            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory
+            @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory,
+            @NonNull final StopwatchProperties stopwatchProperties
     ) {
 //        TODO it has too small space - it's not possible to see comment
         this.stopwatchRecordService = stopwatchRecordService;
         this.stopwatchRecords = stopwatchRecordService.findAll();
+        this.stopwatchProperties = stopwatchProperties;
 
         this.stopwatchRecords.addListener((ListChangeListener<StopwatchRecord>) c -> {
             System.out.println("StopWatchTab: stopwatchRecords's listener");
@@ -66,7 +68,7 @@ public class StopwatchPanelVBox extends VBox {
                 .map(it -> new StopwatchRecordVBox(it, stopwatchRecordService))
                 .forEach(children::add);
         children.addAll(printButton, createStopwatchWrapper);
-        if (devMode) {
+        if (stopwatchProperties.isDevMode()) {
             children.addAll(generateRandomButton);
         }
     }

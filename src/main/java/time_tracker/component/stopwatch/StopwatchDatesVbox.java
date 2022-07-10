@@ -3,6 +3,7 @@ package time_tracker.component.stopwatch;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import time_tracker.annotation.NonNull;
+import time_tracker.config.properties.StopwatchProperties.StopwatchDatesProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.StopwatchRecordService;
@@ -13,9 +14,6 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 public class StopwatchDatesVbox extends VBox {
-    // TODO move to configs
-    private static final int AMOUNT_OF_DAYS_TO_SHOW = 30;
-
     @NonNull
     private final StopwatchRecordService stopwatchRecordService;
 
@@ -25,7 +23,8 @@ public class StopwatchDatesVbox extends VBox {
     public StopwatchDatesVbox(
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordService stopwatchRecordService,
-            @NonNull final StopwatchRecordRepository stopwatchRecordRepository
+            @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
+            @NonNull final StopwatchDatesProperties stopwatchDatesProperties
     ) {
         this.stopwatchRecordService = stopwatchRecordService;
         this.stopwatchRecordRepository = stopwatchRecordRepository;
@@ -33,7 +32,8 @@ public class StopwatchDatesVbox extends VBox {
         var datesText = new Text("Dates");
 
         var today = stopWatchAppState.getChosenDate();
-        var texts = IntStream.range(0, AMOUNT_OF_DAYS_TO_SHOW)
+        var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
+        var texts = IntStream.range(0, amountOfDaysToShow)
                 .mapToObj(today::minusDays)
                 .map(date -> new StopwatchDateText(date, stopWatchAppState))
                 .collect(toList());
