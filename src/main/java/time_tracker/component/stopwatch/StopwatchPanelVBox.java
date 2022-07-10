@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
+import time_tracker.component.stopwatch.factory.StopwatchRecordVBoxFactory;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
@@ -21,8 +22,6 @@ public class StopwatchPanelVBox extends VBox {
     @NonNull
     private final ObservableList<StopwatchRecord> stopwatchRecords;
     @NonNull
-    private final StopwatchRecordService stopwatchRecordService;
-    @NonNull
     private final Button printButton = new Button("Print");
     @NonNull
     private final Button generateRandomButton = new Button("Generate random");
@@ -33,14 +32,18 @@ public class StopwatchPanelVBox extends VBox {
     private final HBox createStopwatchWrapper = new HBox(stopwatchNameTextField, addStopwatchButton);
     @NonNull
     private final StopwatchProperties stopwatchProperties;
+    @NonNull
+    private final StopwatchRecordVBoxFactory stopwatchRecordVBoxFactory;
 
     public StopwatchPanelVBox(
             @NonNull final StopwatchRecordService stopwatchRecordService,
+            @NonNull final StopwatchRecordVBoxFactory stopwatchRecordVBoxFactory,
             @NonNull final RandomStopwatchRecordFactory randomStopwatchRecordFactory,
             @NonNull final StopwatchProperties stopwatchProperties
     ) {
 //        TODO it has too small space - it's not possible to see comment
-        this.stopwatchRecordService = stopwatchRecordService;
+        this.stopwatchRecordVBoxFactory = stopwatchRecordVBoxFactory;
+
         this.stopwatchRecords = stopwatchRecordService.findAll();
         this.stopwatchProperties = stopwatchProperties;
 
@@ -66,8 +69,7 @@ public class StopwatchPanelVBox extends VBox {
         children.clear();
 
         stopwatchRecords.stream()
-                // TODO introduce a factory for it
-                .map(it -> new StopwatchRecordVBox(it, stopwatchRecordService))
+                .map(stopwatchRecordVBoxFactory::create)
                 .forEach(children::add);
         children.addAll(printButton, createStopwatchWrapper);
         if (stopwatchProperties.isDevMode()) {

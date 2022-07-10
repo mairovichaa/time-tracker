@@ -60,9 +60,12 @@ public class TimeTrackerApp extends Application {
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
         var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = new RandomStopwatchRecordFactory(stopwatchRecordService);
-        var stopWatchTab = stopwatchConfiguration.stopWatchTab(
-                stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, randomStopwatchRecordFactory, stopwatchProperties
+        var stopwatchDatesVboxFactory = stopwatchConfiguration.stopwatchDatesVboxFactory(
+                stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, stopwatchProperties
         );
+        var stopwatchRecordVBoxFactory = stopwatchConfiguration.stopwatchRecordVBoxFactory(stopwatchRecordService);
+        var stopwatchPanelVBoxFactory = stopwatchConfiguration.stopwatchPanelVBoxFactory(stopwatchRecordService, stopwatchRecordVBoxFactory, randomStopwatchRecordFactory, stopwatchProperties);
+        var stopWatchTab = stopwatchConfiguration.stopWatchTab(stopwatchDatesVboxFactory, stopwatchPanelVBoxFactory);
         tabPane.getTabs().addAll(stopWatchTab, tab);
 
         totalText.textProperty().bind(Bindings.concat("Total : ", total.asString("%.2f")));
