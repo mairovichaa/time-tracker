@@ -43,6 +43,11 @@ public class TimeTrackerApp extends Application {
     private ClipboardContent clipboardContent = new ClipboardContent();
     private Clipboard clipboard = Clipboard.getSystemClipboard();
 
+
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage primaryStage) {
         log.log(Level.INFO, "Starting application");
@@ -114,8 +119,10 @@ public class TimeTrackerApp extends Application {
     }
 
     private AppProperties readAppProperties(@NonNull final String pathToPropertiesFile) {
+        log.log(Level.INFO, () -> "Trying to read properties from " + pathToPropertiesFile);
         var objectMapper = new ObjectMapper(new YAMLFactory());
         try {
+            // TODO add default configs
             var propertiesFile = new File(pathToPropertiesFile);
             return objectMapper.readValue(propertiesFile, AppProperties.class);
         } catch (IOException e) {

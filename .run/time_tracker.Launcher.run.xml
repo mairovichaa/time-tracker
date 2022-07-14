@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="time_tracker.Launcher" type="Application" factoryName="Application">
+    <envs>
+      <env name="pathToPropertiesFile" value="$PROJECT_DIR$/src/main/resources/application.yml" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="time_tracker.Launcher" />
+    <module name="time-tracker.main" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
