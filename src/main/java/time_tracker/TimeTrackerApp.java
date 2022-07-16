@@ -116,6 +116,7 @@ public class TimeTrackerApp extends Application {
         Scene scene = new Scene(tabPane, 600, 600);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
