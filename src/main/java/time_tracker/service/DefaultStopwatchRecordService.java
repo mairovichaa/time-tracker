@@ -56,7 +56,6 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         measurement.setStoppedAt(now);
 
         record.setMeasurementInProgress(measurement);
-        record.getHasMeasurementInProgress().set(true);
 
         var timer = new Timer();
         recordToTimer.put(record.getName(), timer);
@@ -89,7 +88,6 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         measurement.setStoppedAt(stoppedAt);
 
         record.setMeasurementInProgress(null);
-        record.getHasMeasurementInProgress().set(false);
         record.getMeasurementsProperty().add(measurement);
     }
 

@@ -3,6 +3,7 @@ package time_tracker.config;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.component.stopwatch.StopWatchTab;
+import time_tracker.component.stopwatch.factory.StopwatchDateStatisticVBoxFactory;
 import time_tracker.component.stopwatch.factory.StopwatchDatesVboxFactory;
 import time_tracker.component.stopwatch.factory.StopwatchPanelVBoxFactory;
 import time_tracker.component.stopwatch.factory.StopwatchRecordVBoxFactory;
@@ -54,10 +55,11 @@ public class StopwatchConfiguration {
     @NonNull
     public StopWatchTab stopWatchTab(
             @NonNull final StopwatchDatesVboxFactory stopwatchDatesVboxFactory,
-            @NonNull final StopwatchPanelVBoxFactory stopwatchPanelVBoxFactory
+            @NonNull final StopwatchPanelVBoxFactory stopwatchPanelVBoxFactory,
+            @NonNull final StopwatchDateStatisticVBoxFactory stopwatchDateStatisticVBoxFactory
     ) {
         log.log(Level.FINE, "Creating stopWatchTab");
-        return new StopWatchTab(stopwatchDatesVboxFactory, stopwatchPanelVBoxFactory);
+        return new StopWatchTab(stopwatchDatesVboxFactory, stopwatchPanelVBoxFactory, stopwatchDateStatisticVBoxFactory);
     }
 
     @NonNull
@@ -90,5 +92,14 @@ public class StopwatchConfiguration {
         log.log(Level.FINE, "Creating stopwatchRecordVBoxFactory");
         return new StopwatchRecordVBoxFactory(stopwatchRecordService);
     }
+
+    @NonNull
+    public StopwatchDateStatisticVBoxFactory stopwatchDateStatisticVBoxFactory(
+            @NonNull final StopwatchRecordService stopwatchRecordService
+    ) {
+        log.log(Level.FINE, "Creating stopwatchDateStatisticVBoxFactory");
+        return new StopwatchDateStatisticVBoxFactory(stopwatchRecordService);
+    }
+
 
 }

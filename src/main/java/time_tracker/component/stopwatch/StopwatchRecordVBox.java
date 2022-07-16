@@ -1,8 +1,6 @@
 package time_tracker.component.stopwatch;
 
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.LongExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -13,11 +11,9 @@ import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 @Log
 public class StopwatchRecordVBox extends VBox {
@@ -71,30 +67,17 @@ public class StopwatchRecordVBox extends VBox {
 
     private void rebindTotalTimeCalc() {
         stopwatchTotalTimeText.textProperty().unbind();
+        var measurementsTotalInSecsLongBinding = stopwatchRecord.getMeasurementsTotalInSecsLongBinding();
+
         StringBinding longBinding = new StringBinding() {
             {
-                var collect = stopwatchRecord.getMeasurementsProperty().stream()
-                        .map(StopwatchRecordMeasurement::getDurationProperty)
-                        .collect(Collectors.toList());
-
-                if (stopwatchRecord.getMeasurementInProgress() != null) {
-                    collect.add(stopwatchRecord.getMeasurementInProgress().getDurationProperty());
-                }
-
-                super.bind(collect.toArray(new Observable[]{}));
+                super.bind(measurementsTotalInSecsLongBinding);
             }
 
             @Override
             protected String computeValue() {
-                var totalSeconds = stopwatchRecord.getMeasurementsProperty().stream()
-                        .map(StopwatchRecordMeasurement::getDurationProperty)
-                        .mapToLong(LongExpression::get)
-                        .sum();
-
-                if (stopwatchRecord.getMeasurementInProgress() != null) {
-                    totalSeconds += stopwatchRecord.getMeasurementInProgress().getDurationProperty().get();
-                }
-                return Utils.formatDuration(totalSeconds);
+                var totalInSecs = measurementsTotalInSecsLongBinding.get();
+                return Utils.formatDuration(totalInSecs);
             }
         };
         stopwatchTotalTimeText.textProperty()
