@@ -2,9 +2,9 @@ package time_tracker.service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import time_tracker.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -26,14 +26,22 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @NonNull
     private final StopwatchRecordRepository stopwatchRecordRepository;
 
+    @NonNull
+    private final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory;
+
     @Override
     public ObservableList<StopwatchRecord> findAll() {
         return stopwatchRecords;
     }
 
     @Override
-    public void setRecords(List<StopwatchRecord> records) {
+    public void setRecords(@NonNull final List<StopwatchRecord> records) {
         stopwatchRecords.clear();
+        if (records.isEmpty()) {
+            log.fine("No records - use default on load factory");
+            var defaultOnLoadRecords = stopwatchRecordOnLoadFactory.create();
+            stopwatchRecords.addAll(defaultOnLoadRecords);
+        }
         stopwatchRecords.addAll(records);
     }
 

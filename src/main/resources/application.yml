@@ -3,3 +3,7 @@ stopwatch:
     amountOfDaysToShow: 30
   devMode: true
   folderWithData: <replace-with-folder-where-you-want-to-store-data>
+  defaultRecords:
+    - record name 1
+    - record name 2
+    - record name 3

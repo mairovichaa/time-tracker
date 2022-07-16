@@ -23,6 +23,7 @@ import time_tracker.annotation.NonNull;
 import time_tracker.component.Interval;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
+import time_tracker.service.StopwatchRecordOnLoadFactory;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 import java.io.File;
@@ -63,7 +64,8 @@ public class TimeTrackerApp extends Application {
         var stopwatchConfiguration = new StopwatchConfiguration();
         var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(stopwatchProperties);
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
-        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
+        var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties);
+        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository, stopwatchRecordOnLoadFactory);
         var randomStopwatchRecordFactory = new RandomStopwatchRecordFactory(stopwatchRecordService);
         var stopwatchDatesVboxFactory = stopwatchConfiguration.stopwatchDatesVboxFactory(
                 stopWatchAppState, stopwatchRecordService, stopwatchRecordRepository, stopwatchProperties

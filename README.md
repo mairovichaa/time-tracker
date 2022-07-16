@@ -20,5 +20,10 @@ Example of property file:
 stopwatch:
   dates:
     amountOfDaysToShow: 30
-  devMode: false
+  devMode: true
+  folderWithData: <replace-with-folder-where-you-want-to-store-data>
+  defaultRecords:
+    - record name 1
+    - record name 2
+    - record name 3
 ```

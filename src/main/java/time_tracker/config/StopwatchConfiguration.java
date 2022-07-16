@@ -12,6 +12,8 @@ import time_tracker.model.StopWatchAppState;
 import time_tracker.repository.StopwatchRecordFileRepository;
 import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.DefaultStopwatchRecordService;
+import time_tracker.service.StopwatchRecordOnLoadFactory;
+import time_tracker.service.StopwatchRecordOnLoadFactoryImpl;
 import time_tracker.service.StopwatchRecordService;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
@@ -25,12 +27,19 @@ public class StopwatchConfiguration {
     @NonNull
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,
-            @NonNull final StopwatchRecordRepository stopwatchRecordRepository
+            @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
+            @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
-        var defaultStopwatchRecordService = new DefaultStopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
+        var defaultStopwatchRecordService = new DefaultStopwatchRecordService(stopWatchAppState, stopwatchRecordRepository, stopwatchRecordOnLoadFactory);
         defaultStopwatchRecordService.create("Всякое");
         return defaultStopwatchRecordService;
+    }
+
+    @NonNull
+    public StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory(@NonNull final StopwatchProperties stopwatchProperties) {
+        log.log(Level.FINE, "Creating stopwatchRecordOnLoadFactory");
+        return new StopwatchRecordOnLoadFactoryImpl(stopwatchProperties);
     }
 
     @NonNull
