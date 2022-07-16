@@ -60,6 +60,7 @@ public class StopwatchDateStatisticVBox extends VBox {
                 bound.forEach(super::unbind);
                 newBindings.forEach(super::bind);
                 bound = newBindings;
+                this.invalidate();
             }
         };
 
