@@ -13,9 +13,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalQueries;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -59,6 +57,20 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
 
     @Override
     @NonNull
+    public Map<LocalDate, List<StopwatchRecord>> load(@NonNull final LocalDate startDate, final int amountToLoad) {
+        Map<LocalDate, List<StopwatchRecord>> result = new HashMap<>();
+
+        for (int minusDays = 0; minusDays < amountToLoad; minusDays++) {
+            var date = startDate.minusDays(minusDays);
+            var loaded = this.load(date);
+            result.put(date, loaded);
+        }
+
+        return result;
+    }
+
+    @Override
+    @NonNull
     public List<StopwatchRecord> load(@NonNull final LocalDate date) {
         var pathToFile = getPathToFile(date);
         if (!Files.exists(pathToFile)) {
@@ -75,7 +87,10 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
             List<StopwatchRecordMeasurement> measurements = new ArrayList<>();
             for (String line : data) {
                 if (line.equals(DELIMITER)) {
-                    var record = new StopwatchRecord(name);
+                    var record = new StopwatchRecord();
+                    record.setName(name);
+                    record.setDate(date);
+
                     record.getMeasurementsProperty().addAll(measurements);
                     result.add(record);
 

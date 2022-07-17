@@ -23,7 +23,6 @@ import time_tracker.annotation.NonNull;
 import time_tracker.component.Interval;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
-import time_tracker.service.StopwatchRecordOnLoadFactory;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
 import java.io.File;
@@ -73,7 +72,13 @@ public class TimeTrackerApp extends Application {
         var stopwatchRecordVBoxFactory = stopwatchConfiguration.stopwatchRecordVBoxFactory(stopwatchRecordService);
         var stopwatchPanelVBoxFactory = stopwatchConfiguration.stopwatchPanelVBoxFactory(stopwatchRecordService, stopwatchRecordVBoxFactory, randomStopwatchRecordFactory, stopwatchProperties);
         var stopwatchDateStatisticVBoxFactory = stopwatchConfiguration.stopwatchDateStatisticVBoxFactory(stopwatchRecordService);
-        var stopWatchTab = stopwatchConfiguration.stopWatchTab(stopwatchDatesVboxFactory, stopwatchPanelVBoxFactory, stopwatchDateStatisticVBoxFactory);
+        var searchState = stopWatchAppState.getSearchState();
+        var stopwatchSearchVboxFactory = stopwatchConfiguration.stopwatchSearchVboxFactory(searchState);
+        var stopWatchTab = stopwatchConfiguration.stopWatchTab(stopwatchDatesVboxFactory, stopwatchPanelVBoxFactory, stopwatchDateStatisticVBoxFactory, stopwatchSearchVboxFactory);
+
+        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository, stopWatchAppState, stopwatchProperties);
+        stopwatchRecordSearchService.initialize(searchState);
+
         tabPane.getTabs().addAll(stopWatchTab, tab);
 
         totalText.textProperty().bind(Bindings.concat("Total : ", total.asString("%.2f")));

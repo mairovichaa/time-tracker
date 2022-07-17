@@ -10,6 +10,7 @@ import time_tracker.annotation.NonNull;
 import time_tracker.component.stopwatch.factory.StopwatchDateStatisticVBoxFactory;
 import time_tracker.component.stopwatch.factory.StopwatchDatesVboxFactory;
 import time_tracker.component.stopwatch.factory.StopwatchPanelVBoxFactory;
+import time_tracker.component.stopwatch.factory.StopwatchSearchVboxFactory;
 
 import java.util.logging.Level;
 
@@ -18,7 +19,8 @@ public class StopWatchTab extends Tab {
     public StopWatchTab(
             @NonNull final StopwatchDatesVboxFactory stopwatchDatesVboxFactory,
             @NonNull final StopwatchPanelVBoxFactory stopwatchPanelVBoxFactory,
-            @NonNull final StopwatchDateStatisticVBoxFactory stopwatchDateStatisticVBoxFactory
+            @NonNull final StopwatchDateStatisticVBoxFactory stopwatchDateStatisticVBoxFactory,
+            @NonNull final StopwatchSearchVboxFactory stopwatchSearchVboxFactory
     ) {
         super("Stopwatch");
         log.log(Level.FINE, "Create StopWatchTab");
@@ -26,6 +28,7 @@ public class StopWatchTab extends Tab {
         var stopwatchDatesVbox = stopwatchDatesVboxFactory.create();
         var stopwatchPanelVBox = stopwatchPanelVBoxFactory.create();
         var stopwatchDateStatisticVBox = stopwatchDateStatisticVBoxFactory.create();
+        var stopwatchSearchVbox = stopwatchSearchVboxFactory.create();
 
         var scrollPane = new ScrollPane(stopwatchPanelVBox);
 
@@ -36,7 +39,8 @@ public class StopWatchTab extends Tab {
                         stopwatchDatesVbox,
                         new Separator(Orientation.VERTICAL),
                         stopwatchDateStatisticVBox,
-                        scrollPane
+                        scrollPane,
+                        stopwatchSearchVbox
                 );
 
         this.setContent(hBoxWrapper);

@@ -7,10 +7,11 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.extern.java.Log;
+import time_tracker.annotation.NonNull;
 import time_tracker.annotation.Nullable;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class StopwatchRecord {
 
     @NonNull
     private String name;
+
+    @NonNull
+    private LocalDate date;
 
     @NonNull
     private List<StopwatchRecordMeasurement> measurements = new ArrayList<>();

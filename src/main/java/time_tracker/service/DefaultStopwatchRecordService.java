@@ -39,7 +39,8 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         stopwatchRecords.clear();
         if (records.isEmpty()) {
             log.fine("No records - use default on load factory");
-            var defaultOnLoadRecords = stopwatchRecordOnLoadFactory.create();
+            var chosenDate = stopWatchAppState.getChosenDate();
+            var defaultOnLoadRecords = stopwatchRecordOnLoadFactory.create(chosenDate);
             stopwatchRecords.addAll(defaultOnLoadRecords);
         }
         stopwatchRecords.addAll(records);
@@ -47,7 +48,10 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @Override
     public StopwatchRecord create(@NonNull final String name) {
-        var record = new StopwatchRecord(name);
+        var record = new StopwatchRecord();
+        record.setName(name);
+        record.setDate(stopWatchAppState.getChosenDate());
+
         stopwatchRecords.add(record);
         return record;
     }
