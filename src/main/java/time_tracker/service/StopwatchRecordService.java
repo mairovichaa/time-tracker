@@ -12,6 +12,9 @@ public interface StopwatchRecordService {
 
     void setRecords(@NonNull final List<StopwatchRecord> records);
 
+    // TODO get rid of it
+    void refreshRecords();
+
     StopwatchRecord create(@NonNull String name);
 
     StopwatchRecordMeasurement startNewMeasurement(@NonNull StopwatchRecord record);

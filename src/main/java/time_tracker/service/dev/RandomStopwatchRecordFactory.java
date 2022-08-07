@@ -7,6 +7,7 @@ import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -47,6 +48,8 @@ public class RandomStopwatchRecordFactory {
         var amountOfMeasurements = Math.max(MIN_AMOUNT_OF_MEASUREMENTS, amountOfMeasurementsUpperBound);
         var measurements = stopwatchRecord.getMeasurementsProperty();
         var secondOfDay = STARTING_DAY_AT_SECONDS;
+
+        var result = new ArrayList<StopwatchRecordMeasurement>();
         for (int measurementNumber = 0; measurementNumber < amountOfMeasurements; measurementNumber++) {
             var measurement = new StopwatchRecordMeasurement();
             var startedAt = LocalTime.ofSecondOfDay(secondOfDay);
@@ -69,9 +72,10 @@ public class RandomStopwatchRecordFactory {
                 measurement.getNoteProperty()
                         .setValue(noteValue);
             }
-
-            measurements.add(measurement);
+            result.add(measurement);
+//            measurements.add(measurement);
         }
+        measurements.addAll(result);
     }
 
     private int calculateNextValueUsingMinAndMax(int min, int max) {

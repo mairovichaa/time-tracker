@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+         spacing="5">
+
+    <Text fx:id="nameText"/>
+    <Text fx:id="totalTimeText" text="00:00:00"/>
+
+    <VBox fx:id="measurementsVBox" spacing="5">
+        <VBox fx:id="finishedMeasurementsVBox" spacing="5"/>
+        <VBox fx:id="inProgressMeasurementVBox"/>
+    </VBox>
+
+    <HBox>
+        <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
+        <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>
+    </HBox>
+</fx:root>

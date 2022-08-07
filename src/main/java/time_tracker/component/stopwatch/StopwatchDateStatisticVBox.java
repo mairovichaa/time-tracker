@@ -5,23 +5,36 @@ import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.annotation.NonNull;
+import time_tracker.config.GlobalContext;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static time_tracker.component.Utils.load;
 
 @Log
 public class StopwatchDateStatisticVBox extends VBox {
 
-    public StopwatchDateStatisticVBox(
-            @NonNull final StopwatchRecordService stopwatchRecordService
-    ) {
+    @FXML
+    private Label totalAmountOfTimeLabel;
+
+    @FXML
+    private Label amountOfRecordsLabel;
+
+    public StopwatchDateStatisticVBox() {
+        load("/fxml/stopwatch/StopwatchDateStatisticVBox.fxml", this);
+
+        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
 
         ObjectBinding<ObservableList<LongBinding>> measurementsTotalInSecsLongBindings = new ObjectBinding<>() {
             {
@@ -69,9 +82,7 @@ public class StopwatchDateStatisticVBox extends VBox {
             measurementsTotalTimeInSecs.rebind(newValue);
         });
 
-
-        var totalText = new Text();
-        totalText.textProperty()
+        totalAmountOfTimeLabel.textProperty()
                 .bind(new StringBinding() {
                     {
                         super.bind(measurementsTotalTimeInSecs);
@@ -79,12 +90,11 @@ public class StopwatchDateStatisticVBox extends VBox {
 
                     @Override
                     protected String computeValue() {
-                        return "Total amount of time: " + Utils.formatDuration(measurementsTotalTimeInSecs.getValue());
+                        return Utils.formatDuration(measurementsTotalTimeInSecs.getValue());
                     }
                 });
 
-        var amountOfRecordsText = new Text();
-        amountOfRecordsText.textProperty()
+        amountOfRecordsLabel.textProperty()
                 .bind(new StringBinding() {
                     {
                         super.bind(stopwatchRecordService.findAll());
@@ -92,11 +102,8 @@ public class StopwatchDateStatisticVBox extends VBox {
 
                     @Override
                     protected String computeValue() {
-                        return "Amount of records: " + stopwatchRecordService.findAll().size();
+                        return stopwatchRecordService.findAll().size() + "";
                     }
                 });
-
-        var dayStatisticText = new Text("Day statistic");
-        this.getChildren().addAll(dayStatisticText, totalText, amountOfRecordsText);
     }
 }

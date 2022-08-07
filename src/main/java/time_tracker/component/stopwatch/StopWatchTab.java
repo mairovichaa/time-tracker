@@ -1,48 +1,47 @@
 package time_tracker.component.stopwatch;
 
-import javafx.geometry.Orientation;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
+import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.annotation.NonNull;
-import time_tracker.component.stopwatch.factory.StopwatchDateStatisticVBoxFactory;
-import time_tracker.component.stopwatch.factory.StopwatchDatesVboxFactory;
-import time_tracker.component.stopwatch.factory.StopwatchPanelVBoxFactory;
-import time_tracker.component.stopwatch.factory.StopwatchSearchVboxFactory;
+import time_tracker.config.GlobalContext;
+import time_tracker.config.properties.StopwatchProperties;
 
 import java.util.logging.Level;
 
 @Log
 public class StopWatchTab extends Tab {
-    public StopWatchTab(
-            @NonNull final StopwatchDatesVboxFactory stopwatchDatesVboxFactory,
-            @NonNull final StopwatchPanelVBoxFactory stopwatchPanelVBoxFactory,
-            @NonNull final StopwatchDateStatisticVBoxFactory stopwatchDateStatisticVBoxFactory,
-            @NonNull final StopwatchSearchVboxFactory stopwatchSearchVboxFactory
-    ) {
+    public StopWatchTab() {
         super("Stopwatch");
         log.log(Level.FINE, "Create StopWatchTab");
 
-        var stopwatchDatesVbox = stopwatchDatesVboxFactory.create();
-        var stopwatchPanelVBox = stopwatchPanelVBoxFactory.create();
-        var stopwatchDateStatisticVBox = stopwatchDateStatisticVBoxFactory.create();
-        var stopwatchSearchVbox = stopwatchSearchVboxFactory.create();
+        var wrapperVBox = new VBox();
+        var stopwatchDateStatisticVBox = new StopwatchDateStatisticVBox();
+        var createRecordVBox = new CreateRecordVBox();
+        wrapperVBox.setSpacing(10);
+        wrapperVBox.getChildren().addAll(stopwatchDateStatisticVBox, createRecordVBox);
 
-        var scrollPane = new ScrollPane(stopwatchPanelVBox);
+        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
+        if (stopwatchProperties.isDevMode()) {
+            var devVBox = new DevVBox();
+            wrapperVBox.getChildren().add(devVBox);
+        }
+
+        var stopwatchPanelVBox = new ListOfRecordsForChosenDateVBox();
+
+        var listOfDatesVbox = new ListOfDatesVbox();
 
         var hBoxWrapper = new HBox();
+        hBoxWrapper.setSpacing(10);
 
         hBoxWrapper.getChildren()
                 .addAll(
-                        stopwatchDatesVbox,
-                        new Separator(Orientation.VERTICAL),
-                        stopwatchDateStatisticVBox,
-                        scrollPane,
-                        stopwatchSearchVbox
+                        listOfDatesVbox,
+                        wrapperVBox,
+                        stopwatchPanelVBox
                 );
-
+        hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
         this.setContent(hBoxWrapper);
     }
 }

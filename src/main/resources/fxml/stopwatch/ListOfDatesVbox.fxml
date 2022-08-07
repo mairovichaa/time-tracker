@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="600">
+
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Dates</Label>
+
+    <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
+                  prefWidth="200.0" footerVisible="false"/>
+
+
+<!--    <MFXScrollPane minWidth="200" maxWidth="200" >-->
+<!--        <VBox fx:id="datesVBox" spacing="10" maxWidth="180">-->
+<!--            <padding>-->
+<!--                <Insets left="5.0" right="20.0" top="10.0" bottom="10.0"/>-->
+<!--            </padding>-->
+<!--        </VBox>-->
+<!--    </MFXScrollPane>-->
+
+</fx:root>

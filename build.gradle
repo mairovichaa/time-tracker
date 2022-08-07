@@ -27,6 +27,7 @@ jar {
 
 dependencies {
     implementation('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.3')
+    implementation 'io.github.palexdev:materialfx:11.13.5'
 
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"

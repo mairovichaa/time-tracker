@@ -2,71 +2,79 @@ package time_tracker.component.stopwatch;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
+import time_tracker.config.GlobalContext;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
+import java.io.IOException;
 import java.util.logging.Level;
+
+import static time_tracker.component.Utils.load;
 
 @Log
 public class StopwatchRecordVBox extends VBox {
+    @FXML
+    private Text nameText;
+    @FXML
+    private Text totalTimeText;
+    @FXML
+    private Button startButton;
+    @FXML
+    private Button stopButton;
+    @FXML
+    private VBox finishedMeasurementsVBox;
+    @FXML
+    private VBox inProgressMeasurementVBox;
 
-    private final static String START_BUTTON_TEXT_VALUE = "Start";
-    private final static String STOP_BUTTON_TEXT_VALUE = "Stop";
-    private final static String DELIMITER_TEXT_VALUE = "-------";
-    public static final String TOTAL_TIME_INITIAL_TEXT_VALUE = "00:00:00";
-    @Getter
-    private final String name;
     private final StopwatchRecord stopwatchRecord;
-
-    private final Text stopwatchText = new Text();
-    private final Text stopwatchTotalTimeText = new Text(TOTAL_TIME_INITIAL_TEXT_VALUE);
-
-    private final Button stopwatchStartButton = new Button(START_BUTTON_TEXT_VALUE);
-    private final Button stopwatchStopButton = new Button(STOP_BUTTON_TEXT_VALUE);
-
-    private final HBox stopwatchButtonsWrapper = new HBox(stopwatchStartButton, stopwatchStopButton);
-    private final Text separatorText = new Text(DELIMITER_TEXT_VALUE);
+    private final StopwatchRecordService stopwatchRecordService;
 
     public StopwatchRecordVBox(
-            @NonNull final StopwatchRecord stopwatchRecord,
-            @NonNull final StopwatchRecordService stopwatchRecordService
+            @NonNull final StopwatchRecord stopwatchRecord
     ) {
-        log.log(Level.FINE, "Create StopwatchRecord");
-        this.name = stopwatchRecord.getName();
-        this.stopwatchRecord = stopwatchRecord;
+        load("/fxml/stopwatch/StopwatchRecordVBox.fxml", this);
 
-        stopwatchText.setText(this.name);
-        stopwatchStartButton.disableProperty()
+        nameText.setText(stopwatchRecord.getName());
+
+        startButton.disableProperty()
                 .bind(stopwatchRecord.getHasMeasurementInProgress());
-        stopwatchStopButton.disableProperty()
+        stopButton.disableProperty()
                 .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgress()));
 
-        stopwatchStartButton.setOnMouseClicked(e -> {
-            log.log(Level.FINE, "stopwatchStartButton is clicked");
-            stopwatchRecordService.startNewMeasurement(stopwatchRecord);
-            rebindTotalTimeCalc();
-            redrawMeasurements();
-        });
+        this.stopwatchRecord = stopwatchRecord;
+        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
 
-        stopwatchStopButton.setOnMouseClicked(e -> {
-            log.log(Level.FINE, "stopwatchStopButton is clicked");
-            stopwatchRecordService.stopMeasurement(stopwatchRecord);
-            redrawMeasurements();
-        });
-        rebindTotalTimeCalc();
-        redrawMeasurements();
+        bindTotalTime();
+        bindMeasurements();
+        bindMeasurementInProgress();
     }
 
-    private void rebindTotalTimeCalc() {
-        stopwatchTotalTimeText.textProperty().unbind();
+    @FXML
+    protected void start() {
+        log.log(Level.FINE, "stopwatchStartButton is clicked");
+        stopwatchRecordService.startNewMeasurement(stopwatchRecord);
+    }
+
+    @FXML
+    protected void stop() {
+        log.log(Level.FINE, "stopwatchStopButton is clicked");
+        stopwatchRecordService.stopMeasurement(stopwatchRecord);
+    }
+
+    private void bindTotalTime() {
         var measurementsTotalInSecsLongBinding = stopwatchRecord.getMeasurementsTotalInSecsLongBinding();
 
         StringBinding longBinding = new StringBinding() {
@@ -80,29 +88,37 @@ public class StopwatchRecordVBox extends VBox {
                 return Utils.formatDuration(totalInSecs);
             }
         };
-        stopwatchTotalTimeText.textProperty()
+        totalTimeText.textProperty()
                 .bind(longBinding);
     }
 
-    private void redrawMeasurements() {
-        var children = this.getChildren();
-        children.clear();
-        children.addAll(stopwatchText, stopwatchTotalTimeText);
+    private void bindMeasurements() {
+        ObservableList<Node> records = FXCollections.observableArrayList();
+        var stopwatchRecords = stopwatchRecord.getMeasurementsProperty();
+        stopwatchRecords.addListener((ListChangeListener<StopwatchRecordMeasurement>) c -> {
+            log.fine(() -> "stopwatch records have been changed ");
+            log.finest(() -> "actual " + c);
+            records.clear();
+            c.getList().stream()
+                    .map(MeasurementVBox::new)
+                    .forEach(records::add);
+        });
+        stopwatchRecords.stream()
+                .map(MeasurementVBox::new)
+                .forEach(records::add);
+        Bindings.bindContent(finishedMeasurementsVBox.getChildren(), records);
+    }
 
-        if (!stopwatchRecord.getMeasurementsProperty().isEmpty()) {
-            stopwatchRecord.getMeasurementsProperty()
-                    .stream()
-                    .map(StopwatchRecordMeasurementText::new)
-                    .forEach(children::add);
-        }
-
-        var measurementInProgress = stopwatchRecord.getMeasurementInProgress();
-        if (measurementInProgress != null) {
-            var hBox = new StopwatchRecordMeasurementInProgressVBox(measurementInProgress);
-            children.add(hBox);
-        }
-
-        children.addAll(stopwatchButtonsWrapper, separatorText);
+    private void bindMeasurementInProgress() {
+        stopwatchRecord.getMeasurementInProgressProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue == null) {
+                        inProgressMeasurementVBox.getChildren().clear();
+                        return;
+                    }
+                    var hBox = new MeasurementInProgressVBox(newValue);
+                    inProgressMeasurementVBox.getChildren().add(hBox);
+                });
     }
 
 }

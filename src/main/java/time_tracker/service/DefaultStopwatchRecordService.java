@@ -1,5 +1,6 @@
 package time_tracker.service;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,13 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     }
 
     @Override
+    public void refreshRecords() {
+        var temp = new ArrayList<>(this.stopwatchRecords);
+        this.stopwatchRecords.clear();
+        this.stopwatchRecords.addAll(temp);
+    }
+
+    @Override
     public StopwatchRecord create(@NonNull final String name) {
         var record = new StopwatchRecord();
         record.setName(name);
@@ -76,7 +84,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
             @Override
             public void run() {
                 var stoppedAt = LocalTime.now();
-                measurement.setStoppedAt(stoppedAt);
+                Platform.runLater(() -> measurement.setStoppedAt(stoppedAt));
             }
         };
 

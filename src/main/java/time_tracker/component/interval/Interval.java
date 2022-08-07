@@ -1,4 +1,4 @@
-package time_tracker.component;
+package time_tracker.component.interval;
 
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;

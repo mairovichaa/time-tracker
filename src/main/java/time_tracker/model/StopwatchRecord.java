@@ -3,7 +3,9 @@ package time_tracker.model;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.binding.LongExpression;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Data;
@@ -73,6 +75,7 @@ public class StopwatchRecord {
         {
             bind(measurementInProgressProperty);
         }
+
         @Override
         protected boolean computeValue() {
             return measurementInProgressProperty.getValue() != null;
