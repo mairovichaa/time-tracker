@@ -15,6 +15,7 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class TimeTrackerApp extends Application {
         var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(stopwatchProperties);
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
         var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties);
-        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository, stopwatchRecordOnLoadFactory);
+        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = stopwatchConfiguration.randomStopwatchRecordFactory(stopwatchRecordService);
         var searchState = stopWatchAppState.getSearchState();
         var stopWatchTab = stopwatchConfiguration.stopWatchTab();
@@ -53,15 +54,12 @@ public class TimeTrackerApp extends Application {
 
         var searchTab = new SearchTab();
 
-        // TODO create a dedicated service?
-        stopWatchAppState.getChosenDateProperty()
-                .addListener((ignored1, ignored2, newChosenDate) -> {
-                    // TODO store current records before load of other
-                    // maybe it makes sense to disable loading if there is at least one running measurement
-                    var records = stopwatchRecordRepository.load(newChosenDate);
-                    stopwatchRecordService.setRecords(records);
-                });
         // TODO get rid of it?
+        stopWatchAppState.setDateToRecords(stopwatchRecordRepository.getLoaded());
+
+        var chosenDateToRecordsForChosenDateBinder = new ChosenDateToRecordsForChosenDateBinder(stopWatchAppState, stopwatchRecordOnLoadFactory);
+        chosenDateToRecordsForChosenDateBinder.bind();
+
         stopWatchAppState.setChosenDate(LocalDate.now());
 
         Tab intervalTab = new IntervalTab();

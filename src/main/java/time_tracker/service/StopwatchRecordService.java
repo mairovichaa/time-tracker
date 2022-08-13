@@ -1,6 +1,5 @@
 package time_tracker.service;
 
-import javafx.collections.ObservableList;
 import time_tracker.annotation.NonNull;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -8,12 +7,6 @@ import time_tracker.model.StopwatchRecordMeasurement;
 import java.util.List;
 
 public interface StopwatchRecordService {
-    ObservableList<StopwatchRecord> findAll();
-
-    void setRecords(@NonNull final List<StopwatchRecord> records);
-
-    // TODO get rid of it
-    void refreshRecords();
 
     StopwatchRecord create(@NonNull String name);
 

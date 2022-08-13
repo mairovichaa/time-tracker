@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class Utils {
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     public String formatDuration(@NonNull final Duration duration) {
         var s = duration.getSeconds();

@@ -1,8 +1,6 @@
 package time_tracker.service;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
@@ -12,7 +10,10 @@ import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.repository.StopwatchRecordRepository;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
 @RequiredArgsConstructor
@@ -21,46 +22,20 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @NonNull
     private final StopWatchAppState stopWatchAppState;
-    @NonNull
-    private final ObservableList<StopwatchRecord> stopwatchRecords = FXCollections.observableList(new ArrayList<>());
 
     @NonNull
     private final StopwatchRecordRepository stopwatchRecordRepository;
-
-    @NonNull
-    private final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory;
-
-    @Override
-    public ObservableList<StopwatchRecord> findAll() {
-        return stopwatchRecords;
-    }
-
-    @Override
-    public void setRecords(@NonNull final List<StopwatchRecord> records) {
-        stopwatchRecords.clear();
-        if (records.isEmpty()) {
-            log.fine("No records - use default on load factory");
-            var chosenDate = stopWatchAppState.getChosenDate();
-            var defaultOnLoadRecords = stopwatchRecordOnLoadFactory.create(chosenDate);
-            stopwatchRecords.addAll(defaultOnLoadRecords);
-        }
-        stopwatchRecords.addAll(records);
-    }
-
-    @Override
-    public void refreshRecords() {
-        var temp = new ArrayList<>(this.stopwatchRecords);
-        this.stopwatchRecords.clear();
-        this.stopwatchRecords.addAll(temp);
-    }
 
     @Override
     public StopwatchRecord create(@NonNull final String name) {
         var record = new StopwatchRecord();
         record.setName(name);
-        record.setDate(stopWatchAppState.getChosenDate());
+        var chosenDate = stopWatchAppState.getChosenDate();
+        record.setDate(chosenDate);
 
-        stopwatchRecords.add(record);
+        stopWatchAppState.getDateToRecords()
+                .get(chosenDate)
+                .add(record);
         return record;
     }
 
@@ -114,6 +89,8 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @Override
     public void store() {
         var date = stopWatchAppState.getChosenDate();
-        stopwatchRecordRepository.store(stopwatchRecords, date);
+        var records = stopWatchAppState.getDateToRecords()
+                .get(date);
+        stopwatchRecordRepository.store(records, date);
     }
 }

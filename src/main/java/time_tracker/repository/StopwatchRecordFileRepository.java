@@ -1,5 +1,8 @@
 package time_tracker.repository;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
@@ -17,6 +20,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.nio.file.Files.list;
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 
 @Log
@@ -29,6 +33,26 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
 
     @NonNull
     private final Path pathToDirWithData;
+
+    @Getter
+    private Map<LocalDate, ObservableList<StopwatchRecord>> loaded = new HashMap<>();
+
+    public void loadAll() {
+        try {
+            list(pathToDirWithData)
+                    .map(it -> it.getFileName().toString().split("\\.")[0])
+                    .map(text -> LocalDate.parse(text, DATE_FORMAT))
+                    .map(this::load)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.groupingBy(StopwatchRecord::getDate))
+                    .forEach((date, records) -> loaded.put(date, FXCollections.observableArrayList(records)));
+            log.finest(() -> "loaded: " + loaded);
+
+        } catch (IOException e) {
+            log.severe(() -> "Can't list files in: " + pathToDirWithData);
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void store(@NonNull final List<StopwatchRecord> records, @NonNull final LocalDate date) {

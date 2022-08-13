@@ -6,17 +6,15 @@ import javafx.beans.binding.StringBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.GlobalContext;
+import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.service.StopwatchRecordService;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,17 +32,17 @@ public class StopwatchDateStatisticVBox extends VBox {
     public StopwatchDateStatisticVBox() {
         load("/fxml/stopwatch/StopwatchDateStatisticVBox.fxml", this);
 
-        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
 
         ObjectBinding<ObservableList<LongBinding>> measurementsTotalInSecsLongBindings = new ObjectBinding<>() {
             {
-                bind(stopwatchRecordService.findAll());
+                bind(stopWatchAppState.getRecordsForChosenDate());
             }
 
             @Override
             protected ObservableList<LongBinding> computeValue() {
                 log.fine("List of stopwatch records changed - computing new value");
-                var totalInSecsBindings = stopwatchRecordService.findAll().stream()
+                var totalInSecsBindings = stopWatchAppState.getRecordsForChosenDate().stream()
                         .map(StopwatchRecord::getMeasurementsTotalInSecsLongBinding)
                         .collect(Collectors.toList());
                 ObservableList<LongBinding> result = FXCollections.observableArrayList();
@@ -97,12 +95,12 @@ public class StopwatchDateStatisticVBox extends VBox {
         amountOfRecordsLabel.textProperty()
                 .bind(new StringBinding() {
                     {
-                        super.bind(stopwatchRecordService.findAll());
+                        super.bind(stopWatchAppState.getRecordsForChosenDate());
                     }
 
                     @Override
                     protected String computeValue() {
-                        return stopwatchRecordService.findAll().size() + "";
+                        return stopWatchAppState.getRecordsForChosenDate().size() + "";
                     }
                 });
     }
