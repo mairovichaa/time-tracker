@@ -20,6 +20,12 @@ public class GlobalContext {
         return instance;
     }
 
+    public <T> T createStoreAndReturn(@NonNull Supplier<? extends T> supplier) {
+        T instance = supplier.get();
+        CLASS_TO_INSTANCE.put(instance.getClass(), instance);
+        return instance;
+    }
+
     public <T> void put(@NonNull Class<T> clazz, @NonNull T instance) {
         CLASS_TO_INSTANCE.put(clazz, instance);
     }

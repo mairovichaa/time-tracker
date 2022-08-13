@@ -4,6 +4,7 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
 @Log
@@ -22,6 +23,9 @@ public class ChosenDateToRecordsForChosenDateBinder {
                         var defaultOnLoadRecords = stopwatchRecordOnLoadFactory.create(chosenDate);
                         var newRecords = FXCollections.observableArrayList(defaultOnLoadRecords);
                         appState.getDateToRecords().put(chosenDate, newRecords);
+
+                        var dayData = new DayData(chosenDate, newRecords);
+                        appState.getDateToDayData().put(chosenDate, dayData);
                     }
 
                     Bindings.bindContent(appState.getRecordsForChosenDate(), appState.getDateToRecords().get(chosenDate));

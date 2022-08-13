@@ -19,13 +19,13 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static time_tracker.Utils.DATE_FORMAT_WITH_SHORT_DAY_NAME;
 import static time_tracker.component.Utils.load;
 
 public class ListOfDatesVbox extends VBox {
 
     @FXML
     private MFXTableView<LocalDate> table;
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy.MM.dd (EEE)");
 
     public ListOfDatesVbox() {
         load("/fxml/stopwatch/ListOfDatesVbox.fxml", this);
@@ -39,7 +39,7 @@ public class ListOfDatesVbox extends VBox {
 
         MFXTableColumn<LocalDate> dateColumn = new MFXTableColumn<>("Date", true, LocalDate::compareTo);
 
-        dateColumn.setRowCellFactory(person -> new MFXTableRowCell<>(DATE_FORMAT::format));
+        dateColumn.setRowCellFactory(date -> new MFXTableRowCell<>(DATE_FORMAT_WITH_SHORT_DAY_NAME::format));
         table.getTableColumns().addAll(dateColumn);
 
         var dates = IntStream.range(0, amountOfDaysToShow)

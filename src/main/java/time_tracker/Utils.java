@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 @UtilityClass
 public class Utils {
+    public static final DateTimeFormatter DATE_FORMAT_WITH_SHORT_DAY_NAME = DateTimeFormatter.ofPattern("yyyy.MM.dd (EEE)");
+
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     public String formatDuration(@NonNull final Duration duration) {

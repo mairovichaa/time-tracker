@@ -2,7 +2,6 @@ package time_tracker.config;
 
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
-import time_tracker.component.stopwatch.StopWatchTab;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.repository.StopwatchRecordFileRepository;
@@ -41,13 +40,7 @@ public class StopwatchConfiguration {
     @NonNull
     public StopWatchAppState stopWatchAppState() {
         log.log(Level.FINE, "Creating stopWatchAppState");
-        var stopWatchAppState = new StopWatchAppState();
-        var today = LocalDate.now();
-        stopWatchAppState.setChosenDate(today);
-        return GlobalContext.createStoreAndReturn(
-                StopWatchAppState.class,
-                () -> stopWatchAppState
-        );
+        return GlobalContext.createStoreAndReturn(StopWatchAppState::new);
     }
 
     @NonNull
@@ -69,12 +62,9 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
-    public StopWatchTab stopWatchTab() {
-        log.log(Level.FINE, "Creating stopWatchTab");
-        return GlobalContext.createStoreAndReturn(
-                StopWatchTab.class,
-                StopWatchTab::new
-        );
+    public TimeService timeService() {
+        log.log(Level.FINE, "Creating timeService");
+        return GlobalContext.createStoreAndReturn(TimeService::new);
     }
 
     @NonNull

@@ -28,6 +28,10 @@ public class StopWatchAppState {
     private Map<LocalDate, ObservableList<StopwatchRecord>> dateToRecords = new HashMap<>();
 
     @NonNull
+    private Map<LocalDate, DayData> dateToDayData = new HashMap<>();
+
+
+    @NonNull
     private ObservableList<StopwatchRecord> recordsForChosenDate = FXCollections.observableArrayList();
 
     public void setChosenDate(@NonNull final LocalDate chosenDate) {
