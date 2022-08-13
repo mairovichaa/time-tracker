@@ -15,6 +15,7 @@ import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.DayData;
 import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
+import time_tracker.service.TimeService;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,9 +46,9 @@ public class TimeTrackerApp extends Application {
         var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = stopwatchConfiguration.randomStopwatchRecordFactory(stopwatchRecordService);
         var searchState = stopWatchAppState.getSearchState();
-        stopwatchConfiguration.timeService();
+        var timeService = stopwatchConfiguration.timeService();
 
-        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository, stopWatchAppState, stopwatchProperties);
+        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository, timeService, stopwatchProperties);
         stopwatchRecordSearchService.initialize(searchState);
 
 

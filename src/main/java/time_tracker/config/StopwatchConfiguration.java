@@ -70,15 +70,16 @@ public class StopwatchConfiguration {
     @NonNull
     public StopwatchRecordSearchService stopwatchRecordSearchService(
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
-            @NonNull final StopWatchAppState stopWatchAppState,
+            @NonNull final TimeService timeService,
             @NonNull final StopwatchProperties stopwatchProperties
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordSearchService");
+        var today = timeService.today();
         return GlobalContext.createStoreAndReturn(
                 StopwatchRecordSearchService.class,
                 () -> new StopwatchRecordSearchServiceImpl(
                         stopwatchRecordRepository,
-                        stopWatchAppState.getChosenDate(),
+                        today,
                         stopwatchProperties
                 )
         );
