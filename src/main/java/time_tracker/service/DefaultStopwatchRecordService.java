@@ -10,10 +10,7 @@ import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.repository.StopwatchRecordRepository;
 
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Level;
 
 @RequiredArgsConstructor
@@ -29,6 +26,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @Override
     public StopwatchRecord create(@NonNull final String name) {
         var record = new StopwatchRecord();
+        record.setId(stopwatchRecordRepository.nextIdForRecord());
         record.setName(name);
         var chosenDate = stopWatchAppState.getChosenDate();
         record.setDate(chosenDate);
@@ -47,6 +45,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         log.log(Level.FINE, () -> "start new measurement " + record);
         var now = LocalTime.now();
         var measurement = new StopwatchRecordMeasurement();
+        measurement.setId(stopwatchRecordRepository.nextIdForMeasurement());
         measurement.setStartedAt(now);
         measurement.setStoppedAt(now);
 
@@ -91,6 +90,7 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         var date = stopWatchAppState.getChosenDate();
         var records = stopWatchAppState.getDateToRecords()
                 .get(date);
-        stopwatchRecordRepository.store(records, date);
+        var copiedRecords = new ArrayList<>(records);
+        stopwatchRecordRepository.store(copiedRecords, date);
     }
 }

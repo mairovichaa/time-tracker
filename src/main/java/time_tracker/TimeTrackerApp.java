@@ -15,7 +15,6 @@ import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.DayData;
 import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
-import time_tracker.service.TimeService;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,15 +41,25 @@ public class TimeTrackerApp extends Application {
         GlobalContext.put(StopwatchProperties.class, stopwatchProperties);
 
         var stopwatchConfiguration = new StopwatchConfiguration();
-        var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(stopwatchProperties);
+
+        var objectMapper = stopwatchConfiguration.objectMapper();
+        var recordToStopwatchRecordConverter = stopwatchConfiguration.recordToStopwatchRecordConverter();
+        var stopwatchRecordToRecordConverter = stopwatchConfiguration.stopwatchRecordToRecordConverter();
+
+        var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(
+                stopwatchProperties, objectMapper,
+                stopwatchRecordToRecordConverter,
+                recordToStopwatchRecordConverter
+        );
+
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
-        var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties);
+        var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties, stopwatchRecordRepository);
         var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
         var randomStopwatchRecordFactory = stopwatchConfiguration.randomStopwatchRecordFactory(stopwatchRecordService);
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
 
-        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository, timeService, stopwatchProperties);
+        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository);
         stopwatchRecordSearchService.initialize(searchState);
 
 

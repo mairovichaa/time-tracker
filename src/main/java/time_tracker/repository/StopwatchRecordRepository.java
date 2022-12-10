@@ -11,12 +11,9 @@ import java.util.Map;
 public interface StopwatchRecordRepository {
     void store(@NonNull final List<StopwatchRecord> records, @NonNull final LocalDate date);
 
-    @NonNull
-    List<StopwatchRecord> load(@NonNull final LocalDate date);
-
-    @NonNull
-    Map<LocalDate, List<StopwatchRecord>> load(@NonNull final LocalDate startDate, final int amountToLoad);
-
     Map<LocalDate, ObservableList<StopwatchRecord>> getLoaded();
+
+    Long nextIdForRecord();
+    Long nextIdForMeasurement();
 
 }

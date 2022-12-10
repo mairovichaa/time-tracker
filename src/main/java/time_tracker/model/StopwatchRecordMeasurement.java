@@ -12,6 +12,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Data
 public class StopwatchRecordMeasurement {
+
+    @NonNull
+    private Long id;
     @NonNull
     private LocalTime startedAt;
     @NonNull

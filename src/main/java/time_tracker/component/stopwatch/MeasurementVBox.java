@@ -12,6 +12,8 @@ import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
+import time_tracker.config.GlobalContext;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecordMeasurement;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
@@ -20,6 +22,8 @@ import static time_tracker.component.Utils.load;
 @Log
 public class MeasurementVBox extends VBox {
 
+    @FXML
+    private Label measurementIdLabel;
     @FXML
     private Label startedAt;
     @FXML
@@ -34,6 +38,12 @@ public class MeasurementVBox extends VBox {
 
     public MeasurementVBox(@NonNull final StopwatchRecordMeasurement measurement) {
         load("/fxml/stopwatch/MeasurementVBox.fxml", this);
+
+        var appProperties = GlobalContext.get(StopwatchProperties.class);
+        var isDevMode = appProperties.isDevMode();
+        measurementIdLabel.setVisible(isDevMode);
+        measurementIdLabel.setText(Long.toString(measurement.getId()));
+
 
         startedAt.textProperty()
                 .bind(new StringBinding() {

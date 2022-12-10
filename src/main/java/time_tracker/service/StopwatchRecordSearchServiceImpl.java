@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.StopwatchSearchState;
-import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.repository.StopwatchRecordRepository;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -20,17 +18,11 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
 
     @NonNull
     private final StopwatchRecordRepository stopwatchRecordRepository;
-    @NonNull
-    private final LocalDate initialDate;
-
-    @NonNull
-    private final StopwatchProperties stopwatchProperties;
 
 
     @Override
     public void initialize(@NonNull final StopwatchSearchState stopwatchSearchState) {
         var searchStateSearch = stopwatchSearchState.getSearch();
-        var amountOfDaysToShow = stopwatchProperties.getDates().getAmountOfDaysToShow();
 
         searchStateSearch.addListener((observable, oldValue, newSearchTerm) -> {
             log.fine(() -> "Search term has changed from " + oldValue + " to " + newSearchTerm);
@@ -39,7 +31,7 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                 found.clear();
                 return;
             }
-            var foundNew = stopwatchRecordRepository.load(initialDate, amountOfDaysToShow)
+            var foundNew = stopwatchRecordRepository.getLoaded()
                     .values()
                     .stream()
                     .flatMap(Collection::stream)

@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 public class StopwatchRecord {
 
     @NonNull
+    private Long id;
+
+    @NonNull
     private String name;
 
     @NonNull

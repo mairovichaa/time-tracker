@@ -1,164 +1,133 @@
 package time_tracker.repository;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
+import time_tracker.domain.Record;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
+import time_tracker.model.mapper.RecordToStopwatchRecordConverter;
+import time_tracker.model.mapper.StopwatchRecordToRecordConverter;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalQueries;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static java.nio.file.Files.list;
-import static time_tracker.Constants.DATA_TIME_FORMATTER;
-
 @Log
-@RequiredArgsConstructor
 public class StopwatchRecordFileRepository implements StopwatchRecordRepository {
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy_MM_dd");
-    public static final String FILENAME_PATTERN = "%s.txt";
-    private final static String MEASUREMENT_PATTERN = "%s;%s;%s";
-    private final static String DELIMITER = "---";
 
-    @NonNull
-    private final Path pathToDirWithData;
+
+    private final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter;
+    private final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter;
+    private final ObjectMapper mapper;
+    private final Path dataFile;
+    private final Path tmpDataFile;
+
+    private final AtomicLong nextRecordId = new AtomicLong();
+    private final AtomicLong nextMeasurementId = new AtomicLong();
 
     @Getter
+    // TODO get rid of Observable list - pass usual list
+    // now there is a bound via data between AppState and this class - it should be removed
+    // see time_tracker.model.StopWatchAppState
     private Map<LocalDate, ObservableList<StopwatchRecord>> loaded = new HashMap<>();
 
-    public void loadAll() {
-        try {
-            list(pathToDirWithData)
-                    .map(it -> it.getFileName().toString().split("\\.")[0])
-                    .map(text -> LocalDate.parse(text, DATE_FORMAT))
-                    .map(this::load)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.groupingBy(StopwatchRecord::getDate))
-                    .forEach((date, records) -> loaded.put(date, FXCollections.observableArrayList(records)));
-            log.finest(() -> "loaded: " + loaded);
+    public StopwatchRecordFileRepository(
+            @NonNull final Path pathToDirWithData,
+            @NonNull final ObjectMapper mapper,
+            @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
+            @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter
+    ) {
+        dataFile = pathToDirWithData.resolve("data.json");
+        tmpDataFile = pathToDirWithData.resolve("data-tmp.json");
+        this.stopwatchRecordToRecordConverter = stopwatchRecordToRecordConverter;
+        this.recordToStopwatchRecordConverter = recordToStopwatchRecordConverter;
+        this.mapper = mapper;
+    }
 
+    public void loadAll() {
+        var recordTypeReference = new TypeReference<List<Record>>() {
+        };
+        try {
+            var records = mapper.readValue(dataFile.toFile(), recordTypeReference);
+            var loadedTmp = recordToStopwatchRecordConverter.convert(records)
+                    .stream()
+                    .collect(Collectors.groupingBy(StopwatchRecord::getDate, Collectors.toList()));
+
+            loadedTmp.keySet()
+                    .forEach(date -> {
+                        var stopwatchRecords = loadedTmp.get(date);
+                        loaded.put(date, FXCollections.observableArrayList(stopwatchRecords));
+                    });
+
+            var nextRecordIdLong = loaded.values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .mapToLong(StopwatchRecord::getId)
+                    .max().orElse(0) + 1;
+            nextRecordId.set(nextRecordIdLong);
+
+            var nextMeasurementIdLong = loaded.values()
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .map(StopwatchRecord::getMeasurementsProperty)
+                    .flatMap(Collection::stream)
+                    .mapToLong(StopwatchRecordMeasurement::getId)
+                    .max().orElse(0) + 1;
+            nextMeasurementId.set(nextMeasurementIdLong);
         } catch (IOException e) {
-            log.severe(() -> "Can't list files in: " + pathToDirWithData);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void store(@NonNull final List<StopwatchRecord> records, @NonNull final LocalDate date) {
-        Path pathToFile = getPathToFile(date);
-        List<String> data = new ArrayList<>();
-        for (StopwatchRecord record : records) {
-            data.add(record.getName());
-            for (StopwatchRecordMeasurement measurement : record.getMeasurementsProperty()) {
-                var startedAt = measurement.getStartedAt();
-                var startedAtFormatted = DATA_TIME_FORMATTER.format(startedAt);
-                var stoppedAt = measurement.getStoppedAt();
-                var stoppedAtFormatted = DATA_TIME_FORMATTER.format(stoppedAt);
-                var note = measurement.getNote();
-                var measurementStr = String.format(MEASUREMENT_PATTERN, startedAtFormatted, stoppedAtFormatted, note);
-                data.add(measurementStr);
-            }
-            data.add(DELIMITER);
-        }
+        var stopwatchRecords = loaded.computeIfAbsent(date, ignored -> {
+            log.severe(() -> "No data for: " + date);
+
+            return FXCollections.observableArrayList(new ArrayList<>());
+        });
+        stopwatchRecords.clear();
+        stopwatchRecords.addAll(records);
+
+        var result = stopwatchRecordToRecordConverter.convert(loaded.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList())
+        );
+
         try {
-            Files.write(pathToFile, data, StandardOpenOption.CREATE);
+            log.finest(() -> "Write data to tmp file in case of failure of write to data file - to keep original data file unchanged.");
+            mapper.writeValue(tmpDataFile.toFile(), result);
         } catch (IOException e) {
-            log.severe(() -> "Can't write data to file: " + pathToFile);
-            e.printStackTrace();
+            log.severe(() -> "Can't write to temp file: " + tmpDataFile);
+            throw new RuntimeException(e);
+        }
+
+        try {
+            mapper.writeValue(dataFile.toFile(), result);
+        } catch (IOException e) {
+            log.severe(() -> "Can't write to data file: " + dataFile);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    @NonNull
-    public Map<LocalDate, List<StopwatchRecord>> load(@NonNull final LocalDate startDate, final int amountToLoad) {
-        Map<LocalDate, List<StopwatchRecord>> result = new HashMap<>();
-
-        for (int minusDays = 0; minusDays < amountToLoad; minusDays++) {
-            var date = startDate.minusDays(minusDays);
-            var loaded = this.load(date);
-            result.put(date, loaded);
-        }
-
-        return result;
+    public Long nextIdForRecord() {
+        return nextRecordId.getAndIncrement();
     }
 
     @Override
-    @NonNull
-    public List<StopwatchRecord> load(@NonNull final LocalDate date) {
-        var pathToFile = getPathToFile(date);
-        if (!Files.exists(pathToFile)) {
-            return Collections.emptyList();
-        }
-        try {
-            var result = new ArrayList<StopwatchRecord>();
-            var data = Files.readAllLines(pathToFile)
-                    .stream()
-                    .map(String::strip)
-                    .filter(Predicate.not(String::isBlank))
-                    .collect(Collectors.toList());
-            String name = null;
-            List<StopwatchRecordMeasurement> measurements = new ArrayList<>();
-            for (String line : data) {
-                if (line.equals(DELIMITER)) {
-                    var record = new StopwatchRecord();
-                    record.setName(name);
-                    record.setDate(date);
-
-                    record.getMeasurementsProperty().addAll(measurements);
-                    result.add(record);
-
-                    name = null;
-                    measurements.clear();
-                    continue;
-                }
-
-                if (name == null) {
-                    name = line;
-                    continue;
-                }
-
-                var measurement = new StopwatchRecordMeasurement();
-                var split = line.split(";");
-
-                var startedAtStr = split[0];
-                var startedAt = DATA_TIME_FORMATTER.parse(startedAtStr, TemporalQueries.localTime());
-                measurement.setStartedAt(startedAt);
-
-                var stoppedAtStr = split[1];
-                var stoppedAt = DATA_TIME_FORMATTER.parse(stoppedAtStr, TemporalQueries.localTime());
-                measurement.setStoppedAt(stoppedAt);
-
-                if (split.length == 3) {
-                    var note = split[2];
-                    measurement.getNoteProperty().setValue(note);
-                }
-
-                measurements.add(measurement);
-            }
-            return result;
-
-        } catch (IOException e) {
-            log.severe(() -> "Can't load data from: " + pathToFile);
-            e.printStackTrace();
-            return Collections.emptyList();
-        }
-    }
-
-    private Path getPathToFile(LocalDate date) {
-        var dateFormatted = DATE_FORMAT.format(date);
-        var filename = String.format(FILENAME_PATTERN, dateFormatted);
-        return pathToDirWithData.resolve(filename);
+    public Long nextIdForMeasurement() {
+        return nextMeasurementId.getAndIncrement();
     }
 
 }

@@ -4,11 +4,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
          spacing="5">
 
+    <HBox>
+        <Label>#</Label>
+        <Label fx:id="recordIdLabel"/>
+    </HBox>
     <Text fx:id="nameText"/>
     <Text fx:id="totalTimeText" text="00:00:00"/>
 

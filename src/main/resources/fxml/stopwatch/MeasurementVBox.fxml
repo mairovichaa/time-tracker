@@ -6,6 +6,11 @@
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
 
+    <HBox>
+        <Label>#</Label>
+        <Label fx:id="measurementIdLabel"/>
+    </HBox>
+
     <HBox spacing="3">
         <Label fx:id="startedAt"/>
         <Label>-></Label>

@@ -9,12 +9,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
+import time_tracker.config.properties.AppProperties;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
@@ -26,6 +29,9 @@ import static time_tracker.component.Utils.load;
 
 @Log
 public class StopwatchRecordVBox extends VBox {
+
+    @FXML
+    private Label recordIdLabel;
     @FXML
     private Text nameText;
     @FXML
@@ -56,6 +62,11 @@ public class StopwatchRecordVBox extends VBox {
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+
+        var appProperties = GlobalContext.get(StopwatchProperties.class);
+        var isDevMode = appProperties.isDevMode();
+        recordIdLabel.setVisible(isDevMode);
+        recordIdLabel.setText(Long.toString(stopwatchRecord.getId()));
 
         bindTotalTime();
         bindMeasurements();
