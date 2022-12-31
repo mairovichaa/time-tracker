@@ -3,14 +3,11 @@ package time_tracker.component.stopwatch;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import time_tracker.Utils;
 import time_tracker.model.StopwatchRecordMeasurement;
-
-import java.io.IOException;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;

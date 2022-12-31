@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @Log
 public class TimeTrackerApp extends Application {
 
+    public static Stage primaryStage;
+
     public static void main(String[] args) {
         launch();
     }
@@ -73,6 +75,7 @@ public class TimeTrackerApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
+        TimeTrackerApp.primaryStage = primaryStage;
     }
 
     private AppProperties readAppProperties(@NonNull final String pathToPropertiesFile) {

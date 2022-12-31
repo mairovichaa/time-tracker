@@ -3,6 +3,7 @@ package time_tracker.model;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.binding.LongExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,7 +16,9 @@ import time_tracker.annotation.Nullable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Log
@@ -41,12 +44,25 @@ public class StopwatchRecord {
         @Nullable
         private SimpleLongProperty measurementInProgressDurationProperty;
 
+        @NonNull
+        private List<BooleanProperty> boundInternalChanged = Collections.emptyList();
+
         {
             this.bind(getMeasurementsProperty(), getMeasurementInProgressProperty());
         }
 
         @Override
         protected long computeValue() {
+            // TODO it shouldn't be done each time - find a way to optimize it
+            if (!boundInternalChanged.isEmpty()) {
+                boundInternalChanged.forEach(this::unbind);
+            }
+
+            boundInternalChanged = getMeasurementsProperty().stream()
+                    .map(StopwatchRecordMeasurement::getInternalChanged)
+                    .collect(Collectors.toList());
+            boundInternalChanged.forEach(this::bind);
+
             var stopwatchRecordMeasurement = getMeasurementInProgressProperty().get();
             if (stopwatchRecordMeasurement == null && measurementInProgressDurationProperty != null) {
                 log.fine("Unbind in progress duration property");

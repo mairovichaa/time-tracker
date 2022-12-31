@@ -14,5 +14,6 @@
         <Label fx:id="total"/>
     </HBox>
     <Label fx:id="comment" wrapText="true"/>
+    <Button fx:id="edit">Edit</Button>
 
 </fx:root>

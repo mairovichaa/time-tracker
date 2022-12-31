@@ -1,5 +1,6 @@
 package time_tracker.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import lombok.Data;
 import time_tracker.annotation.NonNull;
@@ -7,6 +8,7 @@ import time_tracker.annotation.Nullable;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Data
 public class StopwatchRecordMeasurement {
@@ -21,6 +23,27 @@ public class StopwatchRecordMeasurement {
 
     @NonNull
     private StringProperty noteProperty = new SimpleStringProperty("");
+
+    @NonNull
+    private SimpleLongProperty durationProperty = new SimpleLongProperty(0);
+
+    private BooleanProperty internalChanged = new SimpleBooleanProperty(false);
+    private AtomicBoolean change = new AtomicBoolean(false);
+
+
+    {
+        this.internalChanged.bind(
+                Bindings.createBooleanBinding(
+                        // make it the opposite to be fire change event for sure
+                        () -> {
+                            var val = change.get();
+                            change.set(!val);
+                            return !val;
+                        },
+                        this.startedAtProperty, this.stoppedAtProperty, this.noteProperty, this.durationProperty
+                )
+        );
+    }
 
 
     public void setStartedAt(@NonNull final LocalTime startedAt) {
@@ -51,6 +74,5 @@ public class StopwatchRecordMeasurement {
         return Duration.between(startedAt, stoppedAt);
     }
 
-    private SimpleLongProperty durationProperty = new SimpleLongProperty(0);
 
 }
