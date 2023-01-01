@@ -15,6 +15,7 @@ import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecordMeasurement;
+import time_tracker.service.StopwatchMeasurementService;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;
@@ -35,6 +36,8 @@ public class MeasurementVBox extends VBox {
 
     @FXML
     private Button edit;
+    @FXML
+    private Button deleteButton;
 
     public MeasurementVBox(@NonNull final StopwatchRecordMeasurement measurement) {
         load("/fxml/stopwatch/MeasurementVBox.fxml", this);
@@ -75,6 +78,7 @@ public class MeasurementVBox extends VBox {
                     {
                         super.bind(measurement.getDurationProperty());
                     }
+
                     @Override
                     protected String computeValue() {
                         var duration = measurement.getDuration();
@@ -100,7 +104,7 @@ public class MeasurementVBox extends VBox {
                 });
 
         edit.setOnMouseClicked(e -> {
-            log.fine("Edit button is clicked");
+            log.fine("Edit button is clicked for measurement = " + measurement.getId());
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(TimeTrackerApp.primaryStage);
@@ -109,5 +113,12 @@ public class MeasurementVBox extends VBox {
             dialog.setScene(dialogScene);
             dialog.show();
         });
+
+        var stopwatchMeasurementService = GlobalContext.get(StopwatchMeasurementService.class);
+        deleteButton.setOnMouseClicked(e -> {
+            log.fine("Delete button is clicked for measurement = " + measurement.getId());
+            stopwatchMeasurementService.delete(measurement.getId());
+        });
+
     }
 }

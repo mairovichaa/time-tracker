@@ -52,6 +52,7 @@ public class TimeTrackerApp extends Application {
                 recordToStopwatchRecordConverter
         );
 
+
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
         var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties, stopwatchRecordRepository);
         var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
@@ -77,6 +78,8 @@ public class TimeTrackerApp extends Application {
         chosenDateToRecordsForChosenDateBinder.bind();
 
         stopWatchAppState.setChosenDate(LocalDate.now());
+
+        stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
 
         TabPane tabPane = new TimeTrackerTabPane();
         Scene scene = new Scene(tabPane, 600, 600);

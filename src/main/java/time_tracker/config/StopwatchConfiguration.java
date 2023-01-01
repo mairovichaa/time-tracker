@@ -138,4 +138,15 @@ public class StopwatchConfiguration {
                 }
         );
     }
+
+    @NonNull
+    public StopwatchMeasurementService stopwatchMeasurementService(
+            @NonNull final StopWatchAppState stopWatchAppState
+    ) {
+        log.log(Level.FINE, "Creating stopwatchMeasurementService");
+        return GlobalContext.createStoreAndReturn(
+                StopwatchMeasurementService.class,
+                () -> new DefaultStopwatchMeasurementService(stopWatchAppState)
+        );
+    }
 }
