@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.model.StopWatchAppState;
 
 import java.util.logging.Level;
 
@@ -32,6 +33,8 @@ public class StopWatchTab extends Tab {
 
         var listOfDatesVbox = new ListOfDatesVbox();
 
+        var listOfMeasurementsForChosenRecordVBox = new ListOfMeasurementsForChosenRecordVBox();
+
         var hBoxWrapper = new HBox();
         hBoxWrapper.setSpacing(10);
 
@@ -39,7 +42,8 @@ public class StopWatchTab extends Tab {
                 .addAll(
                         listOfDatesVbox,
                         wrapperVBox,
-                        stopwatchPanelVBox
+                        stopwatchPanelVBox,
+                        listOfMeasurementsForChosenRecordVBox
                 );
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
         this.setContent(hBoxWrapper);

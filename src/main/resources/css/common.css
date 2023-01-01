@@ -7,6 +7,10 @@
 	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.12, -1.0, 2.0);
 }
 
+.record:hover, .record-chosen {
+    -fx-background-color: #F3F3F3;
+}
+
 .header-label {
 	-fx-font-family: 'Visby Round CF Bold';
 	-fx-font-size: 14;

@@ -7,7 +7,7 @@
 <?import javafx.scene.control.Label?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+         styleClass="grid-background,record" style="-fx-padding: 10 10 10 10;"
          spacing="5">
 
     <HBox>
@@ -17,8 +17,12 @@
     <Text fx:id="nameText"/>
     <Text fx:id="totalTimeText" text="00:00:00"/>
 
+    <HBox>
+        <Label>Amount of measurements: </Label>
+        <Label fx:id="amountOfMeasurements"/>
+    </HBox>
+
     <VBox fx:id="measurementsVBox" spacing="5">
-        <VBox fx:id="finishedMeasurementsVBox" spacing="5"/>
         <VBox fx:id="inProgressMeasurementVBox"/>
     </VBox>
 
@@ -26,4 +30,5 @@
         <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
         <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>
     </HBox>
+
 </fx:root>

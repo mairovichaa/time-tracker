@@ -19,6 +19,9 @@ public class StopWatchAppState {
     private LocalDate chosenDate;
 
     @NonNull
+    private ObjectProperty<StopwatchRecord> chosenStopwatchRecord = new SimpleObjectProperty<>(new StopwatchRecord());
+
+    @NonNull
     private ObjectProperty<LocalDate> chosenDateProperty = new SimpleObjectProperty<>();
 
     @NonNull
