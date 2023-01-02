@@ -1,4 +1,5 @@
 ### Run application
+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
 
 Download application: <b>TODO add link to place where it could be downloaded</b>
 
