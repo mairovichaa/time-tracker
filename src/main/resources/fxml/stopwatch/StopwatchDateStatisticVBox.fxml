@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
          spacing="5">
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Day statistic</Label>
+
+    <HBox spacing="3">
+        <Label>Amount of records:</Label>
+        <Label fx:id="amountOfRecordsLabel"/>
+    </HBox>
+
     <HBox spacing="3">
         <Label>Total amount of time:</Label>
         <Label fx:id="totalAmountOfTimeLabel"/>
     </HBox>
 
     <HBox spacing="3">
-        <Label>Amount of records:</Label>
-        <Label fx:id="amountOfRecordsLabel"/>
+        <Label>Expected amount of time:</Label>
+        <Label fx:id="expectedAmountOfTime"/>
     </HBox>
+
+    <HBox spacing="3">
+        <Label>Time to work left:</Label>
+        <Label fx:id="timeToWorkLeft"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Overtime:</Label>
+        <Label fx:id="overtime"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Comment:</Label>
+        <Label fx:id="comment"/>
+    </HBox>
+
+    <Button fx:id="editButton">Edit</Button>
 </fx:root>

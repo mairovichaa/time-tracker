@@ -13,12 +13,18 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.domain.DayStatistics;
 import time_tracker.model.DayData;
+import time_tracker.repository.DayStatisticsRepository;
+import time_tracker.repository.FileRepository;
 import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
+import time_tracker.service.DayStatisticsService;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -46,12 +52,13 @@ public class TimeTrackerApp extends Application {
         var recordToStopwatchRecordConverter = stopwatchConfiguration.recordToStopwatchRecordConverter();
         var stopwatchRecordToRecordConverter = stopwatchConfiguration.stopwatchRecordToRecordConverter();
 
+        var fileRepository = stopwatchConfiguration.fileRepository(stopwatchProperties, objectMapper);
         var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(
-                stopwatchProperties, objectMapper,
+                fileRepository,
                 stopwatchRecordToRecordConverter,
                 recordToStopwatchRecordConverter
         );
-
+        var dayStatisticsRepository = stopwatchConfiguration.dayStatisticsRepository(fileRepository);
 
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
         var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties, stopwatchRecordRepository);
@@ -66,13 +73,15 @@ public class TimeTrackerApp extends Application {
 
         stopWatchAppState.setDateToRecords(stopwatchRecordRepository.getLoaded());
 
-        stopWatchAppState.setDateToDayData(
-                stopWatchAppState.getDateToRecords()
-                        .entrySet()
-                        .stream()
-                        .map(it -> new DayData(it.getKey(), it.getValue()))
-                        .collect(Collectors.toMap(DayData::getDate, x -> x))
-        );
+        var dateToDayData = stopWatchAppState.getDateToRecords()
+                .entrySet()
+                .stream()
+                .map(it -> new DayData(it.getKey(), it.getValue()))
+                .collect(Collectors.toMap(DayData::getDate, x -> x));
+
+        var dayStatisticsService = stopwatchConfiguration.dayStatisticsService(stopWatchAppState, dayStatisticsRepository);
+        dayStatisticsService.enrich(dateToDayData);
+        stopWatchAppState.setDateToDayData(dateToDayData);
 
         var chosenDateToRecordsForChosenDateBinder = new ChosenDateToRecordsForChosenDateBinder(stopWatchAppState, stopwatchRecordOnLoadFactory);
         chosenDateToRecordsForChosenDateBinder.bind();

@@ -1,13 +1,11 @@
 package time_tracker.model;
 
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 
@@ -18,7 +16,10 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Log
 public class DayData {
-
+    @Getter
+    @Setter
+    // TODO initialize
+    private Long id;
     @Getter
     private final LocalDate date;
 
@@ -27,6 +28,24 @@ public class DayData {
 
     @Getter
     private final IntegerProperty amount = new SimpleIntegerProperty();
+
+    @Getter
+    private final LongProperty expectedTotalInSecs = new SimpleLongProperty(-1);
+
+    public boolean isExpectedTotalInSecsInitialized() {
+        return expectedTotalInSecs.getValue() != -1;
+    }
+
+    @Getter
+    private final StringProperty noteProperty = new SimpleStringProperty();
+
+    public String getNote() {
+        return noteProperty.getValue();
+    }
+
+    public void setNote(@NonNull String note) {
+        noteProperty.setValue(note);
+    }
 
     public DayData(LocalDate date, ObservableList<StopwatchRecord> records) {
         this.date = date;

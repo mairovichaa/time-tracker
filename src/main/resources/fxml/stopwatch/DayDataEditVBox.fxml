@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+
+    <HBox spacing="3">
+        <Label>Started at:</Label>
+        <MFXTextField fx:id="expectedTotalField" floatMode="DISABLED"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Comment:</Label>
+        <MFXTextField fx:id="commentField" floatMode="DISABLED"/>
+    </HBox>
+
+    <HBox>
+        <Button fx:id="saveButton">Save</Button>
+        <Button fx:id="cancelButton">Cancel</Button>
+    </HBox>
+
+
+</fx:root>

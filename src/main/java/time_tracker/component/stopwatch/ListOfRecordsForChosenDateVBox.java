@@ -13,6 +13,8 @@ import time_tracker.annotation.NonNull;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.repository.DayStatisticsRepository;
+import time_tracker.service.DayStatisticsService;
 import time_tracker.service.StopwatchRecordService;
 
 import static time_tracker.component.Utils.load;
@@ -27,10 +29,14 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
     @NonNull
     private final StopwatchRecordService stopwatchRecordService;
 
+    @NonNull
+    private final DayStatisticsService dayStatisticsService;
+
     public ListOfRecordsForChosenDateVBox() {
         load("/fxml/stopwatch/ListOfRecordsForChosenDateVBox.fxml", this);
 
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        this.dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
 
         ObservableList<Node> records = FXCollections.observableArrayList();
@@ -49,5 +55,6 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
     @FXML
     protected void save() {
         stopwatchRecordService.store();
+        dayStatisticsService.save();
     }
 }
