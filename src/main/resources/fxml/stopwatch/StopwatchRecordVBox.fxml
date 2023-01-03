@@ -30,5 +30,6 @@
         <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
         <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>
     </HBox>
+    <MFXButton buttonType="RAISED" fx:id="deleteButton" text="Delete" onAction="#delete"/>
 
 </fx:root>

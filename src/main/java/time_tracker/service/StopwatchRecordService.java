@@ -15,4 +15,6 @@ public interface StopwatchRecordService {
     void stopMeasurement(@NonNull StopwatchRecord stopwatchRecord);
 
     void store();
+
+    void delete(@NonNull StopwatchRecord stopwatchRecord);
 }

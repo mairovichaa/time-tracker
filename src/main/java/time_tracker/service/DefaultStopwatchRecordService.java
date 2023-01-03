@@ -93,4 +93,15 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
         var copiedRecords = new ArrayList<>(records);
         stopwatchRecordRepository.store(copiedRecords, date);
     }
+
+    @Override
+    public void delete(StopwatchRecord record) {
+        log.log(Level.FINE, () -> "delete record: " + record);
+        var removed = stopWatchAppState.getDateToRecords()
+                .get(record.getDate())
+                .remove(record);
+        if (!removed) {
+            log.log(Level.SEVERE, () -> "Record can't be removed as it hasn't been found: " + record);
+        }
+    }
 }
