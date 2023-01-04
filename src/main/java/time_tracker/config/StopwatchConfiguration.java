@@ -6,19 +6,19 @@ import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
-import time_tracker.model.mapper.MeasurementToStopwatchRecordMeasurementConverter;
 import time_tracker.model.mapper.RecordToStopwatchRecordConverter;
-import time_tracker.model.mapper.StopwatchRecordMeasurementToMeasurementConverter;
 import time_tracker.model.mapper.StopwatchRecordToRecordConverter;
-import time_tracker.repository.*;
+import time_tracker.repository.DayStatisticsRepository;
+import time_tracker.repository.FileRepository;
+import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.*;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
-import java.nio.file.Paths;
 import java.util.logging.Level;
 
 @Log
 public class StopwatchConfiguration {
+    private final RepositoryConfiguration repositoryConfiguration = new RepositoryConfiguration();
 
     @NonNull
     public StopwatchRecordService stopwatchRecordService(
@@ -62,16 +62,11 @@ public class StopwatchConfiguration {
         return GlobalContext.createStoreAndReturn(StopWatchAppState::new);
     }
 
-    //TODO move to a dedicated repository configuration
     @NonNull
     public DayStatisticsRepository dayStatisticsRepository(
             @NonNull final FileRepository fileRepository
     ) {
-        log.log(Level.FINE, "Creating dayStatisticsRepository");
-        return GlobalContext.createStoreAndReturn(
-                DayStatisticsRepository.class,
-                () -> new DefaultDayStatisticsRepository(fileRepository)
-        );
+        return repositoryConfiguration.dayStatisticsRepository(fileRepository);
     }
 
     @NonNull
@@ -80,15 +75,7 @@ public class StopwatchConfiguration {
             @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
             @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter
     ) {
-        log.log(Level.FINE, "Creating stopwatchRecordRepository");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchRecordRepository.class,
-                () -> {
-                    var result = new StopwatchRecordFileRepository(stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter, fileRepository);
-                    result.loadAll();
-                    return result;
-                }
-        );
+        return repositoryConfiguration.stopwatchRecordRepository(fileRepository, stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter);
     }
 
     @NonNull
@@ -96,13 +83,17 @@ public class StopwatchConfiguration {
             @NonNull final StopwatchProperties stopwatchProperties,
             @NonNull final ObjectMapper objectMapper
     ) {
-        log.log(Level.FINE, "Creating fileRepository");
-        var folderWithData = stopwatchProperties.getFolderWithData();
-        var path = Paths.get(folderWithData);
-        return GlobalContext.createStoreAndReturn(
-                FileRepository.class,
-                () -> new FileRepository(path, objectMapper)
-        );
+        return repositoryConfiguration.fileRepository(stopwatchProperties, objectMapper);
+    }
+
+    @NonNull
+    public StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter() {
+        return repositoryConfiguration.stopwatchRecordToRecordConverter();
+    }
+
+    @NonNull
+    public RecordToStopwatchRecordConverter recordToStopwatchRecordConverter() {
+        return repositoryConfiguration.recordToStopwatchRecordConverter();
     }
 
     @NonNull
@@ -144,30 +135,6 @@ public class StopwatchConfiguration {
                     var objectMapper = new ObjectMapper();
                     objectMapper.registerModule(new JavaTimeModule());
                     return objectMapper;
-                }
-        );
-    }
-
-    @NonNull
-    public StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter() {
-        log.log(Level.FINE, "Creating stopwatchRecordToRecordConverter");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchRecordToRecordConverter.class,
-                () -> {
-                    var stopwatchRecordMeasurementToMeasurementConverter = new StopwatchRecordMeasurementToMeasurementConverter();
-                    return new StopwatchRecordToRecordConverter(stopwatchRecordMeasurementToMeasurementConverter);
-                }
-        );
-    }
-
-    @NonNull
-    public RecordToStopwatchRecordConverter recordToStopwatchRecordConverter() {
-        log.log(Level.FINE, "Creating recordToStopwatchRecordConverter");
-        return GlobalContext.createStoreAndReturn(
-                RecordToStopwatchRecordConverter.class,
-                () -> {
-                    var measurementToStopwatchRecordMeasurementConverter = new MeasurementToStopwatchRecordMeasurementConverter();
-                    return new RecordToStopwatchRecordConverter(measurementToStopwatchRecordMeasurementConverter);
                 }
         );
     }
