@@ -13,18 +13,12 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.domain.DayStatistics;
 import time_tracker.model.DayData;
-import time_tracker.repository.DayStatisticsRepository;
-import time_tracker.repository.FileRepository;
 import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
-import time_tracker.service.DayStatisticsService;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -67,10 +61,6 @@ public class TimeTrackerApp extends Application {
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
 
-        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService(stopwatchRecordRepository);
-        stopwatchRecordSearchService.initialize(searchState);
-
-
         stopWatchAppState.setDateToRecords(stopwatchRecordRepository.getLoaded());
 
         var dateToDayData = stopWatchAppState.getDateToRecords()
@@ -89,6 +79,9 @@ public class TimeTrackerApp extends Application {
         stopWatchAppState.setChosenDate(LocalDate.now());
 
         stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
+
+        var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService();
+        stopwatchRecordSearchService.initialize(searchState, stopWatchAppState);
 
         TabPane tabPane = new TimeTrackerTabPane();
         Scene scene = new Scene(tabPane, 600, 600);

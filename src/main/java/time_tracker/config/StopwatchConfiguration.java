@@ -103,15 +103,11 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
-    public StopwatchRecordSearchService stopwatchRecordSearchService(
-            @NonNull final StopwatchRecordRepository stopwatchRecordRepository
-    ) {
+    public StopwatchRecordSearchService stopwatchRecordSearchService() {
         log.log(Level.FINE, "Creating stopwatchRecordSearchService");
         return GlobalContext.createStoreAndReturn(
                 StopwatchRecordSearchService.class,
-                () -> new StopwatchRecordSearchServiceImpl(
-                        stopwatchRecordRepository
-                )
+                StopwatchRecordSearchServiceImpl::new
         );
     }
 
