@@ -3,6 +3,8 @@ package time_tracker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -14,11 +16,14 @@ import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.DayData;
+import time_tracker.model.StopwatchRecord;
 import time_tracker.service.ChosenDateToRecordsForChosenDateBinder;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -61,7 +66,10 @@ public class TimeTrackerApp extends Application {
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
 
-        stopWatchAppState.setDateToRecords(stopwatchRecordRepository.getLoaded());
+        Map<LocalDate, ObservableList<StopwatchRecord>> dateToRecords = new HashMap<>();
+        stopwatchRecordRepository.getLoaded()
+                        .forEach((date, records) -> dateToRecords.put(date, FXCollections.observableArrayList(records)));
+        stopWatchAppState.setDateToRecords(dateToRecords);
 
         var dateToDayData = stopWatchAppState.getDateToRecords()
                 .entrySet()

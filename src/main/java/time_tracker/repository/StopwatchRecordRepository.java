@@ -1,6 +1,5 @@
 package time_tracker.repository;
 
-import javafx.collections.ObservableList;
 import time_tracker.annotation.NonNull;
 import time_tracker.model.StopwatchRecord;
 
@@ -11,9 +10,10 @@ import java.util.Map;
 public interface StopwatchRecordRepository {
     void store(@NonNull final List<StopwatchRecord> records, @NonNull final LocalDate date);
 
-    Map<LocalDate, ObservableList<StopwatchRecord>> getLoaded();
+    Map<LocalDate, List<StopwatchRecord>> getLoaded();
 
     Long nextIdForRecord();
+
     Long nextIdForMeasurement();
 
 }

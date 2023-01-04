@@ -29,10 +29,7 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
     private final AtomicLong nextMeasurementId = new AtomicLong();
 
     @Getter
-    // TODO get rid of Observable list - pass usual list
-    // now there is a bound via data between AppState and this class - it should be removed
-    // see time_tracker.model.StopWatchAppState
-    private Map<LocalDate, ObservableList<StopwatchRecord>> loaded = new HashMap<>();
+    private Map<LocalDate, List<StopwatchRecord>> loaded = new HashMap<>();
 
     public StopwatchRecordFileRepository(
             @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
@@ -55,7 +52,7 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
         loadedTmp.keySet()
                 .forEach(date -> {
                     var stopwatchRecords = loadedTmp.get(date);
-                    loaded.put(date, FXCollections.observableArrayList(stopwatchRecords));
+                    loaded.put(date, stopwatchRecords);
                 });
 
         var nextRecordIdLong = loaded.values()
@@ -80,7 +77,7 @@ public class StopwatchRecordFileRepository implements StopwatchRecordRepository 
         var stopwatchRecords = loaded.computeIfAbsent(date, ignored -> {
             log.severe(() -> "No data for: " + date);
 
-            return FXCollections.observableArrayList(new ArrayList<>());
+            return new ArrayList<>();
         });
         stopwatchRecords.clear();
         stopwatchRecords.addAll(records);
