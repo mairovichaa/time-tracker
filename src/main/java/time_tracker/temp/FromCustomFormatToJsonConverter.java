@@ -113,7 +113,7 @@ public class FromCustomFormatToJsonConverter {
 
                 if (split.length == 3) {
                     var note = split[2];
-                    measurement.getNoteProperty().setValue(note);
+                    measurement.setNote(note);
                 }
 
                 measurements.add(measurement);

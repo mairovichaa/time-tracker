@@ -5,6 +5,7 @@ import time_tracker.annotation.NonNull;
 import time_tracker.config.StopwatchSearchState;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.model.StopwatchRecordMeasurement;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
     private boolean searchTermInRecordMeasurements(String searchTerm, StopwatchRecord record) {
         return record.getMeasurementsProperty()
                 .stream()
-                .map(it -> it.getNoteProperty().getValue())
+                .map(StopwatchRecordMeasurement::getNote)
                 .filter(Objects::nonNull)
                 .anyMatch(it -> it.contains(searchTerm));
     }

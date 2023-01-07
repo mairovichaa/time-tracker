@@ -62,7 +62,7 @@ public class StopwatchRecord {
             }
 
             boundInternalChanged = getMeasurementsProperty().stream()
-                    .map(StopwatchRecordMeasurement::getInternalChanged)
+                    .map(StopwatchRecordMeasurement::getIsChanged)
                     .collect(Collectors.toList());
             boundInternalChanged.forEach(this::bind);
 

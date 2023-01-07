@@ -7,6 +7,7 @@ import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.model.StopwatchRecordMeasurement;
 
 import java.util.Comparator;
 
@@ -50,8 +51,8 @@ public class ReportVBox extends VBox {
 
                     it.getMeasurementsProperty()
                             .stream()
-                            .filter(measurement -> !measurement.getNoteProperty().get().isBlank())
-                            .map(measurement -> measurement.getNoteProperty().getValue())
+                            .map(StopwatchRecordMeasurement::getNote)
+                            .filter(measurement -> !measurement.isBlank())
                             .distinct()
                             .forEach(measurementNote ->
                                     reportContent.append("- ")

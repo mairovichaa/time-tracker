@@ -2,7 +2,7 @@ package time_tracker.model;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import lombok.Data;
+import lombok.Getter;
 import time_tracker.annotation.NonNull;
 import time_tracker.annotation.Nullable;
 
@@ -10,32 +10,82 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Data
 public class StopwatchRecordMeasurement {
 
+    private final SimpleLongProperty idProperty = new SimpleLongProperty(-1);
+
+    public Long getId() {
+        return idProperty.getValue();
+    }
+
+    public void setId(@NonNull Long id) {
+        idProperty.setValue(id);
+    }
+
     @NonNull
-    private Long id;
-    @NonNull
-    private LocalTime startedAt;
-    @NonNull
-    private ObjectProperty<LocalTime> startedAtProperty = new SimpleObjectProperty<>();
+    @Getter
+    private final ObjectProperty<LocalTime> startedAtProperty = new SimpleObjectProperty<>();
+
     @Nullable
-    private LocalTime stoppedAt;
-    @NonNull
-    private ObjectProperty<LocalTime> stoppedAtProperty = new SimpleObjectProperty<>();
+    public LocalTime getStartedAt() {
+        return startedAtProperty.get();
+    }
+
+    public void setStartedAt(@NonNull final LocalTime startedAt) {
+        this.startedAtProperty.set(startedAt);
+
+        if (getStoppedAt() != null) {
+            var duration = getDuration();
+            durationProperty.set(duration.getSeconds());
+        }
+    }
 
     @NonNull
-    private StringProperty noteProperty = new SimpleStringProperty("");
+    @Getter
+    private final ObjectProperty<LocalTime> stoppedAtProperty = new SimpleObjectProperty<>();
+
+    @Nullable
+    public LocalTime getStoppedAt() {
+        return stoppedAtProperty.get();
+    }
+
+    public void setStoppedAt(@NonNull final LocalTime stoppedAt) {
+        this.stoppedAtProperty.set(stoppedAt);
+
+        if (getStartedAt() != null) {
+            var duration = getDuration();
+            durationProperty.set(duration.getSeconds());
+        }
+    }
 
     @NonNull
-    private SimpleLongProperty durationProperty = new SimpleLongProperty(0);
+    @Getter
+    private final StringProperty noteProperty = new SimpleStringProperty("");
 
-    private BooleanProperty internalChanged = new SimpleBooleanProperty(false);
-    private AtomicBoolean change = new AtomicBoolean(false);
+    public void setNote(@Nullable String note) {
+        noteProperty.set(note);
+    }
 
+    @Nullable
+    public String getNote() {
+        return noteProperty.getValue();
+    }
+
+    @NonNull
+    @Getter
+    private final SimpleLongProperty durationProperty = new SimpleLongProperty(0);
+
+    public Duration getDuration() {
+        return Duration.between(getStartedAt(), getStoppedAt());
+    }
+
+    @Getter
+    private final BooleanProperty isChanged = new SimpleBooleanProperty(false);
+
+    private final AtomicBoolean change = new AtomicBoolean(false);
 
     {
-        this.internalChanged.bind(
+        this.isChanged.bind(
                 Bindings.createBooleanBinding(
                         // make it the opposite to be fire change event for sure
                         () -> {
@@ -43,39 +93,9 @@ public class StopwatchRecordMeasurement {
                             change.set(!val);
                             return !val;
                         },
-                        this.startedAtProperty, this.stoppedAtProperty, this.noteProperty, this.durationProperty
+                        idProperty, startedAtProperty, stoppedAtProperty, noteProperty, durationProperty
                 )
         );
     }
-
-
-    public void setStartedAt(@NonNull final LocalTime startedAt) {
-        this.startedAt = startedAt;
-        this.startedAtProperty.set(startedAt);
-
-        if (stoppedAt != null) {
-            var duration = getDuration();
-            getDurationProperty().set(duration.getSeconds());
-        }
-    }
-
-    public void setStoppedAt(@NonNull final LocalTime stoppedAt) {
-        this.stoppedAt = stoppedAt;
-        this.stoppedAtProperty.set(stoppedAt);
-
-        if (startedAt != null) {
-            var duration = getDuration();
-            getDurationProperty().set(duration.getSeconds());
-        }
-    }
-
-    public String getNote() {
-        return noteProperty.getValue();
-    }
-
-    public Duration getDuration() {
-        return Duration.between(startedAt, stoppedAt);
-    }
-
 
 }

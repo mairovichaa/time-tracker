@@ -33,7 +33,7 @@ public class MeasurementInProgressVBox extends VBox {
                     {super.bind(measurement.getStartedAtProperty());}
                     @Override
                     protected String computeValue() {
-                        var startedAt = measurement.getStartedAtProperty().getValue();
+                        var startedAt = measurement.getStartedAt();
                         return DATA_TIME_FORMATTER.format(startedAt);
                     }
                 });
@@ -43,7 +43,7 @@ public class MeasurementInProgressVBox extends VBox {
                     {super.bind(measurement.getStoppedAtProperty());}
                     @Override
                     protected String computeValue() {
-                        var stoppedAt = measurement.getStoppedAtProperty().getValue();
+                        var stoppedAt = measurement.getStoppedAt();
                         return DATA_TIME_FORMATTER.format(stoppedAt);
                     }
                 });
@@ -68,7 +68,7 @@ public class MeasurementInProgressVBox extends VBox {
                     }
                     @Override
                     protected String computeValue() {
-                        var comment = measurement.getNoteProperty().getValue();
+                        var comment = measurement.getNote();
                         if (comment.isEmpty()){
                             return "No comment";
                         }

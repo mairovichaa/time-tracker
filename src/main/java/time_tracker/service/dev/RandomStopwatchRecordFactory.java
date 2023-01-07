@@ -69,8 +69,7 @@ public class RandomStopwatchRecordFactory {
             if (random.nextBoolean()) {
                 var noteNumber = random.nextInt();
                 var noteValue = "note #" + Math.abs(noteNumber);
-                measurement.getNoteProperty()
-                        .setValue(noteValue);
+                measurement.setNote(noteValue);
             }
             result.add(measurement);
 //            measurements.add(measurement);

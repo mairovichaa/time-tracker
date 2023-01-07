@@ -12,7 +12,7 @@ public class MeasurementToStopwatchRecordMeasurementConverter implements Convert
         dst.setId(src.getId());
         dst.setStartedAt(src.getStartedAt());
         dst.setStoppedAt(src.getStoppedAt());
-        dst.getNoteProperty().set(src.getNote());
+        dst.setNote(src.getNote());
 
         return dst;
     }

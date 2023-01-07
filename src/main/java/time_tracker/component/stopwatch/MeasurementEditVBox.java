@@ -47,17 +47,17 @@ public class MeasurementEditVBox extends VBox {
     ) {
         load("/fxml/stopwatch/MeasurementEditVBox.fxml", this);
 
-        var startedAtValue = measurement.getStartedAtProperty().getValue();
+        var startedAtValue = measurement.getStartedAt();
         var startedAtFormatted = DATA_TIME_FORMATTER_2.format(startedAtValue);
         this.startedAt.textProperty().setValue(startedAtFormatted);
         startedAtResult.set(startedAtValue);
 
-        var stoppedAtValue = measurement.getStoppedAtProperty().getValue();
+        var stoppedAtValue = measurement.getStoppedAt();
         var stoppedAtFormatted = DATA_TIME_FORMATTER_2.format(stoppedAtValue);
         this.finishedAt.textProperty().setValue(stoppedAtFormatted);
         finishedAtResult.set(stoppedAtValue);
 
-        var noteValue = measurement.getNoteProperty().getValue();
+        var noteValue = measurement.getNote();
         this.comment.textProperty().setValue(noteValue);
 
 
@@ -98,7 +98,7 @@ public class MeasurementEditVBox extends VBox {
         save.setOnMouseClicked(e -> {
             measurement.setStartedAt(startedAtResult.get());
             measurement.setStoppedAt(finishedAtResult.get());
-            measurement.getNoteProperty().set(comment.getText());
+            measurement.setNote(comment.getText());
             stage.close();
         });
 
