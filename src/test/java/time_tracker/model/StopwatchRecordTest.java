@@ -98,7 +98,9 @@ class StopwatchRecordTest {
 
         var amountOfNotifications = new AtomicInteger();
         record.getMeasurementsTotalInSecsLongBinding()
-                .addListener(listener -> amountOfNotifications.getAndIncrement());
+                .addListener((observable, oldValue, newValue) -> {
+                    amountOfNotifications.getAndIncrement();
+                });
 
         // when
         measurementRecordChange.accept(record);
@@ -112,7 +114,8 @@ class StopwatchRecordTest {
         return Stream.of(
                 Arguments.of(
                         "should have measurementsTotalInSecsLongBinding equal to zero when no measurements",
-                        (Consumer<StopwatchRecord>) record -> {},  0, 0
+                        (Consumer<StopwatchRecord>) record -> {
+                        }, 0, 0
                 ),
                 Arguments.of(
                         "should update measurementsTotalInSecsLongBinding when measurement is changed",
@@ -120,14 +123,14 @@ class StopwatchRecordTest {
                             var measurement = createMeasurementWithDurationOf(100);
                             record.getMeasurementsProperty().add(measurement);
                             measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(200));
-                        },  200, 1
+                        }, 200, 2
                 ),
                 Arguments.of(
                         "should update measurementsTotalInSecsLongBinding when measurement is added",
                         (Consumer<StopwatchRecord>) record -> {
                             var measurement = createMeasurementWithDurationOf(100);
                             record.getMeasurementsProperty().add(measurement);
-                        },  100, 1
+                        }, 100, 1
                 ),
                 Arguments.of(
                         "should be several updates and total has to be recalculated when measurement is added and then its durations is changed",
@@ -136,14 +139,14 @@ class StopwatchRecordTest {
                             record.getMeasurementsProperty().add(measurement);
                             measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(200));
                         },
-                        200, 1
+                        200, 2
                 ),
                 Arguments.of(
                         "should update measurementsTotalInSecsLongBinding when measurementInProgress is added",
                         (Consumer<StopwatchRecord>) record -> {
                             var measurement = createMeasurementWithDurationOf(100);
                             record.setMeasurementInProgress(measurement);
-                        },  100, 1
+                        }, 100, 1
                 ),
                 Arguments.of(
                         "should update measurementsTotalInSecsLongBinding when measurementInProgress is changed",
@@ -151,7 +154,7 @@ class StopwatchRecordTest {
                             var measurement = createMeasurementWithDurationOf(100);
                             record.setMeasurementInProgress(measurement);
                             measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(200));
-                        },  200, 1
+                        }, 200, 2
                 )
         );
     }
@@ -159,7 +162,7 @@ class StopwatchRecordTest {
     private static StopwatchRecordMeasurement createMeasurementWithDurationOf(long durationInSeconds) {
         var measurement = new StopwatchRecordMeasurement();
 
-        var startedAt = LocalTime.now();
+        var startedAt = LocalTime.of(10, 0, 0);
         measurement.setStartedAt(startedAt);
         measurement.setStoppedAt(startedAt.plusSeconds(durationInSeconds));
 

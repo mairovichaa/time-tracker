@@ -73,8 +73,7 @@ public class WeeklyStatisticsVBox extends VBox {
                             .mapToObj(it::plusDays)
                             .map(stopWatchAppState.getDateToDayData()::get)
                             .filter(Objects::nonNull)
-                            .map(DayData::getTotalInSecs)
-                            .mapToLong(LongProperty::getValue)
+                            .mapToLong(DayData::getTotalInSecs)
                             .sum();
 
                     var duration = Utils.formatDuration(total);

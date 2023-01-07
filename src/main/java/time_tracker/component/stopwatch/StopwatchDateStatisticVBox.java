@@ -1,7 +1,6 @@
 package time_tracker.component.stopwatch;
 
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.LongProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -53,7 +52,7 @@ public class StopwatchDateStatisticVBox extends VBox {
     private void rebind() {
         var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
         var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
-        var measurementsTotalTimeInSecs = dayData.getTotalInSecs();
+        var measurementsTotalTimeInSecs = dayData.getTotalInSecsProperty();
         totalAmountOfTimeLabel.textProperty().unbind();
         totalAmountOfTimeLabel.textProperty()
                 .bind(new StringBinding() {
@@ -71,17 +70,17 @@ public class StopwatchDateStatisticVBox extends VBox {
         amountOfRecordsLabel.textProperty()
                 .bind(new StringBinding() {
                     {
-                        super.bind(dayData.getAmount());
+                        super.bind(dayData.getAmountOfRecordsProperty());
                     }
 
                     @Override
                     protected String computeValue() {
-                        return dayData.getAmount().getValue() + "";
+                        return dayData.getAmountOfRecords() + "";
                     }
                 });
 
         expectedAmountOfTime.textProperty().unbind();
-        var expectedTotalInSecsProperty = dayData.getExpectedTotalInSecs();
+        var expectedTotalInSecsProperty = dayData.getExpectedTotalInSecsProperty();
         expectedAmountOfTime.textProperty()
                 .bind(new StringBinding() {
                     {
@@ -129,7 +128,7 @@ public class StopwatchDateStatisticVBox extends VBox {
 
                     @Override
                     protected String computeValue() {
-                        var comment = dayData.getNoteProperty().getValue();
+                        var comment = dayData.getNote();
                         if (comment == null) {
                             return "No comment";
                         }

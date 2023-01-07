@@ -24,16 +24,24 @@ public class DayData {
     private final LocalDate date;
 
     @Getter
-    private final LongProperty totalInSecs = new SimpleLongProperty();
+    private final LongProperty totalInSecsProperty = new SimpleLongProperty(0);
+
+    public long getTotalInSecs() {
+        return totalInSecsProperty.get();
+    }
 
     @Getter
-    private final IntegerProperty amount = new SimpleIntegerProperty();
+    private final IntegerProperty amountOfRecordsProperty = new SimpleIntegerProperty(0);
+
+    public int getAmountOfRecords() {
+        return amountOfRecordsProperty.get();
+    }
 
     @Getter
-    private final LongProperty expectedTotalInSecs = new SimpleLongProperty(-1);
+    private final LongProperty expectedTotalInSecsProperty = new SimpleLongProperty(-1);
 
     public boolean isExpectedTotalInSecsInitialized() {
-        return expectedTotalInSecs.getValue() != -1;
+        return expectedTotalInSecsProperty.getValue() != -1;
     }
 
     @Getter
@@ -47,8 +55,12 @@ public class DayData {
         noteProperty.setValue(note);
     }
 
+    @Getter
+    private final ObservableList<StopwatchRecord> records;
+
     public DayData(LocalDate date, ObservableList<StopwatchRecord> records) {
         this.date = date;
+        this.records = records;
 
         var measurementsTotalTimeInSecs = new LongBinding() {
             @NonNull
@@ -82,10 +94,10 @@ public class DayData {
         records.addListener((ListChangeListener<StopwatchRecord>) c -> {
             log.fine("List of stopwatch records changed - rebind total");
             measurementsTotalTimeInSecs.rebind();
-            this.amount.setValue(records.size());
+            this.amountOfRecordsProperty.setValue(records.size());
         });
 
-        this.totalInSecs.bind(measurementsTotalTimeInSecs);
-        this.amount.setValue(records.size());
+        this.totalInSecsProperty.bind(measurementsTotalTimeInSecs);
+        this.amountOfRecordsProperty.setValue(records.size());
     }
 }

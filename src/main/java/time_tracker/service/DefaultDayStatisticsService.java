@@ -35,13 +35,13 @@ public class DefaultDayStatisticsService implements DayStatisticsService {
                 .findFirst()
                 .ifPresentOrElse(
                         dayStatistics -> {
-                            dayStatistics.setExpectedTotalInSecs(dayData.getExpectedTotalInSecs().getValue());
+                            dayStatistics.setExpectedTotalInSecs(dayData.getExpectedTotalInSecsProperty().getValue());
                             dayStatistics.setNote(dayData.getNote());
                         },
                         () -> {
                             var dayStatistics = new DayStatistics();
                             dayStatistics.setDate(dayData.getDate());
-                            dayStatistics.setExpectedTotalInSecs(dayData.getExpectedTotalInSecs().getValue());
+                            dayStatistics.setExpectedTotalInSecs(dayData.getExpectedTotalInSecsProperty().getValue());
                             dayStatistics.setNote(dayData.getNote());
                             data.add(dayStatistics);
                         }
@@ -59,12 +59,12 @@ public class DefaultDayStatisticsService implements DayStatisticsService {
             if (dayData != null) {
                 dayData.setId(it.getId());
                 dayData.setNote(it.getNote());
-                dayData.getExpectedTotalInSecs().setValue(it.getExpectedTotalInSecs());
+                dayData.getExpectedTotalInSecsProperty().setValue(it.getExpectedTotalInSecs());
             }
         });
         dateToDayData.values()
                 .stream()
                 .filter(it -> !it.isExpectedTotalInSecsInitialized())
-                .forEach(it -> it.getExpectedTotalInSecs().setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS));
+                .forEach(it -> it.getExpectedTotalInSecsProperty().setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS));
     }
 }

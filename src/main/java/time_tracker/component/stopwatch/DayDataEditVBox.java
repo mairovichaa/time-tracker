@@ -34,19 +34,19 @@ public class DayDataEditVBox extends VBox {
     ) {
         load("/fxml/stopwatch/DayDataEditVBox.fxml", this);
 
-        var expectedTotalInSecs = dayData.getExpectedTotalInSecs().getValue();
+        var expectedTotalInSecs = dayData.getExpectedTotalInSecsProperty().getValue();
         var duration = Utils.formatDuration(expectedTotalInSecs);
         expectedTotalField.textProperty().setValue(duration);
 
-        var noteValue = dayData.getNoteProperty().getValue();
+        var noteValue = dayData.getNote();
         commentField.textProperty().setValue(noteValue);
 
         saveButton.setOnMouseClicked(e -> {
             var newExpectedTotalInSecs = expectedTotalField.textProperty().get();
             var newExpectedLocalTime = LocalTime.parse(newExpectedTotalInSecs, LOCAL_TIME_FORMATTER);
 
-            dayData.getExpectedTotalInSecs().setValue(newExpectedLocalTime.toSecondOfDay());
-            dayData.getNoteProperty().set(commentField.getText());
+            dayData.getExpectedTotalInSecsProperty().setValue(newExpectedLocalTime.toSecondOfDay());
+            dayData.setNote(commentField.getText());
             stage.close();
         });
 

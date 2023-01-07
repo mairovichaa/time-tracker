@@ -65,8 +65,8 @@ public class DailyStatisticsVBox extends VBox {
 
                     var dayData = stopWatchAppState.getDateToDayData().get(it);
                     if (dayData != null) {
-                        builder.amount(dayData.getAmount().get());
-                        var totalSecs = dayData.getTotalInSecs().get();
+                        builder.amount(dayData.getAmountOfRecords());
+                        var totalSecs = dayData.getTotalInSecs();
                         var duration = Utils.formatDuration(totalSecs);
                         builder.total(duration);
                     } else {
