@@ -52,9 +52,9 @@ public class StopwatchRecordVBox extends VBox {
         nameText.setText(stopwatchRecord.getName());
 
         startButton.disableProperty()
-                .bind(stopwatchRecord.getHasMeasurementInProgress());
+                .bind(stopwatchRecord.getHasMeasurementInProgressProperty());
         stopButton.disableProperty()
-                .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgress()));
+                .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgressProperty()));
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);

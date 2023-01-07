@@ -34,14 +34,29 @@ public class StopwatchRecord {
     private LocalDate date;
 
     @NonNull
-    private List<StopwatchRecordMeasurement> measurements = new ArrayList<>();
-
-    @NonNull
-    private ObservableList<StopwatchRecordMeasurement> measurementsProperty = FXCollections.observableArrayList(measurements);
-
-    private StopwatchRecordMeasurement measurementInProgress;
+    private ObservableList<StopwatchRecordMeasurement> measurementsProperty = FXCollections.observableArrayList(new ArrayList<>());
 
     private ObjectProperty<StopwatchRecordMeasurement> measurementInProgressProperty = new SimpleObjectProperty<>();
+
+    @Nullable
+    public StopwatchRecordMeasurement getMeasurementInProgress() {
+        return measurementInProgressProperty.get();
+    }
+
+    public void setMeasurementInProgress(@Nullable final StopwatchRecordMeasurement measurementInProgress) {
+        measurementInProgressProperty.setValue(measurementInProgress);
+    }
+
+    private BooleanBinding hasMeasurementInProgressProperty = new BooleanBinding() {
+        {
+            bind(measurementInProgressProperty);
+        }
+
+        @Override
+        protected boolean computeValue() {
+            return measurementInProgressProperty.getValue() != null;
+        }
+    };
 
     private LongBinding measurementsTotalInSecsLongBinding = new LongBinding() {
         @Nullable
@@ -89,21 +104,5 @@ public class StopwatchRecord {
             return totalSeconds;
         }
     };
-
-    private BooleanBinding hasMeasurementInProgress = new BooleanBinding() {
-        {
-            bind(measurementInProgressProperty);
-        }
-
-        @Override
-        protected boolean computeValue() {
-            return measurementInProgressProperty.getValue() != null;
-        }
-    };
-
-    public void setMeasurementInProgress(@Nullable final StopwatchRecordMeasurement measurementInProgress) {
-        this.measurementInProgress = measurementInProgress;
-        measurementInProgressProperty.setValue(measurementInProgress);
-    }
 
 }
