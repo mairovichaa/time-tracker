@@ -12,7 +12,6 @@ import time_tracker.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
@@ -47,6 +46,20 @@ public class DayData {
 
     @Getter
     private final LongProperty expectedTotalInSecsProperty = new SimpleLongProperty(-1);
+
+    @Getter
+    private final LongProperty timeToWorkLeftProperty = new SimpleLongProperty(expectedTotalInSecsProperty.get());
+
+    public long getTimeToWorkLeft() {
+        return timeToWorkLeftProperty.get();
+    }
+
+    @Getter
+    private final LongProperty overtimeProperty = new SimpleLongProperty(0);
+
+    public long getOvertime() {
+        return overtimeProperty.get();
+    }
 
     public boolean isExpectedTotalInSecsInitialized() {
         return expectedTotalInSecsProperty.getValue() != -1;
@@ -146,9 +159,33 @@ public class DayData {
             {
                 bind(totalInSecsProperty, trackedInSecsProperty);
             }
+
             @Override
             protected boolean computeValue() {
                 return totalInSecsProperty.get() - trackedInSecsProperty.get() <= 0;
+            }
+        });
+
+        timeToWorkLeftProperty.bind(new LongBinding() {
+            {
+                bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
+            }
+
+            @Override
+            protected long computeValue() {
+                var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();
+                return Math.max(diffInSecs, 0);
+            }
+        });
+
+        overtimeProperty.bind(new LongBinding() {
+            {
+                bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
+            }
+            @Override
+            protected long computeValue() {
+                var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();
+                return Math.abs(Math.min(diffInSecs, 0));
             }
         });
 

@@ -244,7 +244,7 @@ class DayDataTest {
                             stopwatchRecord.setTracked(true);
                             stopwatchRecord.setTracked(false);
                             stopwatchRecord.setTracked(true);
-                        }, 300, true, 3
+                        }, 200, true, 3
                 )
         );
     }

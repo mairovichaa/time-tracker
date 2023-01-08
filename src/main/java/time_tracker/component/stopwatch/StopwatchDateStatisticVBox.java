@@ -122,14 +122,12 @@ public class StopwatchDateStatisticVBox extends VBox {
         timeToWorkLeft.textProperty()
                 .bind(new StringBinding() {
                     {
-                        super.bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
+                        super.bind(dayData.getTimeToWorkLeftProperty());
                     }
 
                     @Override
                     protected String computeValue() {
-                        var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();
-                        var absDiff = Math.max(diffInSecs, 0);
-                        return Utils.formatDuration(absDiff);
+                        return Utils.formatDuration(dayData.getTimeToWorkLeft());
                     }
                 });
 
@@ -137,14 +135,12 @@ public class StopwatchDateStatisticVBox extends VBox {
         overtime.textProperty()
                 .bind(new StringBinding() {
                     {
-                        super.bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
+                        super.bind(dayData.getOvertimeProperty());
                     }
 
                     @Override
                     protected String computeValue() {
-                        var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();
-                        var absDiff = Math.abs(Math.min(diffInSecs, 0));
-                        return Utils.formatDuration(absDiff);
+                        return Utils.formatDuration(dayData.getOvertime());
                     }
                 });
 

@@ -11,8 +11,13 @@ public class WeeklyStatistics {
 
     @Getter
     private String endDate;
-
     @Getter
     private String total;
+    @Getter
+    private String timeToWorkLeft;
+    @Getter
+    private String tracked;
+    @Getter
+    private String expected;
 
 }

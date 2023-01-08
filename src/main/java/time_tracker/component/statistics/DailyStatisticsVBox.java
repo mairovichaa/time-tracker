@@ -26,18 +26,18 @@ public class DailyStatisticsVBox extends VBox {
 
     @FXML
     private MFXTableView<DayStatistics> table;
+
+    private final TimeService timeService;
+    private final StopwatchProperties stopwatchProperties;
     private final StopWatchAppState stopWatchAppState;
 
     public DailyStatisticsVBox() {
         load("/fxml/statistics/DailyStatisticsVBox.fxml", this);
 
         stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
-        var timeService = GlobalContext.get(TimeService.class);
-        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
-        var stopwatchDatesProperties = stopwatchProperties.getDates();
+        timeService = GlobalContext.get(TimeService.class);
+        stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
 
-        var today = timeService.today();
-        var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
 
         MFXTableColumn<DayStatistics> dateColumn = new MFXTableColumn<>("Date");
         dateColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getDate));
@@ -45,15 +45,33 @@ public class DailyStatisticsVBox extends VBox {
         MFXTableColumn<DayStatistics> totalColumn = new MFXTableColumn<>("Total");
         totalColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getTotal));
 
+        MFXTableColumn<DayStatistics> timeToWorkLeftColumn = new MFXTableColumn<>("Time to work left");
+        timeToWorkLeftColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getTimeToWorkLeft));
+
+        MFXTableColumn<DayStatistics> expectedColumn = new MFXTableColumn<>("Expected");
+        expectedColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getExpected));
+
+        MFXTableColumn<DayStatistics> trackedColumn = new MFXTableColumn<>("Tracked");
+        trackedColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getTracked));
+
         MFXTableColumn<DayStatistics> amountColumn = new MFXTableColumn<>("Amount");
         amountColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getAmount));
 
-        table.getTableColumns().addAll(dateColumn, amountColumn, totalColumn);
+        table.getTableColumns().addAll(dateColumn, amountColumn, totalColumn, expectedColumn, timeToWorkLeftColumn, trackedColumn);
 
-        var dates = getDayStatistics(today, amountOfDaysToShow);
-        table.setItems(dates);
         table.autosizeColumnsOnInitialization();
+        refresh();
+    }
 
+    @FXML
+    private void refresh() {
+        var stopwatchDatesProperties = stopwatchProperties.getDates();
+
+        var today = timeService.today();
+        var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
+        var dates = getDayStatistics(today, amountOfDaysToShow);
+        table.setItems(FXCollections.observableArrayList());
+        table.setItems(dates);
     }
 
     private ObservableList<DayStatistics> getDayStatistics(LocalDate today, int amountOfDaysToShow) {
@@ -69,6 +87,18 @@ public class DailyStatisticsVBox extends VBox {
                         var totalSecs = dayData.getTotalInSecs();
                         var duration = Utils.formatDuration(totalSecs);
                         builder.total(duration);
+
+                        var timeToWorkLeftSecs = dayData.getTimeToWorkLeft();
+                        var timeToWorkLeft = Utils.formatDuration(timeToWorkLeftSecs);
+                        builder.timeToWorkLeft(timeToWorkLeft);
+
+                        var trackedSecs = dayData.getTrackedInSecsProperty().get();
+                        var tracked = Utils.formatDuration(trackedSecs);
+                        builder.tracked(tracked);
+
+                        var expectedSecs = dayData.getExpectedTotalInSecsProperty().get();
+                        var expected = Utils.formatDuration(expectedSecs);
+                        builder.expected(expected);
                     } else {
                         builder.total("-");
                     }
