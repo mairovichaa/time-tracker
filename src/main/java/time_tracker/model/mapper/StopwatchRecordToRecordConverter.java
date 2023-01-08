@@ -22,6 +22,7 @@ public class StopwatchRecordToRecordConverter implements Converter<StopwatchReco
         dst.setId(src.getId());
         dst.setName(src.getName());
         dst.setDate(src.getDate());
+        dst.setTracked(src.getTrackedProperty().get());
 
         var converted = stopwatchRecordMeasurementToMeasurementConverter.convert(src.getMeasurementsProperty());
         var newMeasurements = new ArrayList<>(converted);

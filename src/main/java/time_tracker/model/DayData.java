@@ -1,5 +1,6 @@
 package time_tracker.model;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.*;
 import javafx.collections.ListChangeListener;
@@ -11,6 +12,7 @@ import time_tracker.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
@@ -22,6 +24,9 @@ public class DayData {
     private Long id;
     @Getter
     private final LocalDate date;
+
+    @Getter
+    private BooleanProperty tracked = new SimpleBooleanProperty(false);
 
     @Getter
     private final LongProperty totalInSecsProperty = new SimpleLongProperty(0);
@@ -36,6 +41,9 @@ public class DayData {
     public int getAmountOfRecords() {
         return amountOfRecordsProperty.get();
     }
+
+    @Getter
+    private final LongProperty trackedInSecsProperty = new SimpleLongProperty();
 
     @Getter
     private final LongProperty expectedTotalInSecsProperty = new SimpleLongProperty(-1);
@@ -91,13 +99,61 @@ public class DayData {
             }
         };
 
+
+        var trackedTimeInSecs = new LongBinding() {
+            @NonNull
+            private List<StopwatchRecord> bound = records;
+
+            {
+                records.stream()
+                        .map(StopwatchRecord::getIsChangedProperty)
+                        .forEach(super::bind);
+            }
+
+            @Override
+            protected long computeValue() {
+                return bound.stream()
+                        .filter(it -> it.getTrackedProperty().get())
+                        .mapToLong(it -> it.getMeasurementsTotalInSecsLongBinding().getValue())
+                        .sum();
+            }
+
+            public void rebind() {
+                log.fine(() -> "Rebind total time in secs");
+                bound.stream()
+                        .map(StopwatchRecord::getIsChangedProperty)
+                        .forEach(super::unbind);
+                records.stream()
+                        .map(StopwatchRecord::getIsChangedProperty)
+                        .forEach(super::bind);
+                bound = records;
+                this.invalidate();
+            }
+        };
+
         records.addListener((ListChangeListener<StopwatchRecord>) c -> {
             log.fine("List of stopwatch records changed - rebind total");
             measurementsTotalTimeInSecs.rebind();
+            trackedTimeInSecs.rebind();
             this.amountOfRecordsProperty.setValue(records.size());
         });
 
         this.totalInSecsProperty.bind(measurementsTotalTimeInSecs);
         this.amountOfRecordsProperty.setValue(records.size());
+
+        this.trackedInSecsProperty.bind(trackedTimeInSecs);
+        this.tracked.bind(new BooleanBinding() {
+            {
+                bind(totalInSecsProperty, trackedInSecsProperty);
+            }
+            @Override
+            protected boolean computeValue() {
+                return totalInSecsProperty.get() - trackedInSecsProperty.get() <= 0;
+            }
+        });
+
+        this.tracked.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));
+        this.trackedInSecsProperty.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));
+        this.totalInSecsProperty.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));
     }
 }

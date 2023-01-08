@@ -1,5 +1,6 @@
 package time_tracker.component.stopwatch;
 
+import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.ListChangeListener;
@@ -39,6 +40,8 @@ public class StopwatchRecordVBox extends VBox {
     @FXML
     private Button stopButton;
     @FXML
+    private MFXToggleButton trackedToggle;
+    @FXML
     private VBox inProgressMeasurementVBox;
 
     private final StopwatchRecord stopwatchRecord;
@@ -55,6 +58,9 @@ public class StopwatchRecordVBox extends VBox {
                 .bind(stopwatchRecord.getHasMeasurementInProgressProperty());
         stopButton.disableProperty()
                 .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgressProperty()));
+
+        trackedToggle.selectedProperty()
+                .bindBidirectional(stopwatchRecord.getTrackedProperty());
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
@@ -75,7 +81,7 @@ public class StopwatchRecordVBox extends VBox {
                 .addListener(c -> {
                     log.fine(() -> "chosen stopwatch record have been changed");
                     var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
-                    if (chosenStopwatchRecord.equals(stopwatchRecord)){
+                    if (chosenStopwatchRecord.equals(stopwatchRecord)) {
                         this.getStyleClass()
                                 .add("record-chosen");
                     } else {
@@ -112,10 +118,21 @@ public class StopwatchRecordVBox extends VBox {
         stopwatchRecordService.stopMeasurement(stopwatchRecord);
     }
 
+//    @FXML
+//    protected void track() {
+//        log.log(Level.FINE, "trackButton is clicked");
+//        stopwatchRecord.setTracked(true);
+//    }
+//
+//    @FXML
+//    protected void untracked() {
+//        log.log(Level.FINE, "untrackedButton is clicked");
+//        stopwatchRecord.setTracked(false);
+//    }
+
     @FXML
     protected void delete() {
         log.log(Level.FINE, "deleteButton is clicked");
-        stopwatchRecordService.delete(stopwatchRecord);
     }
 
     private void chosen() {

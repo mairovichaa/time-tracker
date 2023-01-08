@@ -1,12 +1,10 @@
 package time_tracker.model;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.binding.LongExpression;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Data;
@@ -18,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Data
@@ -32,6 +31,16 @@ public class StopwatchRecord {
 
     @NonNull
     private LocalDate date;
+
+    private BooleanProperty trackedProperty = new SimpleBooleanProperty(false);
+
+    public void setTracked(boolean isTracked) {
+        trackedProperty.set(isTracked);
+    }
+
+    public boolean isTracked() {
+        return trackedProperty.get();
+    }
 
     @NonNull
     private ObservableList<StopwatchRecordMeasurement> measurementsProperty = FXCollections.observableArrayList(new ArrayList<>());
@@ -105,4 +114,26 @@ public class StopwatchRecord {
         }
     };
 
+    public long getMeasurementsTotalInSecs() {
+        return getMeasurementsTotalInSecsLongBinding().get();
+    }
+
+    private final LongProperty isChangedProperty = new SimpleLongProperty(0);
+    private final AtomicLong change = new AtomicLong(0);
+
+    {
+        this.isChangedProperty.bind(
+                Bindings.createLongBinding(
+                        () -> {
+                            var changeNumber = change.getAndIncrement();
+                            log.fine(() -> "record with id = " + getId() + " has been changed. Change number = " + changeNumber);
+                            return changeNumber;
+                        },
+                        this.trackedProperty, this.measurementsProperty, this.measurementInProgressProperty, this.measurementsTotalInSecsLongBinding
+                )
+        );
+        this.isChangedProperty.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));
+        this.trackedProperty.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));
+
+    }
 }

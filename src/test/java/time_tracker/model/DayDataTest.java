@@ -1,6 +1,7 @@
 package time_tracker.model;
 
 import javafx.collections.FXCollections;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -133,6 +134,117 @@ class DayDataTest {
                             records.add(stopwatchRecord);
                             records.add(stopwatchRecord);
                         }, 2, 2
+                )
+        );
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("shouldChangeAmountOfTrackedTimeMethodSource")
+    void shouldChangeAmountOfTrackedTime(
+            String description,
+            Consumer<DayData> appDataChange,
+            int expectedTrackedInSecs,
+            boolean expectedTracked,
+            int expectedAmountOfNotifications
+    ) {
+        // given
+        var startedAt = LocalDate.of(10, 1, 1);
+        var records = FXCollections.<StopwatchRecord>observableArrayList();
+        var dayData = new DayData(startedAt, records);
+
+        var amountOfNotifications = new AtomicInteger();
+        dayData.getTrackedInSecsProperty()
+                .addListener((observable, oldValue, newValue) -> amountOfNotifications.getAndIncrement());
+
+        // when
+        appDataChange.accept(dayData);
+
+        // then
+        assertThat(dayData.getTrackedInSecsProperty().get()).isEqualTo(expectedTrackedInSecs);
+        assertThat(dayData.getTracked().get()).isEqualTo(expectedTracked);
+        assertThat(amountOfNotifications.get()).isEqualTo(expectedAmountOfNotifications);
+    }
+
+    private static Stream<Arguments> shouldChangeAmountOfTrackedTimeMethodSource() {
+        return Stream.of(
+                Arguments.of(
+                        "amountOfRecordsProperty should be equal to zero when no records",
+                        (Consumer<DayData>) dayData -> {
+                        }, 0, true, 0
+                ),
+                Arguments.of(
+                        "all time should be tracked if record is marked tracked",
+                        (Consumer<DayData>) dayData -> {
+                            var records = dayData.getRecords();
+                            var stopwatchRecord = new StopwatchRecord();
+                            var measurement = new StopwatchRecordMeasurement();
+                            measurement.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(100));
+
+                            stopwatchRecord.getMeasurementsProperty().add(measurement);
+
+                            records.add(stopwatchRecord);
+
+                            stopwatchRecord.setTracked(true);
+                        }, 100, true, 1
+                ),
+                Arguments.of(
+                        "no time should be tracked if record is marked tracked",
+                        (Consumer<DayData>) dayData -> {
+                            var records = dayData.getRecords();
+                            var stopwatchRecord = new StopwatchRecord();
+                            var measurement = new StopwatchRecordMeasurement();
+                            measurement.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(100));
+
+                            stopwatchRecord.getMeasurementsProperty().add(measurement);
+
+                            records.add(stopwatchRecord);
+                        }, 0, false, 0
+                ),
+                Arguments.of(
+                        "all time should be tracked from all measurements if record is marked tracked",
+                        (Consumer<DayData>) dayData -> {
+                            var records = dayData.getRecords();
+                            var stopwatchRecord = new StopwatchRecord();
+                            var measurement = new StopwatchRecordMeasurement();
+                            measurement.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(100));
+
+                            stopwatchRecord.getMeasurementsProperty().add(measurement);
+
+                            var measurement2 = new StopwatchRecordMeasurement();
+                            measurement2.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement2.setStoppedAt(measurement2.getStartedAt().plusSeconds(100));
+                            stopwatchRecord.getMeasurementsProperty().add(measurement2);
+
+                            records.add(stopwatchRecord);
+
+                            stopwatchRecord.setTracked(true);
+                        }, 200, true, 1
+                ),
+                Arguments.of(
+                        "tracked in secs should be notified several times if tracked status is changed several times",
+                        (Consumer<DayData>) dayData -> {
+                            var records = dayData.getRecords();
+                            var stopwatchRecord = new StopwatchRecord();
+                            var measurement = new StopwatchRecordMeasurement();
+                            measurement.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement.setStoppedAt(measurement.getStartedAt().plusSeconds(100));
+
+                            stopwatchRecord.getMeasurementsProperty().add(measurement);
+
+                            var measurement2 = new StopwatchRecordMeasurement();
+                            measurement2.setStartedAt(LocalTime.of(10, 0, 0));
+                            measurement2.setStoppedAt(measurement2.getStartedAt().plusSeconds(100));
+                            stopwatchRecord.getMeasurementsProperty().add(measurement2);
+
+                            records.add(stopwatchRecord);
+
+                            stopwatchRecord.setTracked(true);
+                            stopwatchRecord.setTracked(false);
+                            stopwatchRecord.setTracked(true);
+                        }, 300, true, 3
                 )
         );
     }

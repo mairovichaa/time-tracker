@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Label?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background,record" style="-fx-padding: 10 10 10 10;"
@@ -26,6 +27,7 @@
         <VBox fx:id="inProgressMeasurementVBox"/>
     </VBox>
 
+    <MFXToggleButton text="Tracked" fx:id="trackedToggle"/>
     <HBox>
         <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
         <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>

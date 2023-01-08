@@ -1,5 +1,6 @@
 package time_tracker.component.stopwatch;
 
+import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -29,6 +30,10 @@ public class StopwatchDateStatisticVBox extends VBox {
     private Label expectedAmountOfTime;
     @FXML
     private Label timeToWorkLeft;
+    @FXML
+    private Label trackedTimeLabel;
+    @FXML
+    private MFXToggleButton trackedToggle;
     @FXML
     private Label overtime;
     @FXML
@@ -66,6 +71,26 @@ public class StopwatchDateStatisticVBox extends VBox {
                     }
                 });
 
+        var trackedInSecs = dayData.getTrackedInSecsProperty();
+        trackedTimeLabel.textProperty().unbind();
+        trackedTimeLabel.textProperty()
+                .bind(new StringBinding() {
+                          {
+                              super.bind(trackedInSecs);
+                          }
+
+                          @Override
+                          protected String computeValue() {
+                              return Utils.formatDuration(trackedInSecs.getValue());
+                          }
+                      }
+                );
+
+        trackedToggle.selectedProperty()
+                .unbind();
+        trackedToggle.selectedProperty()
+                .bind(dayData.getTracked());
+
         amountOfRecordsLabel.textProperty().unbind();
         amountOfRecordsLabel.textProperty()
                 .bind(new StringBinding() {
@@ -86,6 +111,7 @@ public class StopwatchDateStatisticVBox extends VBox {
                     {
                         super.bind(expectedTotalInSecsProperty);
                     }
+
                     @Override
                     protected String computeValue() {
                         return Utils.formatDuration(expectedTotalInSecsProperty.getValue());
@@ -98,6 +124,7 @@ public class StopwatchDateStatisticVBox extends VBox {
                     {
                         super.bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
                     }
+
                     @Override
                     protected String computeValue() {
                         var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();
@@ -112,6 +139,7 @@ public class StopwatchDateStatisticVBox extends VBox {
                     {
                         super.bind(measurementsTotalTimeInSecs, expectedTotalInSecsProperty);
                     }
+
                     @Override
                     protected String computeValue() {
                         var diffInSecs = expectedTotalInSecsProperty.getValue() - measurementsTotalTimeInSecs.getValue();

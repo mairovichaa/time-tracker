@@ -13,7 +13,7 @@ public class Launcher {
         TimeTrackerApp.main(args);
     }
 
-    private static void readLoggingConfiguration() {
+    public static void readLoggingConfiguration() {
         var resourceAsStream = Launcher.class.getResourceAsStream("/logging.properties");
         try (InputStream is = new BufferedInputStream(resourceAsStream)) {
             LogManager.getLogManager().readConfiguration(is);

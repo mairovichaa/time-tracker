@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
@@ -32,6 +33,16 @@
         <Label>Overtime:</Label>
         <Label fx:id="overtime"/>
     </HBox>
+
+    <Separator/>
+
+    <HBox spacing="3">
+        <Label>Tracked time:</Label>
+        <Label fx:id="trackedTimeLabel"/>
+    </HBox>
+
+    <MFXToggleButton text="Tracked" fx:id="trackedToggle"/>
+    <Separator/>
 
     <HBox spacing="3">
         <Label>Comment:</Label>

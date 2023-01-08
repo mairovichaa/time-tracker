@@ -98,9 +98,7 @@ class StopwatchRecordTest {
 
         var amountOfNotifications = new AtomicInteger();
         record.getMeasurementsTotalInSecsLongBinding()
-                .addListener((observable, oldValue, newValue) -> {
-                    amountOfNotifications.getAndIncrement();
-                });
+                .addListener((observable, oldValue, newValue) -> amountOfNotifications.getAndIncrement());
 
         // when
         measurementRecordChange.accept(record);
@@ -167,6 +165,83 @@ class StopwatchRecordTest {
         measurement.setStoppedAt(startedAt.plusSeconds(durationInSeconds));
 
         return measurement;
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("shouldCallChangedWhenObjectIsChangedMethodSource")
+    void shouldCallChangedWhenObjectIsChanged(String description, Consumer<StopwatchRecord> measurementChange, int amountOfExpectedChanges) throws InterruptedException {
+        // given
+        var record = new StopwatchRecord();
+        var amountOfNotifications = new AtomicInteger();
+        record.getIsChangedProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    amountOfNotifications.getAndIncrement();
+                    System.out.println(amountOfNotifications.get());
+                });
+
+        // when
+        measurementChange.accept(record);
+
+        // then
+        assertThat(amountOfNotifications.get()).isEqualTo(amountOfExpectedChanges);
+    }
+
+    private static Stream<Arguments> shouldCallChangedWhenObjectIsChangedMethodSource() {
+        return Stream.of(
+                Arguments.of(
+                        "setTracked is called",
+                        (Consumer<StopwatchRecord>) record -> record.setTracked(true),
+                        1
+                ),
+
+                Arguments.of(
+                        "setTracked is called multiple times",
+                        (Consumer<StopwatchRecord>) record -> {
+                            record.setTracked(true);
+                            record.setTracked(false);
+                            record.setTracked(true);
+                        },
+                        3
+                ),
+
+                Arguments.of(
+                        "add measurement",
+                        (Consumer<StopwatchRecord>) record -> record.getMeasurementsProperty().add(new StopwatchRecordMeasurement()),
+                        2
+                ),
+
+                Arguments.of(
+                        "total secs due to change of measurement  have changed",
+                        (Consumer<StopwatchRecord>) record -> {
+                            var measurement = new StopwatchRecordMeasurement();
+                            var startedAt = LocalTime.of(10, 0, 0);
+                            measurement.setStartedAt(startedAt);
+                            measurement.setStoppedAt(startedAt.plusSeconds(100));
+                            record.getMeasurementsProperty().add(measurement);
+
+                            measurement.setStoppedAt(startedAt.plusSeconds(200));
+                        },
+                        2
+                ),
+
+                Arguments.of(
+                        "setMeasurementInProgress is called",
+                        (Consumer<StopwatchRecord>) record -> record.setMeasurementInProgress(new StopwatchRecordMeasurement()),
+                        2
+                )
+        );
+    }
+
+    @Test
+    void whenSetIsTrackedThenChangeTrackedStatus() {
+        var record = new StopwatchRecord();
+        assertThat(record.isTracked()).isFalse();
+
+        record.setTracked(true);
+        assertThat(record.isTracked()).isTrue();
+
+        record.setTracked(false);
+        assertThat(record.isTracked()).isFalse();
     }
 
 }
