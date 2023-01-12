@@ -7,6 +7,8 @@ import lombok.extern.java.Log;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
+import static time_tracker.service.DefaultDayStatisticsService.DEFAULT_EXPECTED_TOTAL_IN_SECS;
+
 @Log
 @RequiredArgsConstructor
 public class ChosenDateToRecordsForChosenDateBinder {
@@ -25,6 +27,8 @@ public class ChosenDateToRecordsForChosenDateBinder {
                         appState.getDateToRecords().put(chosenDate, newRecords);
 
                         var dayData = new DayData(chosenDate, newRecords);
+                        dayData.getExpectedTotalInSecsProperty()
+                                        .setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS);
                         appState.getDateToDayData().put(chosenDate, dayData);
                     }
 

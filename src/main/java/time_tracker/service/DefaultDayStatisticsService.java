@@ -51,7 +51,7 @@ public class DefaultDayStatisticsService implements DayStatisticsService {
     }
 
     // TODO move to configs?
-    private final static Long DEFAULT_EXPECTED_TOTAL_IN_SECS = (6 * 60 + 40L) * 60;
+    public final static Long DEFAULT_EXPECTED_TOTAL_IN_SECS = (6 * 60 + 40L) * 60;
     @Override
     public void enrich(Map<LocalDate, DayData> dateToDayData) {
         data.forEach(it -> {
