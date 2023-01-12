@@ -117,22 +117,10 @@ public class StopwatchRecordVBox extends VBox {
         log.log(Level.FINE, "stopwatchStopButton is clicked");
         stopwatchRecordService.stopMeasurement(stopwatchRecord);
     }
-
-//    @FXML
-//    protected void track() {
-//        log.log(Level.FINE, "trackButton is clicked");
-//        stopwatchRecord.setTracked(true);
-//    }
-//
-//    @FXML
-//    protected void untracked() {
-//        log.log(Level.FINE, "untrackedButton is clicked");
-//        stopwatchRecord.setTracked(false);
-//    }
-
     @FXML
     protected void delete() {
         log.log(Level.FINE, "deleteButton is clicked");
+        stopwatchRecordService.delete(stopwatchRecord);
     }
 
     private void chosen() {
