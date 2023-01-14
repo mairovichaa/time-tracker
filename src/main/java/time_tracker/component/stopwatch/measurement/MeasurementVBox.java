@@ -14,9 +14,12 @@ import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.domain.Measurement;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchMeasurementService;
 import time_tracker.service.StopwatchRecordService;
+
+import java.util.logging.Level;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;
@@ -35,19 +38,21 @@ public class MeasurementVBox extends VBox {
     @FXML
     private Label comment;
 
-    @FXML
-    private Button edit;
-    @FXML
-    private Button deleteButton;
+    private final StopwatchRecordMeasurement measurement;
+    private final StopwatchRecordService stopwatchRecordService;
+    private final StopwatchMeasurementService stopwatchMeasurementService;
 
     public MeasurementVBox(@NonNull final StopwatchRecordMeasurement measurement) {
         load("/fxml/stopwatch/measurement/MeasurementVBox.fxml", this);
+
+        this.measurement = measurement;
 
         var appProperties = GlobalContext.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         measurementIdLabel.setVisible(isDevMode);
         measurementIdLabel.setText(Long.toString(measurement.getId()));
-        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        this.stopwatchMeasurementService = GlobalContext.get(StopwatchMeasurementService.class);
 
         startedAt.textProperty()
                 .bind(new StringBinding() {
@@ -103,23 +108,23 @@ public class MeasurementVBox extends VBox {
                         return comment;
                     }
                 });
+    }
 
-        edit.setOnMouseClicked(e -> {
-            log.fine("Edit button is clicked for measurement = " + measurement.getId());
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(TimeTrackerApp.primaryStage);
-            VBox dialogVbox = new MeasurementEditVBox(measurement, dialog);
-            Scene dialogScene = new Scene(dialogVbox, 600, 600);
-            dialog.setScene(dialogScene);
-            dialog.show();
-        });
-
-        var stopwatchMeasurementService = GlobalContext.get(StopwatchMeasurementService.class);
-        deleteButton.setOnMouseClicked(e -> {
-            log.fine("Delete button is clicked for measurement = " + measurement.getId());
-            stopwatchMeasurementService.delete(measurement.getId());
-            stopwatchRecordService.store();
-        });
+    @FXML
+    protected void edit() {
+        log.fine("Edit button is clicked for measurement = " + measurement.getId());
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(TimeTrackerApp.primaryStage);
+        VBox dialogVbox = new MeasurementEditVBox(measurement, dialog);
+        Scene dialogScene = new Scene(dialogVbox, 600, 600);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+    @FXML
+    protected void delete() {
+        log.fine("Delete button is clicked for measurement = " + measurement.getId());
+        stopwatchMeasurementService.delete(measurement.getId());
+        stopwatchRecordService.store();
     }
 }

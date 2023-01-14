@@ -2,27 +2,31 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+         styleClass="grid-background"
          spacing="5" minWidth="320" maxWidth="320">
+    <HBox style="-fx-padding: 0 0 10 10;" minWidth="300" maxWidth="300">
+        <VBox style="-fx-padding: 10 0 0 0;" minWidth="290" spacing="5">
 
-    <HBox>
-        <Label>#</Label>
-        <Label fx:id="measurementIdLabel"/>
-    </HBox>
+            <HBox>
+                <Label>#</Label>
+                <Label fx:id="measurementIdLabel"/>
+            </HBox>
 
-    <HBox spacing="3">
-        <Label fx:id="startedAt"/>
-        <Label>-></Label>
-        <Label fx:id="finishedAt"/>
-        <Label>=</Label>
-        <Label fx:id="total"/>
+            <HBox spacing="3">
+                <Label fx:id="startedAt"/>
+                <Label>-></Label>
+                <Label fx:id="finishedAt"/>
+                <Label>=</Label>
+                <Label fx:id="total"/>
+            </HBox>
+            <Label fx:id="comment" wrapText="true"/>
+            <MFXButton buttonType="RAISED" fx:id="edit" text="Edit" onMouseClicked="#edit"/>
+        </VBox>
+        <VBox>
+            <Label styleClass="delete-button" fx:id="deleteLabel" onMouseClicked="#delete">x</Label>
+        </VBox>
     </HBox>
-    <Label fx:id="comment" wrapText="true"/>
-    <HBox spacing="3">
-        <Button fx:id="edit">Edit</Button>
-        <Button fx:id="deleteButton">Delete</Button>
-    </HBox>
-
 </fx:root>

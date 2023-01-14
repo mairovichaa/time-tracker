@@ -48,6 +48,10 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
             }
 
             var stopwatchRecord = chosenStopwatchRecordProperty.get();
+
+            recordNameLabel.setText(stopwatchRecord.getName());
+            recordDateLabel.setText(DATE_FORMAT_WITH_SHORT_DAY_NAME.format(stopwatchRecord.getDate()));
+
             var measurementsProperty = stopwatchRecord.getMeasurementsProperty();
 
             var invalidationListener = (InvalidationListener) ignored -> refreshRecords(records, measurementsProperty);
@@ -56,9 +60,6 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
             measurementsProperty.addListener(invalidationListener);
             refreshRecords(records, measurementsProperty);
-
-            recordNameLabel.setText(stopwatchRecord.getName());
-            recordDateLabel.setText(DATE_FORMAT_WITH_SHORT_DAY_NAME.format(stopwatchRecord.getDate()));
         });
 
         Bindings.bindContent(finishedMeasurementsVBox.getChildren(), records);

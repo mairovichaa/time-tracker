@@ -10,8 +10,7 @@
     <VBox styleClass="grid-background">
         <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">List of measurements for
         </Label>
-        <Label wrapText="true" maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label"
-               fx:id="recordNameLabel"/>
+        <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label" fx:id="recordNameLabel"/>
         <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">on</Label>
         <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label" fx:id="recordDateLabel"/>
 
