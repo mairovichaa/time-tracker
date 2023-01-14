@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
@@ -49,5 +50,5 @@
         <Label fx:id="comment"/>
     </HBox>
 
-    <Button fx:id="editButton">Edit</Button>
+    <MFXButton buttonType="RAISED" fx:id="editButton" text="Edit"/>
 </fx:root>

@@ -3,6 +3,7 @@ package time_tracker.component.stopwatch;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.NonNull;
@@ -13,6 +14,7 @@ import time_tracker.model.DayData;
 import time_tracker.service.DayStatisticsService;
 import time_tracker.service.StopwatchRecordService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,6 +24,8 @@ import static time_tracker.component.Utils.load;
 public class DayDataEditVBox extends VBox {
     private static final String LOCAL_TIME_FORMATTER_PATTERN = "HH:mm:ss";
     private static final DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_TIME_FORMATTER_PATTERN);
+    @FXML
+    private Label dateLabel;
     @FXML
     private MFXTextField expectedTotalField;
     @FXML
@@ -37,6 +41,10 @@ public class DayDataEditVBox extends VBox {
     ) {
         load("/fxml/stopwatch/DayDataEditVBox.fxml", this);
         var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
+
+        var date = dayData.getDate();
+        dateLabel.textProperty()
+                .setValue(Utils.formatLocalDate(date));
 
         var expectedTotalInSecs = dayData.getExpectedTotalInSecsProperty().getValue();
         var duration = Utils.formatDuration(expectedTotalInSecs);

@@ -166,7 +166,7 @@ public class StopwatchDateStatisticVBox extends VBox {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(TimeTrackerApp.primaryStage);
             VBox dialogVbox = new DayDataEditVBox(dayData, dialog);
-            Scene dialogScene = new Scene(dialogVbox, 600, 600);
+            Scene dialogScene = new Scene(dialogVbox);
             dialog.setScene(dialogScene);
             dialog.show();
         });

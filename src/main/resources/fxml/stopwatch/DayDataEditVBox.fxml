@@ -3,24 +3,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+         spacing="5" minWidth="200" maxWidth="200" minHeight="180" maxHeight="180">
 
     <HBox spacing="3">
-        <Label>Started at:</Label>
-        <MFXTextField fx:id="expectedTotalField" floatMode="DISABLED"/>
+        <Label>Date:</Label>
+        <Label fx:id="dateLabel"/>
     </HBox>
+
+    <Label>Expected amount of time:</Label>
+    <MFXTextField fx:id="expectedTotalField" floatMode="DISABLED"/>
+
+    <Label>Comment:</Label>
+    <MFXTextField fx:id="commentField" floatMode="DISABLED"/>
 
     <HBox spacing="3">
-        <Label>Comment:</Label>
-        <MFXTextField fx:id="commentField" floatMode="DISABLED"/>
+        <MFXButton buttonType="RAISED" fx:id="saveButton" text="Save"/>
+        <MFXButton buttonType="RAISED" fx:id="cancelButton" text="Cancel"/>
     </HBox>
-
-    <HBox>
-        <Button fx:id="saveButton">Save</Button>
-        <Button fx:id="cancelButton">Cancel</Button>
-    </HBox>
-
 
 </fx:root>
