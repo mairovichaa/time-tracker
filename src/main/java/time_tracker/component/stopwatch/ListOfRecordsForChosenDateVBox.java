@@ -1,6 +1,5 @@
 package time_tracker.component.stopwatch;
 
-import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -13,7 +12,6 @@ import time_tracker.annotation.NonNull;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.repository.DayStatisticsRepository;
 import time_tracker.service.DayStatisticsService;
 import time_tracker.service.StopwatchRecordService;
 
@@ -24,8 +22,6 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
     @FXML
     private VBox recordsVBox;
 
-    @FXML
-    private MFXScrollPane scrollPane;
     @NonNull
     private final StopwatchRecordService stopwatchRecordService;
 

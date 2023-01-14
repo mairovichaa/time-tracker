@@ -1,5 +1,6 @@
 package time_tracker.component.stopwatch;
 
+import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
@@ -46,6 +47,7 @@ public class StopWatchTab extends Tab {
                         listOfMeasurementsForChosenRecordVBox
                 );
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
-        this.setContent(hBoxWrapper);
+        var scrollPane = new MFXScrollPane(hBoxWrapper);
+        this.setContent(scrollPane);
     }
 }

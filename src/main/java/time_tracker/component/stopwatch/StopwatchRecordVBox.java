@@ -7,8 +7,8 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
@@ -30,9 +30,11 @@ public class StopwatchRecordVBox extends VBox {
     @FXML
     private Label recordIdLabel;
     @FXML
-    private Text nameText;
+    private Label nameLabel;
     @FXML
-    private Text totalTimeText;
+    private Label totalTimeLabel;
+    @FXML
+    private Label deleteLabel;
     @FXML
     private Label amountOfMeasurements;
     @FXML
@@ -52,7 +54,7 @@ public class StopwatchRecordVBox extends VBox {
     ) {
         load("/fxml/stopwatch/StopwatchRecordVBox.fxml", this);
 
-        nameText.setText(stopwatchRecord.getName());
+        nameLabel.setText(stopwatchRecord.getName());
 
         startButton.disableProperty()
                 .bind(stopwatchRecord.getHasMeasurementInProgressProperty());
@@ -145,7 +147,7 @@ public class StopwatchRecordVBox extends VBox {
                 return Utils.formatDuration(totalInSecs);
             }
         };
-        totalTimeText.textProperty()
+        totalTimeLabel.textProperty()
                 .bind(longBinding);
     }
 

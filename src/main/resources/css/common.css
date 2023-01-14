@@ -11,6 +11,19 @@
     -fx-background-color: #F3F3F3;
 }
 
+.delete-button {
+    -fx-font-size: 20;
+}
+
+.delete-button:hover {
+    -fx-cursor: hand;
+    -fx-text-fill: #FF0000;
+}
+
+.grey-scroll-pane {
+    -fx-background-color: #F3F3F3;
+}
+
 .header-label {
 	-fx-font-family: 'Visby Round CF Bold';
 	-fx-font-size: 14;

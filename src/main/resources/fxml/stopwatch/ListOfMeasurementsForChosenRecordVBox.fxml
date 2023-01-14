@@ -7,7 +7,7 @@
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background"
-         maxHeight="600">
+         maxHeight="600" maxWidth="350">
 
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">List of measurements for</Label>
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label" fx:id="recordNameLabel"></Label>

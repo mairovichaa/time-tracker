@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ScrollPane?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
-         styleClass="grid-background"
-         maxHeight="600">
-    <VBox>
+         maxHeight="600" maxWidth="600" minWidth="320" spacing="10">
+    <VBox styleClass="grid-background">
         <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">List of records</Label>
 
         <padding>
             <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
         </padding>
-
-        <MFXScrollPane fx:id="scrollPane" minWidth="530" maxWidth="530">
-            <VBox fx:id="recordsVBox" spacing="10"  minWidth="500" maxWidth="500">
-                <padding>
-                    <Insets left="5.0" right="20.0" top="10.0" bottom="10.0"/>
-                </padding>
-            </VBox>
-        </MFXScrollPane>
 
         <VBox fx:id="controlsVBox" spacing="7">
             <padding>
@@ -31,5 +22,16 @@
             <MFXButton buttonType="RAISED" text="Save" onAction="#save"/>
         </VBox>
     </VBox>
-
+    <VBox>
+        <ScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane">
+            <padding>
+                <Insets left="20.0" right="20.0" top="10.0" bottom="10.0"/>
+            </padding>
+            <VBox fx:id="recordsVBox" spacing="15" minWidth="500" maxWidth="500">
+                <padding>
+                    <Insets left="10.0" right="20.0" top="10.0" bottom="10.0"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+    </VBox>
 </fx:root>
