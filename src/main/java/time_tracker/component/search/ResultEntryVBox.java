@@ -1,15 +1,12 @@
 package time_tracker.component.search;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import time_tracker.Utils;
 import time_tracker.annotation.NonNull;
-import time_tracker.component.stopwatch.MeasurementVBox;
+import time_tracker.component.stopwatch.measurement.MeasurementVBox;
 import time_tracker.model.StopwatchRecord;
-
-import java.io.IOException;
 
 import static time_tracker.component.Utils.*;
 

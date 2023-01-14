@@ -6,9 +6,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
+import time_tracker.component.stopwatch.measurement.ListOfMeasurementsForChosenRecordVBox;
+import time_tracker.component.stopwatch.record.CreateRecordVBox;
+import time_tracker.component.stopwatch.record.ListOfRecordsForChosenDateVBox;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.model.StopWatchAppState;
 
 import java.util.logging.Level;
 

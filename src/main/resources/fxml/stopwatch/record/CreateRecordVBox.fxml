@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../css/common.css"
+         stylesheets="@../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
 
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Create record</Label>

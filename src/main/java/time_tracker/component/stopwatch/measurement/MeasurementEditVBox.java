@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.measurement;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.StringBinding;
@@ -10,7 +10,9 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
+import time_tracker.config.GlobalContext;
 import time_tracker.model.StopwatchRecordMeasurement;
+import time_tracker.service.StopwatchRecordService;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -45,7 +47,8 @@ public class MeasurementEditVBox extends VBox {
             @NonNull final StopwatchRecordMeasurement measurement,
             @NonNull final Stage stage
     ) {
-        load("/fxml/stopwatch/MeasurementEditVBox.fxml", this);
+        load("/fxml/stopwatch/measurement/MeasurementEditVBox.fxml", this);
+        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
 
         var startedAtValue = measurement.getStartedAt();
         var startedAtFormatted = DATA_TIME_FORMATTER_2.format(startedAtValue);
@@ -99,6 +102,9 @@ public class MeasurementEditVBox extends VBox {
             measurement.setStartedAt(startedAtResult.get());
             measurement.setStoppedAt(finishedAtResult.get());
             measurement.setNote(comment.getText());
+
+            stopwatchRecordService.store();
+
             stage.close();
         });
 

@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.measurement;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.StringBinding;
@@ -26,7 +26,7 @@ public class MeasurementInProgressVBox extends VBox {
     private MFXTextField commentInput;
 
     public MeasurementInProgressVBox(@NonNull final StopwatchRecordMeasurement measurement) {
-        load("/fxml/stopwatch/MeasurementInProgressVBox.fxml", this);
+        load("/fxml/stopwatch/measurement/MeasurementInProgressVBox.fxml", this);
 
         startedAt.textProperty()
                 .bind(new StringBinding() {

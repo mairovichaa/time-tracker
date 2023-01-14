@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.record;
 
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.Bindings;
@@ -7,11 +7,11 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
+import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
@@ -52,7 +52,7 @@ public class StopwatchRecordVBox extends VBox {
     public StopwatchRecordVBox(
             @NonNull final StopwatchRecord stopwatchRecord
     ) {
-        load("/fxml/stopwatch/StopwatchRecordVBox.fxml", this);
+        load("/fxml/stopwatch/record/StopwatchRecordVBox.fxml", this);
 
         nameLabel.setText(stopwatchRecord.getName());
 
@@ -118,11 +118,13 @@ public class StopwatchRecordVBox extends VBox {
     protected void stop() {
         log.log(Level.FINE, "stopwatchStopButton is clicked");
         stopwatchRecordService.stopMeasurement(stopwatchRecord);
+        stopwatchRecordService.store();
     }
     @FXML
     protected void delete() {
         log.log(Level.FINE, "deleteButton is clicked");
         stopwatchRecordService.delete(stopwatchRecord);
+        stopwatchRecordService.store();
     }
 
     private void chosen() {

@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.measurement;
 
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
@@ -16,6 +16,7 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchMeasurementService;
+import time_tracker.service.StopwatchRecordService;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;
@@ -40,13 +41,13 @@ public class MeasurementVBox extends VBox {
     private Button deleteButton;
 
     public MeasurementVBox(@NonNull final StopwatchRecordMeasurement measurement) {
-        load("/fxml/stopwatch/MeasurementVBox.fxml", this);
+        load("/fxml/stopwatch/measurement/MeasurementVBox.fxml", this);
 
         var appProperties = GlobalContext.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         measurementIdLabel.setVisible(isDevMode);
         measurementIdLabel.setText(Long.toString(measurement.getId()));
-
+        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
 
         startedAt.textProperty()
                 .bind(new StringBinding() {
@@ -118,7 +119,7 @@ public class MeasurementVBox extends VBox {
         deleteButton.setOnMouseClicked(e -> {
             log.fine("Delete button is clicked for measurement = " + measurement.getId());
             stopwatchMeasurementService.delete(measurement.getId());
+            stopwatchRecordService.store();
         });
-
     }
 }

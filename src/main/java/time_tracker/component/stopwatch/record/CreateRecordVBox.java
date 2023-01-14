@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.record;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.beans.binding.StringBinding;
@@ -23,7 +23,7 @@ public class CreateRecordVBox extends VBox {
     private final StopwatchRecordService stopwatchRecordService;
 
     public CreateRecordVBox() {
-        load("/fxml/stopwatch/CreateRecordVBox.fxml", this);
+        load("/fxml/stopwatch/record/CreateRecordVBox.fxml", this);
 
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
 
@@ -47,6 +47,7 @@ public class CreateRecordVBox extends VBox {
         log.fine(() -> "addStopwatchButton is clicked");
         var stopwatchName = recordNameTextField.getText();
         stopwatchRecordService.create(stopwatchName);
+        stopwatchRecordService.store();
         recordNameTextField.clear();
     }
 }

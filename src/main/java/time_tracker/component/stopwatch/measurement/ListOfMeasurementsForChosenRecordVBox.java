@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.measurement;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -30,7 +30,7 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
     private VBox finishedMeasurementsVBox;
 
     public ListOfMeasurementsForChosenRecordVBox() {
-        load("/fxml/stopwatch/ListOfMeasurementsForChosenRecordVBox.fxml", this);
+        load("/fxml/stopwatch/record/ListOfMeasurementsForChosenRecordVBox.fxml", this);
 
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
 

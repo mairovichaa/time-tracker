@@ -9,7 +9,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      stylesheets="@../../css/common.css"
+      stylesheets="@../../../css/common.css"
       styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
     <HBox spacing="3">
         <Label fx:id="startedAt"/>

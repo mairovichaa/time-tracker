@@ -1,4 +1,4 @@
-package time_tracker.component.stopwatch;
+package time_tracker.component.stopwatch.record;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -29,7 +29,7 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
     private final DayStatisticsService dayStatisticsService;
 
     public ListOfRecordsForChosenDateVBox() {
-        load("/fxml/stopwatch/ListOfRecordsForChosenDateVBox.fxml", this);
+        load("/fxml/stopwatch/record/ListOfRecordsForChosenDateVBox.fxml", this);
 
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
         this.dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
