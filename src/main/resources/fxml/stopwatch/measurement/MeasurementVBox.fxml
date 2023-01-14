@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+         spacing="5" minWidth="320" maxWidth="320">
 
     <HBox>
         <Label>#</Label>
