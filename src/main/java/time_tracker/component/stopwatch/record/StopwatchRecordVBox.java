@@ -3,6 +3,8 @@ package time_tracker.component.stopwatch.record;
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -64,8 +66,12 @@ public class StopwatchRecordVBox extends VBox {
         trackedToggle.selectedProperty()
                 .bindBidirectional(stopwatchRecord.getTrackedProperty());
 
+
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+
+        stopwatchRecord.getTrackedProperty()
+                .addListener((observable, oldValue, newValue) -> stopwatchRecordService.store());
 
         var appProperties = GlobalContext.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();

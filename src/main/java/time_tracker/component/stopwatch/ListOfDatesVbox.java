@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
 import java.io.IOException;
@@ -38,9 +39,20 @@ public class ListOfDatesVbox extends VBox {
         var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
 
         MFXTableColumn<LocalDate> dateColumn = new MFXTableColumn<>("Date", true, LocalDate::compareTo);
-
         dateColumn.setRowCellFactory(date -> new MFXTableRowCell<>(DATE_FORMAT_WITH_SHORT_DAY_NAME::format));
-        table.getTableColumns().addAll(dateColumn);
+
+        MFXTableColumn<LocalDate> trackedColumn = new MFXTableColumn<>("T", true);
+        trackedColumn.setRowCellFactory(date -> new MFXTableRowCell<>(it -> {
+            var dayData = stopWatchAppState.getDateToDayData()
+                    .get(it);
+            if (dayData == null){
+                return "+";
+            }
+            var isTracked = dayData.isTracked();
+            return isTracked ? "+" : "-";
+        }));
+
+        table.getTableColumns().addAll(dateColumn, trackedColumn);
 
         var dates = IntStream.range(0, amountOfDaysToShow)
                 .mapToObj(today::minusDays)

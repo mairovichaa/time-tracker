@@ -27,6 +27,10 @@ public class DayData {
     @Getter
     private BooleanProperty tracked = new SimpleBooleanProperty(false);
 
+    public boolean isTracked() {
+        return tracked.get();
+    }
+
     @Getter
     private final LongProperty totalInSecsProperty = new SimpleLongProperty(0);
 
