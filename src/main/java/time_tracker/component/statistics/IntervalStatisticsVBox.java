@@ -6,12 +6,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
+import time_tracker.annotation.NonNull;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static time_tracker.component.Utils.load;
@@ -43,7 +45,7 @@ public class IntervalStatisticsVBox extends VBox {
 
 
         startDatePicker.valueProperty()
-                        .addListener((observable, oldValue, newValue) -> recalculateStatistics());
+                .addListener((observable, oldValue, newValue) -> recalculateStatistics());
 
         endDatePicker.valueProperty()
                 .addListener((observable, oldValue, newValue) -> recalculateStatistics());
@@ -67,12 +69,12 @@ public class IntervalStatisticsVBox extends VBox {
         }
 
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
-        var startDateExclusively = startDate.minusDays(1);
-        var endDateExclusively = endDate.plusDays(1);
+        var dateFilter = createDateFilter(startDate, endDate);
+
         var records = stopWatchAppState.getDateToRecords()
                 .keySet()
                 .stream()
-                .filter(it -> startDateExclusively.isBefore(it) && it.plusDays(1).isBefore(endDateExclusively))
+                .filter(dateFilter)
                 .map(it -> stopWatchAppState.getDateToRecords().get(it))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -87,7 +89,7 @@ public class IntervalStatisticsVBox extends VBox {
         var dayDataList = stopWatchAppState.getDateToDayData()
                 .keySet()
                 .stream()
-                .filter(it -> startDateExclusively.isBefore(it) && it.isBefore(endDateExclusively))
+                .filter(dateFilter)
                 .map(it -> stopWatchAppState.getDateToDayData().get(it))
                 .collect(Collectors.toList());
 
@@ -104,5 +106,14 @@ public class IntervalStatisticsVBox extends VBox {
         var timeToWorkLeft = Math.max(expectedTotal - totalInSecs, 0);
         timeToWorkLeftLabel.textProperty()
                 .set(Utils.formatDuration(timeToWorkLeft));
+    }
+
+    private Predicate<LocalDate> createDateFilter(
+            @NonNull final LocalDate startDate,
+            @NonNull final LocalDate endDate
+    ) {
+        var startDateExclusively = startDate.minusDays(1);
+        var endDateExclusively = endDate.plusDays(1);
+        return date -> startDateExclusively.isBefore(date) && date.isBefore(endDateExclusively);
     }
 }

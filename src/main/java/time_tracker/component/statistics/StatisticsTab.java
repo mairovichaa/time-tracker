@@ -1,6 +1,7 @@
 package time_tracker.component.statistics;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 
@@ -19,6 +20,8 @@ public class StatisticsTab extends Tab {
         hBoxWrapper.getChildren()
                 .addAll(weeklyStatisticsVBox, dailyStatisticsVBox, intervalStatisticsVBox);
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
-        this.setContent(hBoxWrapper);
+
+        var scrollPane = new ScrollPane(hBoxWrapper);
+        this.setContent(scrollPane);
     }
 }
