@@ -14,6 +14,9 @@ import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
+import time_tracker.service.DayStatisticsService;
+
+import java.time.Duration;
 
 import static time_tracker.component.Utils.load;
 
@@ -170,5 +173,27 @@ public class StopwatchDateStatisticVBox extends VBox {
             dialog.setScene(dialogScene);
             dialog.show();
         });
+    }
+
+    @FXML
+    protected void setHoliday(){
+        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
+        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
+        log.fine("'Holiday' button is clicked for dayData = " + dayData.getId());
+        dayData.setExpected(Duration.ZERO);
+        dayData.setNote("Holiday");
+        var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
+        dayStatisticsService.save();
+    }
+
+    @FXML
+    protected void setWeekend(){
+        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
+        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
+        log.fine("'Weekend' button is clicked for dayData = " + dayData.getId());
+        dayData.setExpected(Duration.ZERO);
+        dayData.setNote("Weekend");
+        var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
+        dayStatisticsService.save();
     }
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,6 +51,14 @@ public class DayData {
 
     @Getter
     private final LongProperty expectedTotalInSecsProperty = new SimpleLongProperty(-1);
+
+    public void setExpected(@NonNull final Duration expected) {
+        expectedTotalInSecsProperty.setValue(expected.toSeconds());
+    }
+
+    public Duration getExpected() {
+        return Duration.ofSeconds(expectedTotalInSecsProperty.get());
+    }
 
     @Getter
     private final LongProperty timeToWorkLeftProperty = new SimpleLongProperty(expectedTotalInSecsProperty.get());

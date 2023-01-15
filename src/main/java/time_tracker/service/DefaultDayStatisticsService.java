@@ -1,5 +1,6 @@
 package time_tracker.service;
 
+import javafx.collections.FXCollections;
 import lombok.extern.java.Log;
 import time_tracker.domain.DayStatistics;
 import time_tracker.model.DayData;
@@ -55,11 +56,18 @@ public class DefaultDayStatisticsService implements DayStatisticsService {
     @Override
     public void enrich(Map<LocalDate, DayData> dateToDayData) {
         data.forEach(it -> {
-            var dayData = dateToDayData.get(it.getDate());
+            var date = it.getDate();
+            var dayData = dateToDayData.get(date);
             if (dayData != null) {
                 dayData.setId(it.getId());
                 dayData.setNote(it.getNote());
                 dayData.getExpectedTotalInSecsProperty().setValue(it.getExpectedTotalInSecs());
+            } else {
+                var result = new DayData(date, FXCollections.observableArrayList());
+                result.setId(it.getId());
+                result.setNote(it.getNote());
+                result.getExpectedTotalInSecsProperty().setValue(it.getExpectedTotalInSecs());
+                dateToDayData.put(date, result);
             }
         });
         dateToDayData.values()

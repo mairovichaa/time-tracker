@@ -26,9 +26,15 @@ public class ChosenDateToRecordsForChosenDateBinder {
                         var newRecords = FXCollections.observableArrayList(defaultOnLoadRecords);
                         appState.getDateToRecords().put(chosenDate, newRecords);
 
+                        var existingDayData = appState.getDateToDayData().get(chosenDate);
                         var dayData = new DayData(chosenDate, newRecords);
-                        dayData.getExpectedTotalInSecsProperty()
-                                        .setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS);
+                        if (existingDayData == null) {
+                            dayData.getExpectedTotalInSecsProperty()
+                                    .setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS);
+                        } else {
+                            dayData.setExpected(existingDayData.getExpected());
+                            dayData.setNote(existingDayData.getNote());
+                        }
                         appState.getDateToDayData().put(chosenDate, dayData);
                     }
 
