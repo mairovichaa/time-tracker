@@ -54,5 +54,6 @@
         <MFXButton buttonType="RAISED" fx:id="editButton" text="Edit"/>
         <MFXButton buttonType="RAISED" onAction="#setHoliday" text="Holiday"/>
         <MFXButton buttonType="RAISED" onAction="#setWeekend" text="Weekend"/>
+        <MFXButton buttonType="RAISED" onAction="#setSick" text="Sick"/>
     </HBox>
 </fx:root>

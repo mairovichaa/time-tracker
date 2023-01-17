@@ -9,6 +9,7 @@ import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.repository.StopwatchRecordRepository;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -88,6 +89,11 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @Override
     public void store() {
         var date = stopWatchAppState.getChosenDate();
+        store(date);
+    }
+
+    @Override
+    public void store(@NonNull final LocalDate date) {
         var records = stopWatchAppState.getDateToRecords()
                 .get(date);
         var copiedRecords = new ArrayList<>(records);

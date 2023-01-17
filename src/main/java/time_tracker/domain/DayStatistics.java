@@ -15,6 +15,5 @@ public class DayStatistics {
     // TODO replace with duration?
     private Long expectedTotalInSecs;
     @NonNull
-    // TODO replace with duration?
     private String note;
 }

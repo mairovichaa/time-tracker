@@ -11,10 +11,8 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.DayData;
-import time_tracker.service.DayStatisticsService;
-import time_tracker.service.StopwatchRecordService;
+import time_tracker.service.DayDataService;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -40,7 +38,7 @@ public class DayDataEditVBox extends VBox {
             @NonNull final Stage stage
     ) {
         load("/fxml/stopwatch/DayDataEditVBox.fxml", this);
-        var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
+        var dayDataService = GlobalContext.get(DayDataService.class);
 
         var date = dayData.getDate();
         dateLabel.textProperty()
@@ -60,7 +58,7 @@ public class DayDataEditVBox extends VBox {
             dayData.getExpectedTotalInSecsProperty().setValue(newExpectedLocalTime.toSecondOfDay());
             dayData.setNote(commentField.getText());
 
-            dayStatisticsService.save();
+            dayDataService.save(dayData);
 
             stage.close();
         });

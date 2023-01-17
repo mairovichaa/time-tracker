@@ -22,35 +22,25 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
     @FXML
     private VBox recordsVBox;
 
-    @NonNull
-    private final StopwatchRecordService stopwatchRecordService;
-
-    @NonNull
-    private final DayStatisticsService dayStatisticsService;
 
     public ListOfRecordsForChosenDateVBox() {
         load("/fxml/stopwatch/record/ListOfRecordsForChosenDateVBox.fxml", this);
 
-        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
-        this.dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
 
         ObservableList<Node> records = FXCollections.observableArrayList();
         stopWatchAppState.getRecordsForChosenDate()
-                .addListener((ListChangeListener<StopwatchRecord>) c -> {
-                    log.fine(() -> "stopwatch records have been changed");
-                    records.clear();
-                    stopWatchAppState.getRecordsForChosenDate()
-                            .stream()
-                            .map(StopwatchRecordVBox::new)
-                            .forEach(records::add);
-                });
+                .addListener((ListChangeListener<StopwatchRecord>) c -> refresh(stopWatchAppState, records));
         Bindings.bindContent(recordsVBox.getChildren(), records);
+        refresh(stopWatchAppState, records);
     }
 
-    @FXML
-    protected void save() {
-        stopwatchRecordService.store();
-        dayStatisticsService.save();
+    private static void refresh(StopWatchAppState stopWatchAppState, ObservableList<Node> records) {
+        log.fine(() -> "stopwatch records have been changed");
+        records.clear();
+        stopWatchAppState.getRecordsForChosenDate()
+                .stream()
+                .map(StopwatchRecordVBox::new)
+                .forEach(records::add);
     }
 }

@@ -4,7 +4,7 @@ import time_tracker.annotation.NonNull;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public interface StopwatchRecordService {
 
@@ -15,6 +15,8 @@ public interface StopwatchRecordService {
     void stopMeasurement(@NonNull StopwatchRecord stopwatchRecord);
 
     void store();
+    void store(@NonNull LocalDate date);
 
     void delete(@NonNull StopwatchRecord stopwatchRecord);
+
 }

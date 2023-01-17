@@ -14,7 +14,7 @@ import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
-import time_tracker.service.DayStatisticsService;
+import time_tracker.service.DayDataService;
 
 import java.time.Duration;
 
@@ -182,8 +182,8 @@ public class StopwatchDateStatisticVBox extends VBox {
         log.fine("'Holiday' button is clicked for dayData = " + dayData.getId());
         dayData.setExpected(Duration.ZERO);
         dayData.setNote("Holiday");
-        var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
-        dayStatisticsService.save();
+        var dayDataService = GlobalContext.get(DayDataService.class);
+        dayDataService.save(dayData);
     }
 
     @FXML
@@ -193,7 +193,18 @@ public class StopwatchDateStatisticVBox extends VBox {
         log.fine("'Weekend' button is clicked for dayData = " + dayData.getId());
         dayData.setExpected(Duration.ZERO);
         dayData.setNote("Weekend");
-        var dayStatisticsService = GlobalContext.get(DayStatisticsService.class);
-        dayStatisticsService.save();
+        var dayDataService = GlobalContext.get(DayDataService.class);
+        dayDataService.save(dayData);
+    }
+
+    @FXML
+    protected void setSick(){
+        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
+        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
+        log.fine("'Sick' button is clicked for dayData = " + dayData.getId());
+        dayData.setExpected(Duration.ZERO);
+        dayData.setNote("Sick");
+        var dayDataService = GlobalContext.get(DayDataService.class);
+        dayDataService.save(dayData);
     }
 }

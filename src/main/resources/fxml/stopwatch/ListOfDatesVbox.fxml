@@ -11,6 +11,8 @@
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Dates</Label>
 
     <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
-                  prefWidth="200.0" footerVisible="false"/>
+                  prefWidth="275.0" footerVisible="false"/>
 
+    <MFXButton buttonType="RAISED" text="Refresh" onAction="#refresh" maxWidth="1.7976931348623157E308"
+               alignment="CENTER"/>
 </fx:root>

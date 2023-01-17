@@ -6,16 +6,12 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -32,11 +28,6 @@ public class ListOfDatesVbox extends VBox {
         load("/fxml/stopwatch/ListOfDatesVbox.fxml", this);
 
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
-        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
-        var stopwatchDatesProperties = stopwatchProperties.getDates();
-
-        var today = stopWatchAppState.getChosenDate();
-        var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
 
         MFXTableColumn<LocalDate> dateColumn = new MFXTableColumn<>("Date", true, LocalDate::compareTo);
         dateColumn.setRowCellFactory(date -> new MFXTableRowCell<>(DATE_FORMAT_WITH_SHORT_DAY_NAME::format));
@@ -54,10 +45,7 @@ public class ListOfDatesVbox extends VBox {
 
         table.getTableColumns().addAll(dateColumn, trackedColumn);
 
-        var dates = IntStream.range(0, amountOfDaysToShow)
-                .mapToObj(today::minusDays)
-                .collect(collectingAndThen(toList(), FXCollections::observableArrayList));
-        table.setItems(dates);
+        refresh();
         table.autosizeColumnsOnInitialization();
 
         table.getSelectionModel().selectionProperty()
@@ -68,5 +56,20 @@ public class ListOfDatesVbox extends VBox {
                     }
                 });
         table.getSelectionModel().selectIndex(0);
+    }
+
+    @FXML
+    protected void refresh(){
+        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
+        var stopwatchDatesProperties = stopwatchProperties.getDates();
+
+        var today = stopWatchAppState.getChosenDate();
+        var amountOfDaysToShow = stopwatchDatesProperties.getAmountOfDaysToShow();
+        var dates = IntStream.range(0, amountOfDaysToShow)
+                .mapToObj(today::minusDays)
+                .collect(collectingAndThen(toList(), FXCollections::observableArrayList));
+        table.getItems().clear();
+        table.setItems(dates);
     }
 }

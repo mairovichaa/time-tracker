@@ -7,7 +7,8 @@ import lombok.extern.java.Log;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
-import static time_tracker.service.DefaultDayStatisticsService.DEFAULT_EXPECTED_TOTAL_IN_SECS;
+import static time_tracker.service.DayDataService.DEFAULT_EXPECTED_TOTAL_IN_SECS;
+
 
 @Log
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ChosenDateToRecordsForChosenDateBinder {
     public void bind() {
         appState.getChosenDateProperty()
                 .addListener((observable, oldValue, chosenDate) -> {
+                    log.finest("Chosen date is changed - update chosen records");
                     var records = appState.getDateToRecords().get(chosenDate);
                     if (records == null) {
                         log.fine("No records - use default on load factory");

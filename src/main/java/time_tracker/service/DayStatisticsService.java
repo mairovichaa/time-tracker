@@ -1,13 +1,14 @@
 package time_tracker.service;
 
 import time_tracker.annotation.NonNull;
-import time_tracker.model.DayData;
+import time_tracker.domain.DayStatistics;
 
-import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 
 public interface DayStatisticsService {
-    void save();
 
-    void enrich(@NonNull Map<LocalDate, DayData> dateToDayData);
+    @NonNull
+    List<DayStatistics> findAll();
+
+    void save(@NonNull DayStatistics dayStatistics);
 }

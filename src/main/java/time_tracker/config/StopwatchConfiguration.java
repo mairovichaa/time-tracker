@@ -33,14 +33,11 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
-    public DayStatisticsService dayStatisticsService(
-            @NonNull final StopWatchAppState stopWatchAppState,
-            @NonNull final DayStatisticsRepository dayStatisticsRepository
-    ) {
+    public DayStatisticsService dayStatisticsService(@NonNull final DayStatisticsRepository dayStatisticsRepository) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
         return GlobalContext.createStoreAndReturn(
                 DayStatisticsService.class,
-                () -> new DefaultDayStatisticsService(stopWatchAppState, dayStatisticsRepository)
+                () -> new DefaultDayStatisticsService(dayStatisticsRepository)
         );
     }
 
@@ -143,6 +140,33 @@ public class StopwatchConfiguration {
         return GlobalContext.createStoreAndReturn(
                 StopwatchMeasurementService.class,
                 () -> new DefaultStopwatchMeasurementService(stopWatchAppState)
+        );
+    }
+
+    @NonNull
+    public InitialDataLoadService initialDataLoadService(
+            @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
+            @NonNull final StopWatchAppState stopWatchAppState,
+            @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory,
+            @NonNull final DayDataService dayDataService
+    ) {
+        log.log(Level.FINE, "Creating initialDataLoadService");
+        return GlobalContext.createStoreAndReturn(
+                InitialDataLoadService.class,
+                () -> new InitialDataLoadService(stopwatchRecordRepository, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService)
+        );
+    }
+
+    @NonNull
+    public DayDataService dayDataService(
+            @NonNull final StopWatchAppState stopWatchAppState,
+            @NonNull final DayStatisticsService dayStatisticsService,
+            @NonNull final StopwatchRecordService stopwatchRecordService
+    ) {
+        log.log(Level.FINE, "Creating dayDataService");
+        return GlobalContext.createStoreAndReturn(
+                DayDataService.class,
+                () -> new DayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService)
         );
     }
 }
