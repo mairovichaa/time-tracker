@@ -62,7 +62,7 @@ public class TimeTrackerApp extends Application {
         var dayStatisticsService = stopwatchConfiguration.dayStatisticsService(dayStatisticsRepository);
 
         var dayDataService = stopwatchConfiguration.dayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService);
-        var initialDataLoadService = stopwatchConfiguration.initialDataLoadService(stopwatchRecordRepository, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService);
+        var initialDataLoadService = stopwatchConfiguration.initialDataLoadService(stopwatchRecordRepository, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService);
         initialDataLoadService.load();
 
         stopWatchAppState.setChosenDate(timeService.today());

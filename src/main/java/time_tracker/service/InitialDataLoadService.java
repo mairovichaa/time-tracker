@@ -18,6 +18,7 @@ public class InitialDataLoadService {
     private final StopWatchAppState stopWatchAppState;
     private final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory;
     private final DayDataService dayDataService;
+    private final DayStatisticsService dayStatisticsService;
 
     public void load() {
         var chosenDateToRecordsForChosenDateBinder = new ChosenDateToRecordsForChosenDateBinder(stopWatchAppState, stopwatchRecordOnLoadFactory);
@@ -26,6 +27,14 @@ public class InitialDataLoadService {
         Map<LocalDate, ObservableList<StopwatchRecord>> dateToRecords = new HashMap<>();
         stopwatchRecordRepository.getLoaded()
                 .forEach((date, records) -> dateToRecords.put(date, observableArrayList(records)));
+
+        dayStatisticsService.findAll()
+                .forEach(it -> {
+                    if (!dateToRecords.containsKey(it.getDate())) {
+                        dateToRecords.put(it.getDate(), observableArrayList());
+                    }
+                });
+
         stopWatchAppState.setDateToRecords(dateToRecords);
 
         var dayData = dayDataService.findAll();

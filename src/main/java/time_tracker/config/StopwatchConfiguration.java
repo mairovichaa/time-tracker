@@ -148,12 +148,13 @@ public class StopwatchConfiguration {
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory,
-            @NonNull final DayDataService dayDataService
+            @NonNull final DayDataService dayDataService,
+            @NonNull final DayStatisticsService dayStatisticsService
     ) {
         log.log(Level.FINE, "Creating initialDataLoadService");
         return GlobalContext.createStoreAndReturn(
                 InitialDataLoadService.class,
-                () -> new InitialDataLoadService(stopwatchRecordRepository, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService)
+                () -> new InitialDataLoadService(stopwatchRecordRepository, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService)
         );
     }
 
