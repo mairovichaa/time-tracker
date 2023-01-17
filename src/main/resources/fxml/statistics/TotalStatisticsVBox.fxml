@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="640.0">
+
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Total statistics</Label>
+
+    <HBox spacing="3">
+        <Label>Total:</Label>
+        <Label fx:id="totalLabel"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Expected:</Label>
+        <Label fx:id="expectedLabel"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Overtime:</Label>
+        <Label fx:id="overtimeLabel"/>
+    </HBox>
+
+    <HBox spacing="3">
+        <Label>Time to work left:</Label>
+        <Label fx:id="timeToWorkLeftLabel"/>
+    </HBox>
+
+</fx:root>

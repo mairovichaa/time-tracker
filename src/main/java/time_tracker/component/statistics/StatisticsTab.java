@@ -12,13 +12,14 @@ public class StatisticsTab extends Tab {
         var dailyStatisticsVBox = new DailyStatisticsVBox();
         var weeklyStatisticsVBox = new WeeklyStatisticsVBox();
         var intervalStatisticsVBox = new IntervalStatisticsVBox();
+        var totalStatisticsVBox = new TotalStatisticsVBox();
 
         var hBoxWrapper = new HBox();
 
         hBoxWrapper.setSpacing(10);
 
         hBoxWrapper.getChildren()
-                .addAll(weeklyStatisticsVBox, dailyStatisticsVBox, intervalStatisticsVBox);
+                .addAll(totalStatisticsVBox, intervalStatisticsVBox, weeklyStatisticsVBox, dailyStatisticsVBox);
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
 
         var scrollPane = new ScrollPane(hBoxWrapper);
