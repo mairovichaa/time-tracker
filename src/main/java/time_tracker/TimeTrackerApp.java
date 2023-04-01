@@ -13,7 +13,7 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.service.DayDataService;
+import time_tracker.service.StopwatchRecordSearchService;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,5 +90,12 @@ public class TimeTrackerApp extends Application {
             log.severe("Can't read properties by path: " + pathToPropertiesFile);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        var stopwatchRecordSearchService = GlobalContext.get(StopwatchRecordSearchService.class);
+        stopwatchRecordSearchService.shutdown();
     }
 }

@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -22,12 +23,13 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
 
     // TODO move to configs
     private final static Duration DEBOUNCE_DURATION_FOR_SEARCH = Duration.ofMillis(500);
+
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     private volatile ScheduledFuture<?> currentScheduledFuture;
     @Override
     public void initialize(@NonNull final StopwatchSearchState stopwatchSearchState, @NonNull final StopWatchAppState stopWatchAppState) {
         var searchStateSearch = stopwatchSearchState.getSearch();
 
-        var scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         searchStateSearch.addListener((observable, oldValue, newSearchTerm) -> {
             log.fine(() -> "Search term has changed from " + oldValue + " to " + newSearchTerm);
             if (currentScheduledFuture != null){
@@ -59,6 +61,11 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                     DEBOUNCE_DURATION_FOR_SEARCH.getNano(),
                     TimeUnit.NANOSECONDS);
         });
+    }
+
+    @Override
+    public void shutdown() {
+        scheduledExecutorService.shutdown();
     }
 
     private boolean searchTermInRecordMeasurements(String searchTerm, StopwatchRecord record) {

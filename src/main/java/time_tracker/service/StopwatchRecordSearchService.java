@@ -8,4 +8,5 @@ public interface StopwatchRecordSearchService {
 
     void initialize(@NonNull final StopwatchSearchState stopwatchSearchState, @NonNull final StopWatchAppState stopWatchAppState);
 
+    void shutdown();;
 }
