@@ -17,7 +17,12 @@ import time_tracker.service.StopwatchRecordSearchService;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.function.Predicate;
 import java.util.logging.Level;
+import java.util.stream.Stream;
 
 @Log
 public class TimeTrackerApp extends Application {
@@ -42,6 +47,22 @@ public class TimeTrackerApp extends Application {
         var objectMapper = stopwatchConfiguration.objectMapper();
         var recordToStopwatchRecordConverter = stopwatchConfiguration.recordToStopwatchRecordConverter();
         var stopwatchRecordToRecordConverter = stopwatchConfiguration.stopwatchRecordToRecordConverter();
+
+        // TODO move to separate service???
+        var folderWithData = stopwatchProperties.getFolderWithData();
+        var path = Paths.get(folderWithData);
+        Stream.of("records", "day-statistics")
+                .map(it -> it + ".json")
+                .map(path::resolve)
+                .map(Path::toFile)
+                .filter(Predicate.not(File::exists))
+                .forEach(it -> {
+                    try {
+                        Files.writeString(it.toPath(), "[]");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         var fileRepository = stopwatchConfiguration.fileRepository(stopwatchProperties, objectMapper);
         var stopwatchRecordRepository = stopwatchConfiguration.stopwatchRecordRepository(
