@@ -23,12 +23,13 @@ public class StopwatchConfiguration {
     @NonNull
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,
-            @NonNull final StopwatchRecordRepository stopwatchRecordRepository
+            @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
+            @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
         return GlobalContext.createStoreAndReturn(
                 StopwatchRecordService.class,
-                () -> new DefaultStopwatchRecordService(stopWatchAppState, stopwatchRecordRepository)
+                () -> new DefaultStopwatchRecordService(stopWatchAppState, stopwatchRecordRepository, stopwatchRecordOnLoadFactory)
         );
     }
 

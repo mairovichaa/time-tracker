@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10"
+         minWidth="200" maxWidth="200" minHeight="140" maxHeight="140">
+
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Add date</Label>
+
+    <MFXDatePicker promptText="Pick a date..." fx:id="datePicker"/>
+
+    <HBox spacing="3">
+        <MFXButton buttonType="RAISED" fx:id="createButton">Create</MFXButton>
+        <MFXButton buttonType="RAISED" fx:id="cancelButton">Cancel</MFXButton>
+    </HBox>
+
+</fx:root>

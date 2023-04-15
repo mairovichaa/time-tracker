@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import lombok.Data;
 import time_tracker.annotation.NonNull;
 import time_tracker.config.StopwatchSearchState;
@@ -31,8 +32,7 @@ public class StopWatchAppState {
     private Map<LocalDate, ObservableList<StopwatchRecord>> dateToRecords = new HashMap<>();
 
     @NonNull
-    private Map<LocalDate, DayData> dateToDayData = new HashMap<>();
-
+    private ObservableMap<LocalDate, DayData> dateToDayData = FXCollections.observableHashMap();
 
     @NonNull
     private ObservableList<StopwatchRecord> recordsForChosenDate = FXCollections.observableArrayList();

@@ -1,5 +1,6 @@
 package time_tracker.service;
 
+import javafx.collections.FXCollections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
@@ -7,6 +8,7 @@ import time_tracker.domain.DayStatistics;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,4 +61,16 @@ public class DayDataService {
         return dateToDayData;
     }
 
+    public void create(@NonNull LocalDate now) {
+        log.finest(() -> "create()");
+        stopwatchRecordService.store(now);
+        var dayStatistics = dayStatisticsService.create(now);
+
+        var dayData = new DayData(now, FXCollections.observableArrayList());
+        dayData.setId(dayStatistics.getId());
+        dayData.setExpected(Duration.ofSeconds(0));
+
+        stopWatchAppState.getDateToDayData()
+                .put(now, dayData);
+    }
 }

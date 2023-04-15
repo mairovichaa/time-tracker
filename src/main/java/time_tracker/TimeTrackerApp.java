@@ -73,13 +73,13 @@ public class TimeTrackerApp extends Application {
         var dayStatisticsRepository = stopwatchConfiguration.dayStatisticsRepository(fileRepository);
 
         var stopWatchAppState = stopwatchConfiguration.stopWatchAppState();
-        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository);
+        var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties, stopwatchRecordRepository);
+        var stopwatchRecordService = stopwatchConfiguration.stopwatchRecordService(stopWatchAppState, stopwatchRecordRepository, stopwatchRecordOnLoadFactory);
         var randomStopwatchRecordFactory = stopwatchConfiguration.randomStopwatchRecordFactory(stopwatchRecordService);
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
         stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
 
-        var stopwatchRecordOnLoadFactory = stopwatchConfiguration.stopwatchRecordOnLoadFactory(stopwatchProperties, stopwatchRecordRepository);
         var dayStatisticsService = stopwatchConfiguration.dayStatisticsService(dayStatisticsRepository);
 
         var dayDataService = stopwatchConfiguration.dayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService);

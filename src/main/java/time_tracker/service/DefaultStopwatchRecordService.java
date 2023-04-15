@@ -1,6 +1,8 @@
 package time_tracker.service;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.annotation.NonNull;
@@ -23,6 +25,9 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @NonNull
     private final StopwatchRecordRepository stopwatchRecordRepository;
+
+    @NonNull
+    private final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory;
 
     @Override
     public StopwatchRecord create(@NonNull final String name) {
@@ -94,8 +99,12 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
 
     @Override
     public void store(@NonNull final LocalDate date) {
-        var records = stopWatchAppState.getDateToRecords()
-                .get(date);
+        ObservableList<StopwatchRecord> records = stopWatchAppState.getDateToRecords()
+                .computeIfAbsent(date, ignored -> {
+                    var defaultRecords = stopwatchRecordOnLoadFactory.create(date);
+                    return FXCollections.observableArrayList(defaultRecords);
+                });
+
         var copiedRecords = new ArrayList<>(records);
         stopwatchRecordRepository.store(copiedRecords, date);
     }

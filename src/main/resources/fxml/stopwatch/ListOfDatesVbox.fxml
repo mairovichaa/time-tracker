@@ -13,6 +13,6 @@
     <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
                   prefWidth="275.0" footerVisible="false"/>
 
-    <MFXButton buttonType="RAISED" text="Refresh" onAction="#refresh" maxWidth="1.7976931348623157E308"
-               alignment="CENTER"/>
+    <MFXButton buttonType="RAISED" text="Add" onAction="#add" maxWidth="1.7976931348623157E308" alignment="CENTER"/>
+    <MFXButton buttonType="RAISED" text="Refresh" onAction="#refresh" maxWidth="1.7976931348623157E308" alignment="CENTER"/>
 </fx:root>

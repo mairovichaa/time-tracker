@@ -1,5 +1,6 @@
 package time_tracker.service;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.RequiredArgsConstructor;
 import time_tracker.model.StopWatchAppState;
@@ -37,7 +38,7 @@ public class InitialDataLoadService {
 
         stopWatchAppState.setDateToRecords(dateToRecords);
 
-        var dayData = dayDataService.findAll();
+        var dayData = FXCollections.observableMap(dayDataService.findAll());
         stopWatchAppState.setDateToDayData(dayData);
     }
 }

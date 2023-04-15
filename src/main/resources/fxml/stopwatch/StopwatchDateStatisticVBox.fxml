@@ -50,8 +50,14 @@
         <Label fx:id="comment"/>
     </HBox>
 
+    <Separator/>
     <HBox spacing="3">
         <MFXButton buttonType="RAISED" fx:id="editButton" text="Edit"/>
+    </HBox>
+
+    <Label>Fast edit buttons</Label>
+
+    <HBox spacing="3">
         <MFXButton buttonType="RAISED" onAction="#setHoliday" text="Holiday"/>
         <MFXButton buttonType="RAISED" onAction="#setWeekend" text="Weekend"/>
         <MFXButton buttonType="RAISED" onAction="#setSick" text="Sick"/>
