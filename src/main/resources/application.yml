@@ -1,6 +1,16 @@
 stopwatch:
   dates:
-    amountOfDaysToShow: 30
+    amountOfDaysToShow: 600
+    fastEditButtons:
+      - name: Holiday
+        expected: 0S
+      - name: Weekend
+        expected: 0S
+      - name: Sick
+        expected: 0S
+      - name: Workday
+        expected: 6H30M
+
   devMode: true
   folderWithData: <replace-with-folder-where-you-want-to-store-data>
   defaultRecords:

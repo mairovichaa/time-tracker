@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
@@ -11,10 +10,6 @@
 
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Fast edit buttons</Label>
 
-    <HBox spacing="3">
-        <MFXButton buttonType="RAISED" onAction="#setHoliday" text="Holiday"/>
-        <MFXButton buttonType="RAISED" onAction="#setWeekend" text="Weekend"/>
-        <MFXButton buttonType="RAISED" onAction="#setSick" text="Sick"/>
-    </HBox>
+    <FlowPane hgap="3" vgap="3" fx:id="fastEditButtonsContainer"/>
 
 </fx:root>

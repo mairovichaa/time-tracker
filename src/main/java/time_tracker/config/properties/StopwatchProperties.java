@@ -16,6 +16,13 @@ public class StopwatchProperties {
     @Data
     public static class StopwatchDatesProperties {
         private int amountOfDaysToShow;
+        private List<FastEditButtonProperties> fastEditButtons = new ArrayList<>();
+    }
+
+    @Data
+    public static class FastEditButtonProperties {
+        private String name;
+        private String expected;
     }
 
 }
