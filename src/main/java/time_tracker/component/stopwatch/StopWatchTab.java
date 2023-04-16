@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
+import time_tracker.component.stopwatch.date.FastEditButtonsVBox;
 import time_tracker.component.stopwatch.measurement.ListOfMeasurementsForChosenRecordVBox;
 import time_tracker.component.stopwatch.record.CreateRecordVBox;
 import time_tracker.component.stopwatch.record.ListOfRecordsForChosenDateVBox;
@@ -23,8 +24,9 @@ public class StopWatchTab extends Tab {
         var wrapperVBox = new VBox();
         var stopwatchDateStatisticVBox = new StopwatchDateStatisticVBox();
         var createRecordVBox = new CreateRecordVBox();
+        var fastEditButtonsVBox = new FastEditButtonsVBox();
         wrapperVBox.setSpacing(10);
-        wrapperVBox.getChildren().addAll(stopwatchDateStatisticVBox, createRecordVBox);
+        wrapperVBox.getChildren().addAll(stopwatchDateStatisticVBox, fastEditButtonsVBox, createRecordVBox);
 
         var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
         if (stopwatchProperties.isDevMode()) {

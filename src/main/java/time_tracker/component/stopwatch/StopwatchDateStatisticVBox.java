@@ -174,37 +174,4 @@ public class StopwatchDateStatisticVBox extends VBox {
             dialog.show();
         });
     }
-
-    @FXML
-    protected void setHoliday(){
-        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
-        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
-        log.fine("'Holiday' button is clicked for dayData = " + dayData.getId());
-        dayData.setExpected(Duration.ZERO);
-        dayData.setNote("Holiday");
-        var dayDataService = GlobalContext.get(DayDataService.class);
-        dayDataService.save(dayData);
-    }
-
-    @FXML
-    protected void setWeekend(){
-        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
-        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
-        log.fine("'Weekend' button is clicked for dayData = " + dayData.getId());
-        dayData.setExpected(Duration.ZERO);
-        dayData.setNote("Weekend");
-        var dayDataService = GlobalContext.get(DayDataService.class);
-        dayDataService.save(dayData);
-    }
-
-    @FXML
-    protected void setSick(){
-        var chosenDate = stopWatchAppState.getChosenDateProperty().getValue();
-        var dayData = stopWatchAppState.getDateToDayData().get(chosenDate);
-        log.fine("'Sick' button is clicked for dayData = " + dayData.getId());
-        dayData.setExpected(Duration.ZERO);
-        dayData.setNote("Sick");
-        var dayDataService = GlobalContext.get(DayDataService.class);
-        dayDataService.save(dayData);
-    }
 }
