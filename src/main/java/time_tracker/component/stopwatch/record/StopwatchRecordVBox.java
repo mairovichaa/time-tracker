@@ -3,15 +3,17 @@ package time_tracker.component.stopwatch.record;
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.extern.java.Log;
+import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.GlobalContext;
@@ -50,13 +52,15 @@ public class StopwatchRecordVBox extends VBox {
 
     private final StopwatchRecord stopwatchRecord;
     private final StopwatchRecordService stopwatchRecordService;
+    private final StopwatchRecord record;
 
     public StopwatchRecordVBox(
             @NonNull final StopwatchRecord stopwatchRecord
     ) {
         load("/fxml/stopwatch/record/StopwatchRecordVBox.fxml", this);
+        this.record = stopwatchRecord;
 
-        nameLabel.setText(stopwatchRecord.getName());
+        nameLabel.textProperty().bind(stopwatchRecord.getNameProperty());
 
         startButton.disableProperty()
                 .bind(stopwatchRecord.getHasMeasurementInProgressProperty());
@@ -126,6 +130,7 @@ public class StopwatchRecordVBox extends VBox {
         stopwatchRecordService.stopMeasurement(stopwatchRecord);
         stopwatchRecordService.store();
     }
+
     @FXML
     protected void delete() {
         log.log(Level.FINE, "deleteButton is clicked");
@@ -171,4 +176,28 @@ public class StopwatchRecordVBox extends VBox {
                 });
     }
 
+    @FXML
+    protected void rename() {
+        log.log(Level.FINE, "'Rename' button is clicked");
+
+        var dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(TimeTrackerApp.primaryStage);
+        var dialogVbox = new RecordRenameVBox(record, dialog);
+        var dialogScene = new Scene(dialogVbox, 200, 80);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    @FXML
+    protected void move() {
+        log.log(Level.FINE, "'Move' button is clicked");
+        var dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(TimeTrackerApp.primaryStage);
+        var dialogVbox = new RecordMoveVBox(record, dialog);
+        var dialogScene = new Scene(dialogVbox, 200, 150);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
 }

@@ -16,7 +16,10 @@ public interface StopwatchRecordService {
 
     void store();
     void store(@NonNull LocalDate date);
+    void store(@NonNull StopwatchRecord record);
 
     void delete(@NonNull StopwatchRecord stopwatchRecord);
+
+    void moveToDate(@NonNull StopwatchRecord record, @NonNull LocalDate newDate);
 
 }
