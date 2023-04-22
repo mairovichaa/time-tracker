@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
@@ -25,8 +26,8 @@
     </HBox>
 
     <HBox>
-        <Button fx:id="save">Save</Button>
-        <Button fx:id="cancel">Cancel</Button>
+        <MFXButton buttonType="RAISED" fx:id="save">Save</MFXButton>
+        <MFXButton buttonType="RAISED" fx:id="cancel">Cancel</MFXButton>
     </HBox>
 
 

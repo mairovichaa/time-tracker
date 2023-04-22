@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+
+    <Label>Current record name:</Label>
+    <Label fx:id="recordNameLabel"/>
+
+    <Label styleClass="sub-header-label">Choose new record:</Label>
+    <MFXListView fx:id="recordNamesList" prefWidth="170.0" maxHeight="100">
+        <GridPane.margin>
+            <Insets bottom="15.0"/>
+        </GridPane.margin>
+    </MFXListView>
+    <MFXButton buttonType="RAISED" onMouseClicked="#cancel">Cancel</MFXButton>
+
+</fx:root>

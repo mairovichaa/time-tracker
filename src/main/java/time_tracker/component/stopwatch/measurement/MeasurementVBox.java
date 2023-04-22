@@ -3,7 +3,6 @@ package time_tracker.component.stopwatch.measurement;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -14,12 +13,9 @@ import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.config.GlobalContext;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.domain.Measurement;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchMeasurementService;
 import time_tracker.service.StopwatchRecordService;
-
-import java.util.logging.Level;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;
@@ -117,7 +113,19 @@ public class MeasurementVBox extends VBox {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(TimeTrackerApp.primaryStage);
         VBox dialogVbox = new MeasurementEditVBox(measurement, dialog);
-        Scene dialogScene = new Scene(dialogVbox, 600, 600);
+        Scene dialogScene = new Scene(dialogVbox, 200, 220);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    @FXML
+    protected void move() {
+        log.fine("'Move' button is clicked for measurement = " + measurement.getId());
+        var dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(TimeTrackerApp.primaryStage);
+        var dialogVbox = new MeasurementMoveVBox(measurement, dialog);
+        var dialogScene = new Scene(dialogVbox, 200, 220);
         dialog.setScene(dialogScene);
         dialog.show();
     }

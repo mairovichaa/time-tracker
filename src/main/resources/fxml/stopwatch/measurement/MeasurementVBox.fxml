@@ -23,7 +23,10 @@
                 <Label fx:id="total"/>
             </HBox>
             <Label fx:id="comment" wrapText="true"/>
-            <MFXButton buttonType="RAISED" fx:id="edit" text="Edit" onMouseClicked="#edit"/>
+            <HBox spacing="3">
+                <MFXButton buttonType="RAISED" fx:id="edit" text="Edit" onMouseClicked="#edit"/>
+                <MFXButton buttonType="RAISED" fx:id="moveButton" text="Move" onMouseClicked="#move"/>
+            </HBox>
         </VBox>
         <VBox>
             <Label styleClass="delete-button" fx:id="deleteLabel" onMouseClicked="#delete">x</Label>
