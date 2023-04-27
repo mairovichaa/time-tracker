@@ -5,10 +5,10 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
+import time_tracker.annotation.NonNull;
 import time_tracker.config.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -23,7 +23,6 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
     @FXML
     private Label recordNameLabel;
-
     @FXML
     private Label recordDateLabel;
     @FXML
@@ -36,7 +35,7 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
         var chosenStopwatchRecordProperty = stopWatchAppState.getChosenStopwatchRecord();
 
-        ObservableList<Node> records = FXCollections.observableArrayList();
+        ObservableList<MeasurementVBox> measurementsVBoxes = FXCollections.observableArrayList();
 
         AtomicReference<Runnable> removePreviousListener = new AtomicReference<>();
 
@@ -54,24 +53,25 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
             var measurementsProperty = stopwatchRecord.getMeasurementsProperty();
 
-            var invalidationListener = (InvalidationListener) ignored -> refreshRecords(records, measurementsProperty);
-
+            var invalidationListener = (InvalidationListener) ignored -> refreshMeasurements(measurementsVBoxes, measurementsProperty);
             removePreviousListener.set(() -> measurementsProperty.removeListener(invalidationListener));
 
             measurementsProperty.addListener(invalidationListener);
-            refreshRecords(records, measurementsProperty);
+            refreshMeasurements(measurementsVBoxes, measurementsProperty);
         });
 
-        Bindings.bindContent(finishedMeasurementsVBox.getChildren(), records);
+        Bindings.bindContent(finishedMeasurementsVBox.getChildren(), measurementsVBoxes);
     }
 
-    private static void refreshRecords(ObservableList<Node> records, ObservableList<StopwatchRecordMeasurement> measurementsProperty) {
-        log.fine(() -> "refresh records");
-        records.clear();
+    private void refreshMeasurements(
+            @NonNull final ObservableList<MeasurementVBox> measurementsVBoxes,
+            @NonNull final ObservableList<StopwatchRecordMeasurement> measurementsProperty) {
+        log.fine(() -> "refresh measurements");
+        measurementsVBoxes.clear();
         measurementsProperty
                 .stream()
                 .map(MeasurementVBox::new)
-                .forEach(records::add);
+                .forEach(measurementsVBoxes::add);
     }
 
 }
