@@ -55,6 +55,10 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
                 removePreviousListener.get().run();
             }
 
+            if (!stopWatchAppState.hasChosenRecord()) {
+                return;
+            }
+
             var stopwatchRecord = chosenStopwatchRecordProperty.get();
 
             recordNameLabel.setText(stopwatchRecord.getName());

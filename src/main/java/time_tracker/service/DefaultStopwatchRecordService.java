@@ -119,6 +119,11 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     @Override
     public void delete(StopwatchRecord record) {
         log.log(Level.FINE, () -> "delete record: " + record);
+        if (stopWatchAppState.getChosenStopwatchRecord().getValue() == record){
+            log.log(Level.FINE, () -> "delete chosen record - reset it");
+            stopWatchAppState.resetChosenStopwatchRecord();
+        }
+
         var removed = stopWatchAppState.getDateToRecords()
                 .get(record.getDate())
                 .remove(record);

@@ -23,6 +23,10 @@ public class StopWatchAppState {
     @NonNull
     private ObjectProperty<StopwatchRecord> chosenStopwatchRecord = new SimpleObjectProperty<>(null);
 
+    public void resetChosenStopwatchRecord() {
+        chosenStopwatchRecord.setValue(null);
+    }
+
     @NonNull
     private BooleanBinding hasChosenStopwatchRecord = new BooleanBinding() {
         {

@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -93,7 +94,7 @@ public class StopwatchRecordVBox extends VBox {
                 .addListener(c -> {
                     log.fine(() -> "chosen stopwatch record have been changed");
                     var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
-                    if (chosenStopwatchRecord.equals(stopwatchRecord)) {
+                    if (stopwatchRecord.equals(chosenStopwatchRecord)) {
                         this.getStyleClass()
                                 .add("record-chosen");
                     } else {
@@ -132,10 +133,11 @@ public class StopwatchRecordVBox extends VBox {
     }
 
     @FXML
-    protected void delete() {
+    protected void delete(MouseEvent event) {
         log.log(Level.FINE, "deleteButton is clicked");
         stopwatchRecordService.delete(stopwatchRecord);
         stopwatchRecordService.store();
+        event.consume();
     }
 
     private void chosen() {
