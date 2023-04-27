@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+
+    <Label>Current record date:</Label>
+    <Label fx:id="recordDateLabel"/>
+
+    <MFXDatePicker promptText="Pick a date..." fx:id="datePicker"/>
+    <HBox spacing="5">
+        <MFXButton buttonType="RAISED" onMouseClicked="#save">Save</MFXButton>
+        <MFXButton buttonType="RAISED" onMouseClicked="#cancel">Cancel</MFXButton>
+    </HBox>
+</fx:root>

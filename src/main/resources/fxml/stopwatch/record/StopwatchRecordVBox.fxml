@@ -36,6 +36,10 @@
                 <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
                 <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>
             </HBox>
+            <HBox spacing="3">
+                <MFXButton buttonType="RAISED" text="Rename" onAction="#rename"/>
+                <MFXButton buttonType="RAISED" text="Move" onAction="#move"/>
+            </HBox>
         </VBox>
 
         <VBox>
