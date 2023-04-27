@@ -27,12 +27,20 @@ public class StopwatchRecord {
     private Long id;
 
     @NonNull
-    private String name;
+    private StringProperty nameProperty = new SimpleStringProperty();
 
     @NonNull
     private LocalDate date;
 
     private BooleanProperty trackedProperty = new SimpleBooleanProperty(false);
+
+    public String getName() {
+        return nameProperty.getValue();
+    }
+
+    public void setName(@NonNull final String name) {
+        nameProperty.setValue(name);
+    }
 
     public void setTracked(boolean isTracked) {
         trackedProperty.set(isTracked);

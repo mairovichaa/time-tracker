@@ -2,6 +2,7 @@ package time_tracker.component.stopwatch.measurement;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,6 +28,10 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
     private Label recordDateLabel;
     @FXML
     private VBox finishedMeasurementsVBox;
+    @FXML
+    private VBox listOfMeasurementsWrapperVBox;
+    @FXML
+    private VBox noMeasurementsInfoVBox;
 
     public ListOfMeasurementsForChosenRecordVBox() {
         load("/fxml/stopwatch/record/ListOfMeasurementsForChosenRecordVBox.fxml", this);
@@ -35,7 +40,11 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
         var chosenStopwatchRecordProperty = stopWatchAppState.getChosenStopwatchRecord();
 
+        listOfMeasurementsWrapperVBox.visibleProperty()
+                .bind(stopWatchAppState.getHasChosenStopwatchRecord());
+
         ObservableList<MeasurementVBox> measurementsVBoxes = FXCollections.observableArrayList();
+        showNoMeasurementsInfoWhenThereIsNoMeasurement(measurementsVBoxes);
 
         AtomicReference<Runnable> removePreviousListener = new AtomicReference<>();
 
@@ -61,6 +70,24 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
         });
 
         Bindings.bindContent(finishedMeasurementsVBox.getChildren(), measurementsVBoxes);
+    }
+
+    private void showNoMeasurementsInfoWhenThereIsNoMeasurement(
+            @NonNull final ObservableList<MeasurementVBox> measurementsVBoxes) {
+        noMeasurementsInfoVBox.visibleProperty()
+                .bind(new BooleanBinding() {
+                    {
+                        bind(measurementsVBoxes);
+                    }
+
+                    @Override
+                    protected boolean computeValue() {
+                        return measurementsVBoxes.isEmpty();
+                    }
+                });
+        noMeasurementsInfoVBox.managedProperty().bind(
+                noMeasurementsInfoVBox.visibleProperty()
+        );
     }
 
     private void refreshMeasurements(

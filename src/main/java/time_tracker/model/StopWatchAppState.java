@@ -1,5 +1,6 @@
 package time_tracker.model;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -20,7 +21,23 @@ public class StopWatchAppState {
     private LocalDate chosenDate;
 
     @NonNull
-    private ObjectProperty<StopwatchRecord> chosenStopwatchRecord = new SimpleObjectProperty<>(new StopwatchRecord());
+    private ObjectProperty<StopwatchRecord> chosenStopwatchRecord = new SimpleObjectProperty<>(null);
+
+    @NonNull
+    private BooleanBinding hasChosenStopwatchRecord = new BooleanBinding() {
+        {
+            bind(chosenStopwatchRecord);
+        }
+
+        @Override
+        protected boolean computeValue() {
+            return chosenStopwatchRecord.getValue() != null;
+        }
+    };
+
+    public boolean hasChosenRecord() {
+        return hasChosenStopwatchRecord.get();
+    }
 
     @NonNull
     private ObjectProperty<LocalDate> chosenDateProperty = new SimpleObjectProperty<>();
