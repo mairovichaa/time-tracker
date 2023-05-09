@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5"
-         maxWidth="600">
-    <Text fx:id="name"/>
-    <Text fx:id="date"/>
-    <VBox fx:id="measurements" spacing="5.0"/>
+         styleClass="grid-background,search-result" style="-fx-padding: 10 10 10 10;" spacing="5"
+         maxWidth="600"
+         onMouseClicked="#chooseRecord"
+>
+    <Label fx:id="nameLabel" wrapText="true"/>
 </fx:root>

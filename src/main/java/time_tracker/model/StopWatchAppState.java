@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import lombok.Data;
 import time_tracker.annotation.NonNull;
-import time_tracker.config.StopwatchSearchState;
 
 import java.time.LocalDate;
 import java.util.HashMap;

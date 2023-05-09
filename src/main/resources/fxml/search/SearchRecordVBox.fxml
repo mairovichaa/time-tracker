@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background"
+         minWidth="320" maxWidth="320">
+    <HBox style="-fx-padding: 0 0 10 10;" minWidth="300" maxWidth="300">
+        <VBox style="-fx-padding: 10 0 0 0;" minWidth="290" spacing="5">
+            <HBox>
+                <Label>#</Label>
+                <Label fx:id="recordIdLabel"/>
+            </HBox>
+
+            <Label wrapText="true" maxWidth="1.7976931348623157E308" styleClass="header-label" fx:id="dateLabel"/>
+
+            <HBox spacing="3">
+                <Label>Amount of time:</Label>
+                <Label fx:id="totalTimeLabel" text="00:00:00"/>
+            </HBox>
+
+            <HBox spacing="3">
+                <Label>Amount of measurements:</Label>
+                <Label fx:id="amountOfMeasurements"/>
+            </HBox>
+
+            <Separator/>
+            <VBox spacing="8">
+                <Label>Measurements</Label>
+                <VBox fx:id="measurementsWrapperVBox" spacing="5"/>
+            </VBox>
+            <Separator/>
+
+            <MFXToggleButton text="Tracked" fx:id="trackedToggle"/>
+        </VBox>
+
+        <VBox>
+            <Label styleClass="delete-button" fx:id="deleteLabel" onMouseClicked="#delete">x</Label>
+        </VBox>
+    </HBox>
+</fx:root>

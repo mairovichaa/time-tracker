@@ -1,6 +1,8 @@
 package time_tracker.component.stopwatch.record;
 
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.ListChangeListener;
@@ -22,6 +24,7 @@ import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
+import time_tracker.service.AppStateService;
 import time_tracker.service.StopwatchRecordService;
 
 import java.util.List;
@@ -50,10 +53,13 @@ public class StopwatchRecordVBox extends VBox {
     private MFXToggleButton trackedToggle;
     @FXML
     private VBox inProgressMeasurementVBox;
+    private final AppStateService appStateService;
 
     private final StopwatchRecord stopwatchRecord;
     private final StopwatchRecordService stopwatchRecordService;
     private final StopwatchRecord record;
+    // reference has to be stored as WeakListChangeListener is used to register it
+    private final InvalidationListener chosenStopwatchRecordListener;
 
     public StopwatchRecordVBox(
             @NonNull final StopwatchRecord stopwatchRecord
@@ -74,7 +80,9 @@ public class StopwatchRecordVBox extends VBox {
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        this.appStateService = GlobalContext.get(AppStateService.class);
 
+        // TODO it seems that listener has to be removed or to be moved to another place
         stopwatchRecord.getTrackedProperty()
                 .addListener((observable, oldValue, newValue) -> stopwatchRecordService.store());
 
@@ -90,18 +98,19 @@ public class StopwatchRecordVBox extends VBox {
         this.setOnMouseClicked(ignored -> chosen());
 
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        this.chosenStopwatchRecordListener = c -> {
+            log.fine(() -> "chosen stopwatch record have been changed");
+            var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
+            if (stopwatchRecord.equals(chosenStopwatchRecord)) {
+                this.getStyleClass()
+                        .add("record-chosen");
+            } else {
+                this.getStyleClass()
+                        .remove("record-chosen");
+            }
+        };
         stopWatchAppState.getChosenStopwatchRecord()
-                .addListener(c -> {
-                    log.fine(() -> "chosen stopwatch record have been changed");
-                    var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
-                    if (stopwatchRecord.equals(chosenStopwatchRecord)) {
-                        this.getStyleClass()
-                                .add("record-chosen");
-                    } else {
-                        this.getStyleClass()
-                                .remove("record-chosen");
-                    }
-                });
+                .addListener(new WeakInvalidationListener(chosenStopwatchRecordListener));
     }
 
     private void bindAmountOfMeasurements() {
@@ -135,8 +144,7 @@ public class StopwatchRecordVBox extends VBox {
     @FXML
     protected void delete(MouseEvent event) {
         log.log(Level.FINE, "deleteButton is clicked");
-        stopwatchRecordService.delete(stopwatchRecord);
-        stopwatchRecordService.store();
+        appStateService.delete(stopwatchRecord);
         event.consume();
     }
 

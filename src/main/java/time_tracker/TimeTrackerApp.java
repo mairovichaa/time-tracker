@@ -13,6 +13,7 @@ import time_tracker.config.GlobalContext;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.service.AppStateService;
 import time_tracker.service.StopwatchRecordSearchService;
 
 import java.io.File;
@@ -78,6 +79,8 @@ public class TimeTrackerApp extends Application {
         var randomStopwatchRecordFactory = stopwatchConfiguration.randomStopwatchRecordFactory(stopwatchRecordService);
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
+        var appStateService = stopwatchConfiguration.appStateService(stopwatchRecordService, stopWatchAppState);
+
         stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
 
         var dayStatisticsService = stopwatchConfiguration.dayStatisticsService(dayStatisticsRepository);
@@ -89,7 +92,7 @@ public class TimeTrackerApp extends Application {
         stopWatchAppState.setChosenDate(timeService.today());
 
         var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService();
-        stopwatchRecordSearchService.initialize(searchState, stopWatchAppState);
+        stopwatchRecordSearchService.initialize(searchState, stopWatchAppState, stopwatchRecordSearchService);
 
         TabPane tabPane = new TimeTrackerTabPane();
         Scene scene = new Scene(tabPane, 600, 600);

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         minWidth="350"
+         maxWidth="350">
+
+    <VBox fx:id="noRecordIsChosenInfoVBox" styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="3">
+        <Label wrapText="true">Choose a Record from search results to see its details.</Label>
+    </VBox>
+
+    <VBox fx:id="searchRecordsDetailsWrapperVBox" spacing="5">
+        <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="3">
+            <Text fx:id="recordNameLabel" wrappingWidth="330"/>
+            <HBox spacing="3">
+                <Label>Amount of time:</Label>
+                <Label fx:id="totalTimeLabel"/>
+            </HBox>
+            <HBox spacing="3">
+                <Label>Amount of dates:</Label>
+                <Label fx:id="numberOfDatesLabel"/>
+            </HBox>
+        </VBox>
+
+        <VBox>
+            <ScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
+                <VBox fx:id="recordsWrapperVBox" spacing="15">
+                    <padding>
+                        <Insets left="10.0" right="20.0" bottom="10.0"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </VBox>
+</fx:root>

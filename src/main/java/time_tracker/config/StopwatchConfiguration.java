@@ -20,6 +20,18 @@ import java.util.logging.Level;
 public class StopwatchConfiguration {
     private final RepositoryConfiguration repositoryConfiguration = new RepositoryConfiguration();
 
+
+    @NonNull
+    public AppStateService appStateService(
+            @NonNull final StopwatchRecordService stopwatchRecordService,
+            @NonNull final StopWatchAppState stopWatchAppState) {
+        log.log(Level.FINE, "Creating appStateService");
+        return GlobalContext.createStoreAndReturn(
+                AppStateService.class,
+                () -> new AppStateService(stopwatchRecordService, stopWatchAppState)
+        );
+    }
+
     @NonNull
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,

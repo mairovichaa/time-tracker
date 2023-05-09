@@ -29,3 +29,12 @@
 	-fx-font-size: 14;
 	-fx-text-fill: -mfx-text-he;
 }
+
+.search-result:hover {
+    -fx-cursor: hand;
+    -fx-background-color: #F3F3F3;
+}
+
+.search-result-entry-chosen {
+    -fx-background-color: #F3F3F3;
+}

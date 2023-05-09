@@ -29,6 +29,7 @@ public class StopwatchRecord {
     @NonNull
     private StringProperty nameProperty = new SimpleStringProperty();
 
+    // TODO make it a property
     @NonNull
     private LocalDate date;
 

@@ -1,6 +1,7 @@
 package time_tracker.component;
 
 import javafx.scene.control.TabPane;
+import time_tracker.component.configuration.ConfigurationTab;
 import time_tracker.component.interval.IntervalTab;
 import time_tracker.component.report.ReportTab;
 import time_tracker.component.search.SearchTab;
@@ -15,6 +16,7 @@ public class TimeTrackerTabPane extends TabPane {
         var statisticsTab = new StatisticsTab();
         var reportTab = new ReportTab();
         var intervalTab = new IntervalTab();
-        this.getTabs().addAll(stopWatchTab, searchTab, statisticsTab, reportTab, intervalTab);
+        var configurationTab = new ConfigurationTab();
+        this.getTabs().addAll(stopWatchTab, searchTab, statisticsTab, reportTab, intervalTab, configurationTab);
     }
 }

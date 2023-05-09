@@ -1,4 +1,4 @@
-package time_tracker.config;
+package time_tracker.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,5 +12,7 @@ public class StopwatchSearchState {
 
     private StringProperty search = new SimpleStringProperty();
     private ObservableList<StopwatchRecord> found = FXCollections.observableArrayList();
+    private StringProperty chosenRecordName = new SimpleStringProperty();
+    private ObservableList<StopwatchRecord> recordsForChosenName = FXCollections.observableArrayList();
 
 }
