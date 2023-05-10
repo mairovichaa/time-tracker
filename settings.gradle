@@ -1,2 +1,8 @@
 rootProject.name = 'time-tracker'
 
+include ':core:domain'
+include ':core:repository'
+include ':core:common'
+include ':core:service'
+include 'desktop'
+
