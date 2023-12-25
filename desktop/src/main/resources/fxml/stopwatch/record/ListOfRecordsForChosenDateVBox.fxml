@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../../css/common.css"
-         maxHeight="600" maxWidth="350" minWidth="350" spacing="10">
+<fx:root maxHeight="600" maxWidth="350" minWidth="350" spacing="10" stylesheets="@../../../css/common.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <VBox styleClass="grid-background">
-        <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">List of records</Label>
-
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="header-label">List of records</Label>
         <padding>
-            <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
     </VBox>
+    <VBox alignment="CENTER">
+        <MFXButton alignment="CENTER" buttonType="RAISED"  text="+" onMouseClicked="#openAddRecordModal"/>
+    </VBox>
     <VBox>
-        <ScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
+        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="grey-scroll-pane">
             <VBox fx:id="recordsVBox" spacing="15">
                 <padding>
-                    <Insets left="10.0" right="20.0" bottom="10.0"/>
+                    <Insets bottom="10.0" left="10.0" right="20.0" />
                 </padding>
             </VBox>
         </ScrollPane>
