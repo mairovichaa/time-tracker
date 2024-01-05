@@ -1,17 +1,13 @@
 package time_tracker;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import lombok.extern.java.Log;
 import time_tracker.common.GlobalContext;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.component.TimeTrackerTabPane;
 import time_tracker.config.StopwatchConfiguration;
-import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.service.StopwatchRecordSearchService;
 
@@ -37,12 +33,12 @@ public class TimeTrackerApp extends Application {
     public void start(Stage primaryStage) {
         log.log(Level.INFO, "Starting application");
 
+        var stopwatchConfiguration = new StopwatchConfiguration();
+
         var pathToPropertiesFile = System.getenv("pathToPropertiesFile");
-        var appProperties = readAppProperties(pathToPropertiesFile);
+        var appProperties = stopwatchConfiguration.appProperties(pathToPropertiesFile);
         var stopwatchProperties = appProperties.getStopwatch();
         GlobalContext.put(StopwatchProperties.class, stopwatchProperties);
-
-        var stopwatchConfiguration = new StopwatchConfiguration();
 
         var objectMapper = stopwatchConfiguration.objectMapper();
         var recordToStopwatchRecordConverter = stopwatchConfiguration.recordToStopwatchRecordConverter();
@@ -79,6 +75,7 @@ public class TimeTrackerApp extends Application {
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
         var appStateService = stopwatchConfiguration.appStateService(stopwatchRecordService, stopWatchAppState);
+        var configurationService = stopwatchConfiguration.configurationService(appProperties, pathToPropertiesFile);
 
         stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
 
@@ -100,19 +97,6 @@ public class TimeTrackerApp extends Application {
         primaryStage.setMaximized(true);
         primaryStage.show();
         TimeTrackerApp.primaryStage = primaryStage;
-    }
-
-    private AppProperties readAppProperties(@NonNull final String pathToPropertiesFile) {
-        log.log(Level.INFO, () -> "Trying to read properties from " + pathToPropertiesFile);
-        var objectMapper = new ObjectMapper(new YAMLFactory());
-        try {
-            // TODO add default configs
-            var propertiesFile = new File(pathToPropertiesFile);
-            return objectMapper.readValue(propertiesFile, AppProperties.class);
-        } catch (IOException e) {
-            log.severe("Can't read properties by path: " + pathToPropertiesFile);
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

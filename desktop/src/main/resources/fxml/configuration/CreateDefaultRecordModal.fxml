@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" minWidth="300">
+
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Create record</Label>
+    <MFXTextField fx:id="recordNameTextField" maxWidth="1.7976931348623157E308" alignment="CENTER" floatMode="BORDER"
+                  floatingText="Name"/>
+    <HBox spacing="3">
+        <MFXButton buttonType="RAISED" text="Add" onAction="#add" maxWidth="1.7976931348623157E308"
+                   alignment="CENTER"/>
+        <MFXButton buttonType="RAISED" fx:id="cancelButton" text="Cancel" onAction="#cancel"/>
+    </HBox>
+
+</fx:root>

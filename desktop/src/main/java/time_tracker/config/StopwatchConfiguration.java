@@ -1,10 +1,12 @@
 package time_tracker.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.java.Log;
 import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.configuration.RepositoryConfiguration;
 import time_tracker.model.StopWatchAppState;
@@ -18,12 +20,13 @@ import time_tracker.repository.StopwatchRecordRepository;
 import time_tracker.service.*;
 import time_tracker.service.dev.RandomStopwatchRecordFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 @Log
 public class StopwatchConfiguration {
     private final RepositoryConfiguration repositoryConfiguration = new RepositoryConfiguration();
-
 
     @NonNull
     public AppStateService appStateService(
@@ -203,5 +206,29 @@ public class StopwatchConfiguration {
                 DayDataService.class,
                 () -> new DayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService)
         );
+    }
+
+    @NonNull
+    public AppProperties appProperties(String pathToPropertiesFile) {
+        log.log(Level.INFO, () -> "Trying to read properties from " + pathToPropertiesFile);
+        var objectMapper = new ObjectMapper(new YAMLFactory());
+        try {
+            // TODO add default configs
+            var propertiesFile = new File(pathToPropertiesFile);
+            var appProperties = objectMapper.readValue(propertiesFile, AppProperties.class);
+            return GlobalContext.createStoreAndReturn(AppProperties.class, () -> appProperties);
+        } catch (IOException e) {
+            log.severe("Can't read properties by path: " + pathToPropertiesFile);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NonNull
+    public ConfigurationService configurationService(
+            @NonNull final AppProperties appProperties,
+            @NonNull final String pathToPropertiesFile
+    ) {
+        log.log(Level.FINE, "Creating configurationService");
+        return GlobalContext.createStoreAndReturn(ConfigurationService.class, () -> new ConfigurationService(appProperties, pathToPropertiesFile));
     }
 }
