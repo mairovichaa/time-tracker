@@ -1,5 +1,7 @@
 package time_tracker;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
@@ -75,7 +77,9 @@ public class TimeTrackerApp extends Application {
         var searchState = stopWatchAppState.getSearchState();
         var timeService = stopwatchConfiguration.timeService();
         var appStateService = stopwatchConfiguration.appStateService(stopwatchRecordService, stopWatchAppState);
-        var configurationService = stopwatchConfiguration.configurationService(appProperties, pathToPropertiesFile);
+        var yamlObjectMapper = new ObjectMapper(new YAMLFactory());
+
+        var configurationService = stopwatchConfiguration.configurationService(appProperties, pathToPropertiesFile, yamlObjectMapper);
 
         stopwatchConfiguration.stopwatchMeasurementService(stopWatchAppState);
 

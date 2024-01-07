@@ -1,11 +1,11 @@
 package time_tracker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.extern.java.Log;
+import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 
@@ -16,7 +16,6 @@ import java.util.List;
 
 import static java.lang.String.format;
 
-
 @Log
 @Getter
 public class ConfigurationService {
@@ -25,14 +24,18 @@ public class ConfigurationService {
 
     private final AppProperties appProperties;
     private final String pathToPropertiesFile;
+    private final ObjectMapper yamlObjectMapper;
 
-    public ConfigurationService(AppProperties appProperties, String pathToPropertiesFile) {
+    public ConfigurationService(
+            @NonNull final AppProperties appProperties,
+            @NonNull final String pathToPropertiesFile,
+            @NonNull final ObjectMapper yamlObjectMapper) {
         this.appProperties = appProperties;
         this.pathToPropertiesFile = pathToPropertiesFile;
+        this.yamlObjectMapper = yamlObjectMapper;
 
         defaultRecordNames.addAll(appProperties.getStopwatch().getDefaultRecords());
     }
-
 
     public void addDefaultRecord(final String recordName) {
         log.fine(() -> format("Add '%s' to default record names set", recordName));
@@ -41,14 +44,7 @@ public class ConfigurationService {
         List<String> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
         defaultRecords.add(recordName);
 
-        // TODO get rid of duplication
-        var objectMapper = new ObjectMapper(new YAMLFactory());
-        try {
-            String newProps = objectMapper.writeValueAsString(appProperties);
-            Files.writeString(Paths.get(pathToPropertiesFile), newProps);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        updatePropertiesFile(appProperties);
 
         defaultRecordNames.add(recordName);
     }
@@ -59,14 +55,17 @@ public class ConfigurationService {
         List<String> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
         defaultRecords.remove(recordName);
 
-        var objectMapper = new ObjectMapper(new YAMLFactory());
+        updatePropertiesFile(appProperties);
+
+        defaultRecordNames.remove(recordName);
+    }
+
+    private void updatePropertiesFile(@NonNull final AppProperties appProperties) {
         try {
-            String newProps = objectMapper.writeValueAsString(appProperties);
+            String newProps = yamlObjectMapper.writeValueAsString(appProperties);
             Files.writeString(Paths.get(pathToPropertiesFile), newProps);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        defaultRecordNames.remove(recordName);
     }
 }

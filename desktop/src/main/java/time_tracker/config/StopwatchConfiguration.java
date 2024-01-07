@@ -226,9 +226,10 @@ public class StopwatchConfiguration {
     @NonNull
     public ConfigurationService configurationService(
             @NonNull final AppProperties appProperties,
-            @NonNull final String pathToPropertiesFile
+            @NonNull final String pathToPropertiesFile,
+            @NonNull final ObjectMapper yamlObjectMapper
     ) {
         log.log(Level.FINE, "Creating configurationService");
-        return GlobalContext.createStoreAndReturn(ConfigurationService.class, () -> new ConfigurationService(appProperties, pathToPropertiesFile));
+        return GlobalContext.createStoreAndReturn(ConfigurationService.class, () -> new ConfigurationService(appProperties, pathToPropertiesFile, yamlObjectMapper));
     }
 }
