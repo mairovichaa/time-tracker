@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.configuration.defaultRecordNames.DefaultRecordConfigurationVBox;
 import time_tracker.config.properties.AppProperties;
 
 @Log
@@ -27,29 +28,11 @@ public class ConfigurationTab extends Tab {
 
         var wrapperVBox = new VBox();
 
-        var defaultRecordNamesWrapperVBox = new DefaultRecordConfigurationVBox();
-
         ObservableList<Node> hBoxChildren = wrapperHBox.getChildren();
-
-        AppProperties appProperties = GlobalContext.get(AppProperties.class);
-
-        ListView<String> propsList = new ListView<>();
-        propsList.getItems().setAll("dates", "defaultRecords");
-        propsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
-                wrapperVBox.getChildren().clear();
-                if (newValue.equals("defaultRecords")) {
-                    wrapperVBox.getChildren().add(defaultRecordNamesWrapperVBox);
-                } else {
-                    wrapperVBox.getChildren().add(new Text("TODO add edit node"));
-                }
-            }
-        });
-        propsList.getSelectionModel().select(0);
-
-        hBoxChildren.add(propsList);
+        var configurationMenuVBox = new ConfigurationMenuVBox(wrapperVBox);
+        hBoxChildren.add(configurationMenuVBox);
         hBoxChildren.add(wrapperVBox);
+
         this.setContent(wrapperHBox);
     }
 }

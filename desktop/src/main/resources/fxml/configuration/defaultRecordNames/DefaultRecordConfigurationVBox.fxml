@@ -4,11 +4,11 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../css/common.css"
+         stylesheets="@../../../css/common.css"
          style="-fx-padding: 10 10 10 10;" spacing="10">
 
-    <Button maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label"
-            fx:id="addDefaultRecordNameButton" onMouseClicked="#add">Add default record name
+    <Button maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label" onMouseClicked="#add">Add
+        default record name
     </Button>
     <ScrollPane>
         <VBox fx:id="defaultRecordNamesVBox" spacing="5"/>

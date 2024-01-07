@@ -1,4 +1,4 @@
-package time_tracker.component.configuration;
+package time_tracker.component.configuration.defaultRecordNames;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
@@ -21,7 +21,7 @@ public class CreateDefaultRecordModal extends VBox {
     public CreateDefaultRecordModal(
             @NonNull Stage stage,
             @NonNull ConfigurationService configurationService) {
-        load("/fxml/configuration/CreateDefaultRecordModal.fxml", this);
+        load("/fxml/configuration/defaultRecordNames/CreateDefaultRecordModal.fxml", this);
         this.stage = stage;
         this.configurationService = configurationService;
     }

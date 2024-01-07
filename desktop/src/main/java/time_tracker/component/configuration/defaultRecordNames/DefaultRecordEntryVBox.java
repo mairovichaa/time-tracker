@@ -1,4 +1,4 @@
-package time_tracker.component.configuration;
+package time_tracker.component.configuration.defaultRecordNames;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
@@ -17,7 +17,7 @@ public class DefaultRecordEntryVBox extends VBox {
     private final String deleteDefaultRecordName;
 
     public DefaultRecordEntryVBox(String defaultRecordName) {
-        load("/fxml/configuration/DefaultRecordEntryVBox.fxml", this);
+        load("/fxml/configuration/defaultRecordNames/DefaultRecordEntryVBox.fxml", this);
         this.deleteDefaultRecordName = defaultRecordName;
         defaultRecordNameText.setText(defaultRecordName);
     }
