@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.text.Text?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
-         spacing="5" minWidth="200" maxWidth="200" minHeight="180" maxHeight="180">
+         spacing="5" minWidth="200" maxWidth="200" minHeight="180"
+>
 
     <HBox spacing="3">
         <Label>Date:</Label>
@@ -24,5 +27,16 @@
         <MFXButton buttonType="RAISED" onMouseClicked="#save" text="Save"/>
         <MFXButton buttonType="RAISED" onMouseClicked="#cancel" text="Cancel"/>
     </HBox>
+
+    <Separator>
+        <padding>
+            <Insets top="5.0"/>
+        </padding>
+    </Separator>
+
+    <VBox spacing="3">
+        <Text>Fast edit buttons</Text>
+        <FlowPane fx:id="fastEditButtons" hgap="3" vgap="3"/>
+    </VBox>
 
 </fx:root>

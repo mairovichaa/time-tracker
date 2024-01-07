@@ -21,6 +21,7 @@ public class StopwatchProperties {
 
     @Data
     public static class FastEditButtonProperties {
+        // TODO add comment field
         private String name;
         private String expected;
     }
