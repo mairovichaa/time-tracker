@@ -21,8 +21,8 @@
     <MFXTextField fx:id="commentField" floatMode="DISABLED"/>
 
     <HBox spacing="3">
-        <MFXButton buttonType="RAISED" fx:id="saveButton" text="Save"/>
-        <MFXButton buttonType="RAISED" fx:id="cancelButton" text="Cancel"/>
+        <MFXButton buttonType="RAISED" onMouseClicked="#save" text="Save"/>
+        <MFXButton buttonType="RAISED" onMouseClicked="#cancel" text="Cancel"/>
     </HBox>
 
 </fx:root>

@@ -2,7 +2,6 @@ package time_tracker.component.stopwatch;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -28,17 +27,19 @@ public class DayDataEditVBox extends VBox {
     private MFXTextField expectedTotalField;
     @FXML
     private MFXTextField commentField;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button cancelButton;
+
+    private final DayData dayData;
+    private final Stage stage;
+    private final DayDataService dayDataService;
 
     public DayDataEditVBox(
             @NonNull final DayData dayData,
             @NonNull final Stage stage
     ) {
         load("/fxml/stopwatch/DayDataEditVBox.fxml", this);
-        var dayDataService = GlobalContext.get(DayDataService.class);
+        this.dayData = dayData;
+        this.stage = stage;
+        this.dayDataService = GlobalContext.get(DayDataService.class);
 
         var date = dayData.getDate();
         dateLabel.textProperty()
@@ -50,19 +51,23 @@ public class DayDataEditVBox extends VBox {
 
         var noteValue = dayData.getNote();
         commentField.textProperty().setValue(noteValue);
+    }
 
-        saveButton.setOnMouseClicked(e -> {
-            var newExpectedTotalInSecs = expectedTotalField.textProperty().get();
-            var newExpectedLocalTime = LocalTime.parse(newExpectedTotalInSecs, LOCAL_TIME_FORMATTER);
+    @FXML
+    public void save() {
+        var newExpectedTotalInSecs = expectedTotalField.textProperty().get();
+        var newExpectedLocalTime = LocalTime.parse(newExpectedTotalInSecs, LOCAL_TIME_FORMATTER);
 
-            dayData.getExpectedTotalInSecsProperty().setValue(newExpectedLocalTime.toSecondOfDay());
-            dayData.setNote(commentField.getText());
+        dayData.getExpectedTotalInSecsProperty().setValue(newExpectedLocalTime.toSecondOfDay());
+        dayData.setNote(commentField.getText());
 
-            dayDataService.save(dayData);
+        dayDataService.save(dayData);
 
-            stage.close();
-        });
+        stage.close();
+    }
 
-        cancelButton.setOnMouseClicked(e -> stage.close());
+    @FXML
+    public void cancel() {
+        stage.close();
     }
 }
