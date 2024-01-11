@@ -18,8 +18,8 @@ import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
-import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import static time_tracker.component.Utils.load;
+import static time_tracker.component.common.Confirmation.requireConfirmation;
 
 @Log
 public class StopwatchRecordVBox extends VBox {
@@ -144,7 +145,15 @@ public class StopwatchRecordVBox extends VBox {
     @FXML
     protected void delete(MouseEvent event) {
         log.log(Level.FINE, "deleteButton is clicked");
-        appStateService.delete(stopwatchRecord);
+
+        requireConfirmation().whenComplete((it, ex) -> {
+            if (it) {
+                appStateService.delete(stopwatchRecord);
+            } else {
+                log.fine(() -> "'No' button is clicked");
+            }
+        });
+
         event.consume();
     }
 
