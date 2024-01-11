@@ -8,6 +8,7 @@ import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
+import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,6 +22,7 @@ import static java.lang.String.format;
 public class ConfigurationService {
 
     private final ObservableList<String> defaultRecordNames = FXCollections.observableArrayList();
+    private final ObservableList<FastEditButtonProperties> fastEditButtons = FXCollections.observableArrayList();
 
     private final AppProperties appProperties;
     private final String pathToPropertiesFile;
@@ -35,6 +37,30 @@ public class ConfigurationService {
         this.yamlObjectMapper = yamlObjectMapper;
 
         defaultRecordNames.addAll(appProperties.getStopwatch().getDefaultRecords());
+        fastEditButtons.addAll(appProperties.getStopwatch().getDates().getFastEditButtons());
+    }
+
+    public void addFastEditButton(@NonNull final FastEditButtonProperties properties) {
+        log.fine(() -> format("Add '%s' to fast edit button set", properties));
+
+        StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
+        List<FastEditButtonProperties> fastEditButtonsProps = appPropertiesStopwatch.getDates().getFastEditButtons();
+        fastEditButtonsProps.add(properties);
+
+        updatePropertiesFile(appProperties);
+
+        fastEditButtons.add(properties);
+    }
+
+    public void deleteFastEditButton(@NonNull final FastEditButtonProperties properties) {
+        log.fine(() -> format("Delete '%s' from fast edit button set", properties));
+        StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
+        List<FastEditButtonProperties> fastEditButtonsProps = appPropertiesStopwatch.getDates().getFastEditButtons();
+        fastEditButtonsProps.remove(properties);
+
+        updatePropertiesFile(appProperties);
+
+        fastEditButtons.remove(properties);
     }
 
     public void addDefaultRecord(final String recordName) {
