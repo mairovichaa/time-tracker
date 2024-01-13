@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import java.lang.String?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="640.0">
 
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Daily statistics</Label>
+
+    <MFXComboBox fx:id="trackedComboBox" floatMode="BORDER" floatingText="Tracked" onAction="#refresh">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="all" />
+                <String fx:value="yes" />
+                <String fx:value="no" />
+            </FXCollections>
+        </items>
+    </MFXComboBox>
+
     <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="700" footerVisible="false"/>
 
     <MFXButton buttonType="RAISED" text="Refresh" onAction="#refresh" maxWidth="1.7976931348623157E308" alignment="CENTER"/>
