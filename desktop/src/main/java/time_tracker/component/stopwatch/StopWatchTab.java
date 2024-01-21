@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.stopwatch.date.DatePickerVBox;
 import time_tracker.component.stopwatch.measurement.ListOfMeasurementsForChosenRecordVBox;
 import time_tracker.component.stopwatch.record.ListOfRecordsForChosenDateVBox;
 import time_tracker.config.properties.StopwatchProperties;
@@ -20,9 +21,10 @@ public class StopWatchTab extends Tab {
         log.log(Level.FINE, "Create StopWatchTab");
 
         var wrapperVBox = new VBox();
+        var datePickerVBox = new DatePickerVBox();
         var stopwatchDateStatisticVBox = new StopwatchDateStatisticVBox();
         wrapperVBox.setSpacing(10);
-        wrapperVBox.getChildren().addAll(stopwatchDateStatisticVBox);
+        wrapperVBox.getChildren().addAll(datePickerVBox, stopwatchDateStatisticVBox);
 
         var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
         if (stopwatchProperties.isDevMode()) {
@@ -31,9 +33,6 @@ public class StopWatchTab extends Tab {
         }
 
         var stopwatchPanelVBox = new ListOfRecordsForChosenDateVBox();
-
-        var listOfDatesVbox = new ListOfDatesVbox();
-
         var listOfMeasurementsForChosenRecordVBox = new ListOfMeasurementsForChosenRecordVBox();
 
         var hBoxWrapper = new HBox();
@@ -41,7 +40,6 @@ public class StopWatchTab extends Tab {
 
         hBoxWrapper.getChildren()
                 .addAll(
-                        listOfDatesVbox,
                         wrapperVBox,
                         stopwatchPanelVBox,
                         listOfMeasurementsForChosenRecordVBox

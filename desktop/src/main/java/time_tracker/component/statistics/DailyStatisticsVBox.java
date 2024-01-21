@@ -7,13 +7,16 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.TimeTrackerTabPane;
 import time_tracker.component.statistics.model.DayStatistics;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
+import java.time.LocalDate;
 import java.util.function.Predicate;
 
 import static java.util.Comparator.comparing;
@@ -55,7 +58,22 @@ public class DailyStatisticsVBox extends VBox {
         MFXTableColumn<DayStatistics> amountColumn = new MFXTableColumn<>("Amount");
         amountColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(DayStatistics::getAmount));
 
-        table.getTableColumns().addAll(dateColumn, amountColumn, totalColumn, expectedColumn, timeToWorkLeftColumn, trackedColumn);
+        MFXTableColumn<DayStatistics> seeColumn = new MFXTableColumn<>("_");
+        seeColumn.setRowCellFactory(stats -> {
+            MFXTableRowCell<DayStatistics, String> dayStatisticsIntegerMFXTableRowCell = new MFXTableRowCell<>(ignored -> "");
+
+            Button button = new Button("See");
+            button.setOnMouseClicked(e -> {
+                TimeTrackerTabPane.INSTANCE.openStopWatchTab();
+                LocalDate localDate = Utils.parseLocalDate(stats.getDate(), DATE_FORMAT_WITH_SHORT_DAY_NAME);
+                stopWatchAppState.setChosenDate(localDate);
+            });
+            dayStatisticsIntegerMFXTableRowCell.leadingGraphicProperty().set(button);
+            return dayStatisticsIntegerMFXTableRowCell;
+
+        });
+
+        table.getTableColumns().addAll(dateColumn, amountColumn, totalColumn, expectedColumn, timeToWorkLeftColumn, trackedColumn, seeColumn);
 
         table.autosizeColumnsOnInitialization();
         refresh();

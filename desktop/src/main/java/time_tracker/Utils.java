@@ -24,4 +24,9 @@ public class Utils {
     public String formatLocalDate(@NonNull final LocalDate date) {
         return DATE_FORMAT.format(date);
     }
+
+    @NonNull
+    public LocalDate parseLocalDate(@NonNull final String date, @NonNull final DateTimeFormatter formatter) {
+        return formatter.parse(date, LocalDate::from);
+    }
 }
