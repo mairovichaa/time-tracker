@@ -23,7 +23,7 @@
         </items>
     </MFXComboBox>
 
-    <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000" footerVisible="false"/>
+    <MFXTableView fx:id="table" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="750" footerVisible="false"/>
 
     <MFXButton buttonType="RAISED" text="Refresh" onAction="#refresh" maxWidth="1.7976931348623157E308" alignment="CENTER"/>
 </fx:root>

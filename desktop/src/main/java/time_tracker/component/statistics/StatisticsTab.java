@@ -5,6 +5,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import time_tracker.common.GlobalContext;
+import time_tracker.config.properties.StopwatchProperties;
 
 public class StatisticsTab extends Tab {
 
@@ -17,15 +19,20 @@ public class StatisticsTab extends Tab {
         firstColumn.getChildren().addAll(totalStatisticsVBox, intervalStatisticsVBox);
         firstColumn.setSpacing(10);
 
-        var weeklyStatisticsVBox = new WeeklyStatisticsVBox();
+        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
+
         var dailyStatisticsVBox = new DailyStatisticsVBox();
 
         var hBoxWrapper = new HBox();
-
         hBoxWrapper.setSpacing(10);
-
         hBoxWrapper.getChildren()
-                .addAll(firstColumn, weeklyStatisticsVBox, dailyStatisticsVBox);
+                .addAll(firstColumn, dailyStatisticsVBox);
+
+        if (stopwatchProperties.getStatistics().isShowWeekly()) {
+            var weeklyStatisticsVBox = new WeeklyStatisticsVBox();
+            hBoxWrapper.getChildren().add(weeklyStatisticsVBox);
+        }
+
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
 
         var scrollPane = new ScrollPane(hBoxWrapper);

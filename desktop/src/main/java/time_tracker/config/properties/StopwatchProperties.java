@@ -12,6 +12,7 @@ public class StopwatchProperties {
     private boolean devMode;
     private String folderWithData;
     private List<String> defaultRecords = new ArrayList<>();
+    private StatisticsProperties statistics;
 
     @Data
     public static class StopwatchDatesProperties {
@@ -24,6 +25,11 @@ public class StopwatchProperties {
         // TODO add comment field
         private String name;
         private String expected;
+    }
+
+    @Data
+    public static class StatisticsProperties {
+        boolean showWeekly;
     }
 
 }

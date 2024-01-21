@@ -1,0 +1,22 @@
+---
+stopwatch:
+  dates:
+    amountOfDaysToShow: 600
+    fastEditButtons:
+    - name: "Holiday"
+      expected: "0S"
+    - name: "Weekend"
+      expected: "0S"
+    - name: "Sick"
+      expected: "0S"
+    - name: "Workday"
+      expected: "8H00M"
+  devMode: true
+  folderWithData: "<path-to-data>"
+  defaultRecords:
+  - "Daily"
+  - "Task 1"
+  - "Task 2"
+  statistics:
+    showWeekly: false
+
