@@ -3,18 +3,22 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.12'
 }
 
-jar {
+tasks.register('fatJar', org.gradle.jvm.tasks.Jar) {
+    dependsOn 'build'
+
+    archiveBaseName = 'app'
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
                 'Main-Class': 'time_tracker.Launcher'
         )
     }
+    from sourceSets.main.output
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-
 
 dependencies {
     implementation project(':core:repository')
@@ -28,9 +32,12 @@ dependencies {
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac-aarch64"
 }
 
 javafx {
-    version = '17'
+    version = '21-ea+24'
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.swing', 'javafx.web']
 }
+
+
