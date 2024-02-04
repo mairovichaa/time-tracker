@@ -6,9 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.extern.java.Log;
+import time_tracker.TimeTrackerApp;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.stopwatch.record.CreateRecordVBoxModal;
 import time_tracker.model.StopWatchAppState;
 
 import java.time.LocalDate;
@@ -57,5 +62,18 @@ public class DatePickerVBox extends VBox {
         log.fine(() -> "Choose new date - " + pickedValue);
 
         stopWatchAppState.setChosenDate(pickedValue);
+    }
+
+    @FXML
+    private void addRecord() {
+        log.fine("'Add record' button is clicked");
+
+        var dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(TimeTrackerApp.primaryStage);
+        var dialogVbox = new CreateRecordVBoxModal(dialog);
+        var dialogScene = new Scene(dialogVbox);
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 }
