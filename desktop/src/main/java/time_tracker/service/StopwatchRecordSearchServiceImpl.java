@@ -3,8 +3,8 @@ package time_tracker.service;
 import javafx.application.Platform;
 import lombok.extern.java.Log;
 import time_tracker.common.DebounceContext;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.common.GlobalContext;
+import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -45,6 +45,12 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                         var found = stopwatchSearchState.getFound();
                         if (newSearchTerm.isBlank()) {
                             found.clear();
+                            List<StopwatchRecord> allExistingRecords = stopWatchAppState.getDateToRecords()
+                                    .values()
+                                    .stream()
+                                    .flatMap(Collection::stream)
+                                    .toList();
+                            found.addAll(allExistingRecords);
                             return;
                         }
                         var foundNew = stopWatchAppState.getDateToRecords()
@@ -52,7 +58,7 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                                 .stream()
                                 .flatMap(Collection::stream)
                                 .filter(it -> it.getName().contains(newSearchTerm) || searchTermInRecordMeasurements(newSearchTerm, it))
-                                .collect(toList());
+                                .toList();
                         log.finest(() -> "Found by term " + newSearchTerm + ": " + foundNew);
 
                         found.clear();
