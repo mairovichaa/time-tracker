@@ -3,27 +3,25 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
-         spacing="5" minWidth="200" maxWidth="200" minHeight="180"
->
+         minWidth="175" maxWidth="175" spacing="5">
 
-    <HBox spacing="3">
-        <Label>Date:</Label>
-        <Label fx:id="dateLabel"/>
-    </HBox>
+    <VBox spacing="10">
+        <VBox>
+            <MFXTextField fx:id="expectedTotalField" floatMode="BORDER" floatingText="Expected" maxWidth="Infinity"
+                          textLimit="8"/>
+            <Label fx:id="errorLabel" visible="false" managed="false" textFill="red" wrapText="true"/>
+        </VBox>
 
-    <Label>Expected amount of time:</Label>
-    <MFXTextField fx:id="expectedTotalField" floatMode="DISABLED"/>
+        <MFXTextField fx:id="commentField" floatMode="BORDER" floatingText="Comment" maxWidth="Infinity"/>
+    </VBox>
 
-    <Label>Comment:</Label>
-    <MFXTextField fx:id="commentField" floatMode="DISABLED"/>
-
-    <HBox spacing="3">
+    <HBox spacing="5" alignment="CENTER_RIGHT">
         <MFXButton buttonType="RAISED" onMouseClicked="#save" text="Save"/>
         <MFXButton buttonType="RAISED" onMouseClicked="#cancel" text="Cancel"/>
     </HBox>
@@ -34,9 +32,11 @@
         </padding>
     </Separator>
 
-    <VBox spacing="3">
-        <Text>Fast edit buttons</Text>
-        <FlowPane fx:id="fastEditButtons" hgap="3" vgap="3"/>
-    </VBox>
+    <HBox alignment="CENTER">
+        <Label>Fast edit buttons</Label>
+
+    </HBox>
+
+    <FlowPane fx:id="fastEditButtons" hgap="5" vgap="5"/>
 
 </fx:root>

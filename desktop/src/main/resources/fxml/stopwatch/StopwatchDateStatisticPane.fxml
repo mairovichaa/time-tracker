@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css">
+
+    <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
+          spacing="5" minWidth="220" maxWidth="220">
+        <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Day statistic</Label>
+
+
+        <HBox spacing="10">
+            <HBox spacing="2" minWidth="70">
+                <HBox.margin>
+                    <Insets left="25"/>
+                </HBox.margin>
+                <Label>E:</Label>
+                <Label fx:id="expectedAmountOfTime"/>
+            </HBox>
+            <HBox spacing="2">
+                <Label>T:</Label>
+                <Label fx:id="totalAmountOfTimeLabel"/>
+            </HBox>
+        </HBox>
+
+        <HBox spacing="10">
+            <HBox spacing="2" minWidth="70">
+                <HBox.margin>
+                    <Insets left="25"/>
+                </HBox.margin>
+                <Label>L:</Label>
+                <Label fx:id="timeToWorkLeft"/>
+            </HBox>
+            <HBox spacing="2">
+                <Label>O:</Label>
+                <Label fx:id="overtime"/>
+            </HBox>
+        </HBox>
+
+        <HBox prefWidth="Infinity" alignment="CENTER">
+            <Label fx:id="nonTrackedLabel"/>
+            <Label fx:id="trackedLabel"/>
+        </HBox>
+
+        <Separator/>
+
+        <HBox alignment="CENTER">
+            <Label fx:id="comment" wrapText="true"/>
+        </HBox>
+    </VBox>
+
+    <!--    195 = 220 (panel width) - 10 (padding) - 15 (width of buttons) * 1 (amount of buttons) - 3 (spacing) * 0 (amount of spaces) -->
+    <HBox layoutX="195" layoutY="10" spacing="3">
+        <Button fx:id="editButton"/>
+    </HBox>
+</fx:root>

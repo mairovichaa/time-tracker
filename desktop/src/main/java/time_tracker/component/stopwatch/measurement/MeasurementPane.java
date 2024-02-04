@@ -2,16 +2,16 @@ package time_tracker.component.stopwatch.measurement;
 
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import lombok.NonNull;
 import lombok.extern.java.Log;
-import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.common.DialogFactory;
+import time_tracker.component.common.Icon;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchMeasurementService;
@@ -19,12 +19,16 @@ import time_tracker.service.StopwatchRecordService;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.component.Utils.load;
+import static time_tracker.component.common.Confirmation.requireConfirmation;
+import static time_tracker.component.common.IconButton.initIconButton;
 
 @Log
-public class MeasurementVBox extends VBox {
+public class MeasurementPane extends Pane {
 
     @FXML
     private Label measurementIdLabel;
+    @FXML
+    private HBox measurementIdWrapper;
     @FXML
     private Label startedAt;
     @FXML
@@ -33,20 +37,28 @@ public class MeasurementVBox extends VBox {
     private Label total;
     @FXML
     private Label comment;
+    @FXML
+    private Button moveButton;
+    @FXML
+    private Button editNameButton;
+    @FXML
+    private Button deleteButton;
 
     private final StopwatchRecordMeasurement measurement;
     private final StopwatchRecordService stopwatchRecordService;
     private final StopwatchMeasurementService stopwatchMeasurementService;
 
-    public MeasurementVBox(@NonNull final StopwatchRecordMeasurement measurement) {
-        load("/fxml/stopwatch/measurement/MeasurementVBox.fxml", this);
+    public MeasurementPane(@NonNull final StopwatchRecordMeasurement measurement) {
+        load("/fxml/stopwatch/measurement/MeasurementPane.fxml", this);
 
         this.measurement = measurement;
 
         var appProperties = GlobalContext.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
-        measurementIdLabel.setVisible(isDevMode);
+        measurementIdWrapper.setVisible(isDevMode);
+        measurementIdWrapper.setManaged(isDevMode);
         measurementIdLabel.setText(Long.toString(measurement.getId()));
+
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
         this.stopwatchMeasurementService = GlobalContext.get(StopwatchMeasurementService.class);
 
@@ -104,35 +116,41 @@ public class MeasurementVBox extends VBox {
                         return comment;
                     }
                 });
+
+        initIconButton(deleteButton, 15, Icon.DELETE);
+        initIconButton(moveButton, 15, Icon.MOVE_GROUP);
+        initIconButton(editNameButton, 15, Icon.PEN);
     }
 
     @FXML
     protected void edit() {
         log.fine("Edit button is clicked for measurement = " + measurement.getId());
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(TimeTrackerApp.primaryStage);
-        VBox dialogVbox = new MeasurementEditVBox(measurement, dialog);
-        Scene dialogScene = new Scene(dialogVbox, 200, 220);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        DialogFactory.createAndShow(
+                stage -> new MeasurementEditVBox(measurement, stage),
+                "Edit measurement"
+        );
     }
 
     @FXML
     protected void move() {
         log.fine("'Move' button is clicked for measurement = " + measurement.getId());
-        var dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(TimeTrackerApp.primaryStage);
-        var dialogVbox = new MeasurementMoveVBox(measurement, dialog);
-        var dialogScene = new Scene(dialogVbox, 200, 220);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        DialogFactory.createAndShow(
+                stage -> new MeasurementMoveVBox(measurement, stage),
+                "Choose new record"
+        );
     }
+
     @FXML
     protected void delete() {
         log.fine("Delete button is clicked for measurement = " + measurement.getId());
-        stopwatchMeasurementService.delete(measurement.getId());
-        stopwatchRecordService.store();
+
+        requireConfirmation().whenComplete((it, ex) -> {
+            if (it) {
+                stopwatchMeasurementService.delete(measurement.getId());
+                stopwatchRecordService.store();
+            } else {
+                log.fine(() -> "'No' button is clicked");
+            }
+        });
     }
 }

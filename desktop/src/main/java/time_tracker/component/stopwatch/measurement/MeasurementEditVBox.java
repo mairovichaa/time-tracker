@@ -34,6 +34,8 @@ public class MeasurementEditVBox extends VBox {
     @FXML
     private Label total;
     @FXML
+    private Label errorLabel;
+    @FXML
     private MFXTextField comment;
     @FXML
     private Button save;
@@ -79,7 +81,12 @@ public class MeasurementEditVBox extends VBox {
                             startedAtTime = LocalTime.parse(startedAtText, LOCAL_TIME_FORMATTER);
                         } catch (Exception exception) {
                             log.fine(() -> "Can't parse startedAt: " + exception.getMessage());
-                            return "startedAt has wrong format: " + LOCAL_TIME_FORMATTER_PATTERN;
+                            save.setDisable(true);
+                            errorLabel.setText("startedAt has wrong format: " + LOCAL_TIME_FORMATTER_PATTERN);
+                            errorLabel.setManaged(true);
+                            errorLabel.setVisible(true);
+                            stage.setHeight(190);
+                            return "??:??:??";
                         }
                         startedAtResult.set(startedAtTime);
 
@@ -89,9 +96,18 @@ public class MeasurementEditVBox extends VBox {
                             finishedAtTime = LocalTime.parse(finishedAtText, LOCAL_TIME_FORMATTER);
                         } catch (Exception exception) {
                             log.fine(() -> "Can't parse finishedAt: " + exception.getMessage());
-                            return "finishedAt has wrong format: " + LOCAL_TIME_FORMATTER_PATTERN;
+                            save.setDisable(true);
+                            errorLabel.setText("finishedAt has wrong format: " + LOCAL_TIME_FORMATTER_PATTERN);
+                            errorLabel.setManaged(true);
+                            errorLabel.setVisible(true);
+                            stage.setHeight(190);
+                            return "??:??:??";
                         }
+                        save.setDisable(false);
                         finishedAtResult.set(finishedAtTime);
+                        errorLabel.setManaged(false);
+                        errorLabel.setVisible(false);
+                        stage.setHeight(175);
 
                         var duration = Duration.between(startedAtTime, finishedAtTime);
                         return Utils.formatDuration(duration);

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="640.0">
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
 
     <Text text="Are you sure?"/>
-    <MFXButton buttonType="RAISED" text="Yes" onAction="#confirm"/>
-    <MFXButton buttonType="RAISED" text="No" onAction="#doNotConfirm"/>
+    <HBox spacing="5">
+        <MFXButton buttonType="RAISED" text="Yes" onAction="#confirm"/>
+        <MFXButton buttonType="RAISED" text="No" onAction="#doNotConfirm"/>
+    </HBox>
+
 </fx:root>

@@ -26,8 +26,6 @@ import static time_tracker.component.Utils.load;
 public class MeasurementMoveVBox extends VBox {
 
     @FXML
-    private Label recordNameLabel;
-    @FXML
     private Button cancel;
     @FXML
     private MFXListView<StopwatchRecord> recordNamesList;
@@ -44,7 +42,6 @@ public class MeasurementMoveVBox extends VBox {
         var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
         var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord()
                 .get();
-        recordNameLabel.setText(chosenStopwatchRecord.getName());
 
         var chosenDate = stopWatchAppState.getChosenDate();
         var stopwatchRecords = stopWatchAppState.getDateToRecords()
@@ -55,6 +52,9 @@ public class MeasurementMoveVBox extends VBox {
 
         StringConverter<StopwatchRecord> converter = FunctionalStringConverter.to(StopwatchRecord::getName);
 
+        recordNamesList.setPrefHeight(stopwatchRecords.size() * 32);
+        // max amount of records to show without scrolling = 6
+        recordNamesList.setMaxHeight(6 * 32);
         recordNamesList.setItems(stopwatchRecords);
         recordNamesList.setConverter(converter);
         recordNamesList.getSelectionModel().selectionProperty().addListener(

@@ -21,8 +21,6 @@ public class MeasurementInProgressVBox extends VBox {
     @FXML
     private Label total;
     @FXML
-    private Label comment;
-    @FXML
     private MFXTextField commentInput;
 
     public MeasurementInProgressVBox(@NonNull final StopwatchRecordMeasurement measurement) {
@@ -60,22 +58,6 @@ public class MeasurementInProgressVBox extends VBox {
 
         commentInput.textProperty()
                 .bindBidirectional(measurement.getNoteProperty());
-
-        comment.textProperty()
-                .bind(new StringBinding() {
-                    {
-                        bind(measurement.getNoteProperty());
-                    }
-                    @Override
-                    protected String computeValue() {
-                        var comment = measurement.getNote();
-                        if (comment.isEmpty()){
-                            return "No comment";
-                        }
-                        return comment;
-                    }
-                });
-
     }
 
 }

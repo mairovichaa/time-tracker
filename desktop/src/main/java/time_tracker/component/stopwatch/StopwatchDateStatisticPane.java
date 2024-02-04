@@ -1,54 +1,47 @@
 package time_tracker.component.stopwatch;
 
-import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 import lombok.extern.java.Log;
-import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.common.DialogFactory;
+import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
-import time_tracker.service.DayDataService;
 
-import java.time.Duration;
+import java.util.List;
 
 import static time_tracker.component.Utils.load;
+import static time_tracker.component.common.IconButton.initIconButton;
 
 @Log
-public class StopwatchDateStatisticVBox extends VBox {
+public class StopwatchDateStatisticPane extends Pane {
 
     @FXML
     private Label totalAmountOfTimeLabel;
-
-    @FXML
-    private Label amountOfRecordsLabel;
-
     @FXML
     private Label expectedAmountOfTime;
     @FXML
     private Label timeToWorkLeft;
-    @FXML
-    private Label trackedTimeLabel;
-    @FXML
-    private MFXToggleButton trackedToggle;
     @FXML
     private Label overtime;
     @FXML
     private Label comment;
     @FXML
     private Button editButton;
+    @FXML
+    private Label trackedLabel;
+    @FXML
+    private Label nonTrackedLabel;
 
     private final StopWatchAppState stopWatchAppState;
 
 
-    public StopwatchDateStatisticVBox() {
-        load("/fxml/stopwatch/StopwatchDateStatisticVBox.fxml", this);
+    public StopwatchDateStatisticPane() {
+        load("/fxml/stopwatch/StopwatchDateStatisticPane.fxml", this);
 
         stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
 
@@ -74,38 +67,11 @@ public class StopwatchDateStatisticVBox extends VBox {
                     }
                 });
 
-        var trackedInSecs = dayData.getTrackedInSecsProperty();
-        trackedTimeLabel.textProperty().unbind();
-        trackedTimeLabel.textProperty()
-                .bind(new StringBinding() {
-                          {
-                              super.bind(trackedInSecs);
-                          }
-
-                          @Override
-                          protected String computeValue() {
-                              return Utils.formatDuration(trackedInSecs.getValue());
-                          }
-                      }
-                );
-
-        trackedToggle.selectedProperty()
-                .unbind();
-        trackedToggle.selectedProperty()
-                .bind(dayData.getTracked());
-
-        amountOfRecordsLabel.textProperty().unbind();
-        amountOfRecordsLabel.textProperty()
-                .bind(new StringBinding() {
-                    {
-                        super.bind(dayData.getAmountOfRecordsProperty());
-                    }
-
-                    @Override
-                    protected String computeValue() {
-                        return dayData.getAmountOfRecords() + "";
-                    }
-                });
+        initIconButton(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-grey"), List.of("label-icon-grey"));
+        initIconButton(trackedLabel, 20, Icon.CHECK, List.of("icon-label-green"), List.of("label-icon-green"));
+        dayData.getTracked()
+                .addListener((observable, oldValue, newValue) -> refreshTracked(newValue));
+        refreshTracked(dayData.isTracked());
 
         expectedAmountOfTime.textProperty().unbind();
         var expectedTotalInSecsProperty = dayData.getExpectedTotalInSecsProperty();
@@ -163,15 +129,28 @@ public class StopwatchDateStatisticVBox extends VBox {
                     }
                 });
 
+        initIconButton(editButton, 15, Icon.PEN);
+
         editButton.setOnMouseClicked(e -> {
             log.fine("Edit button is clicked for dayData = " + dayData.getId());
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(TimeTrackerApp.primaryStage);
-            VBox dialogVbox = new DayDataEditVBox(dayData, dialog);
-            Scene dialogScene = new Scene(dialogVbox);
-            dialog.setScene(dialogScene);
-            dialog.show();
+            DialogFactory.createAndShow(
+                    stage -> new DayDataEditVBox(dayData, stage),
+                    "Edit day info"
+            );
         });
+    }
+
+    private void refreshTracked(final boolean tracked) {
+        if (tracked) {
+            nonTrackedLabel.setVisible(false);
+            nonTrackedLabel.setManaged(false);
+            trackedLabel.setVisible(true);
+            trackedLabel.setManaged(true);
+        } else {
+            nonTrackedLabel.setVisible(true);
+            nonTrackedLabel.setManaged(true);
+            trackedLabel.setVisible(false);
+            trackedLabel.setManaged(false);
+        }
     }
 }

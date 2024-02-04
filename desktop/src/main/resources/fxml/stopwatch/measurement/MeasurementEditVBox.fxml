@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import io.github.palexdev.materialfx.controls.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
-         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
 
-    <HBox spacing="3">
-        <Label>Started at:</Label>
-        <MFXTextField fx:id="startedAt" floatMode="DISABLED"/>
-    </HBox>
-    <HBox spacing="3">
-        <Label>Finished at:</Label>
-        <MFXTextField fx:id="finishedAt" floatMode="DISABLED"/>
-    </HBox>
-    <HBox spacing="3">
-        <Label>Total:</Label>
-        <Label fx:id="total" wrapText="true"/>
-    </HBox>
-    <HBox spacing="3">
-        <Label>Comment:</Label>
-        <MFXTextField fx:id="comment" floatMode="DISABLED"/>
-    </HBox>
+    <VBox>
+        <HBox spacing="7">
+            <MFXTextField fx:id="startedAt" floatingText="Started at" floatMode="BORDER" maxWidth="85" minWidth="85"
+                          prefWidth="85"
+                          alignment="CENTER" textLimit="8"/>
+            <Label maxHeight="Infinity">-></Label>
+            <MFXTextField fx:id="finishedAt" floatingText="Finished at" floatMode="BORDER" maxWidth="85" minWidth="85"
+                          prefWidth="85"
+                          alignment="CENTER" textLimit="8"/>
+            <Label maxHeight="Infinity">=</Label>
+            <Label fx:id="total" wrapText="true" maxHeight="Infinity"/>
+        </HBox>
+        <Label fx:id="errorLabel" visible="false" managed="false" textFill="red"/>
+    </VBox>
 
-    <HBox>
+    <MFXTextField fx:id="comment" floatingText="Comment" floatMode="BORDER" maxWidth="Infinity"/>
+
+    <HBox spacing="5" alignment="CENTER_RIGHT">
         <MFXButton buttonType="RAISED" fx:id="save">Save</MFXButton>
         <MFXButton buttonType="RAISED" fx:id="cancel">Cancel</MFXButton>
     </HBox>
-
-
 </fx:root>
