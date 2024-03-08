@@ -1,24 +1,147 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.12'
 }
 
-tasks.register('fatJar', org.gradle.jvm.tasks.Jar) {
-    dependsOn 'build'
+tasks.register('jarMac', org.gradle.jvm.tasks.Jar) {
+    group 'build'
+    dependsOn 'prepareJarsForMac'
 
-    archiveBaseName = 'app'
+    archiveBaseName = 'app-mac'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
                 'Main-Class': 'time_tracker.Launcher'
         )
     }
+
     from sourceSets.main.output
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    doFirst {
+        // TODO rework build directories constants - move them to configs / init in one place
+        from fileTree('build/mac').collect { it.isDirectory() ? it : zipTree(it) }
     }
+    destinationDirectory = file("$buildDir/os-specific-jars")
 }
+
+tasks.register('prepareJarsForMac', Copy) {
+    group 'build'
+    dependsOn 'assemble'
+
+    from configurations.runtimeClasspath
+    into 'build/mac'
+
+    exclude "javafx-*win.jar"
+    exclude "javafx-*linux.jar"
+    exclude "javafx-*mac-aarch64.jar"
+}
+
+tasks.register('jarMacAarch64', org.gradle.jvm.tasks.Jar) {
+    group 'build'
+    dependsOn 'prepareJarsForMacAarch64'
+
+    archiveBaseName = 'app-mac-aarch64'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': 'time_tracker.Launcher'
+        )
+    }
+
+    from sourceSets.main.output
+    doFirst {
+        from fileTree('build/macAarch64').collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    destinationDirectory = file("$buildDir/os-specific-jars")
+}
+
+tasks.register('prepareJarsForMacAarch64', Copy) {
+    group 'build'
+    dependsOn 'assemble'
+
+    from configurations.runtimeClasspath
+    into 'build/macAarch64'
+
+    exclude "javafx-*win.jar"
+    exclude "javafx-*linux.jar"
+    exclude "javafx-graphics-21-ea+24-mac.jar"
+}
+
+tasks.register('jarWin', org.gradle.jvm.tasks.Jar) {
+    group 'build'
+    dependsOn 'prepareJarsForWin'
+
+    archiveBaseName = 'app-win'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': 'time_tracker.Launcher'
+        )
+    }
+
+    from sourceSets.main.output
+    doFirst {
+        from fileTree('build/win').collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    destinationDirectory = file("$buildDir/os-specific-jars")
+}
+
+tasks.register('prepareJarsForWin', Copy) {
+    group 'build'
+    dependsOn 'assemble'
+
+    from configurations.runtimeClasspath
+    into 'build/win'
+
+    exclude "javafx-*linux.jar"
+    exclude "javafx-*mac.jar"
+    exclude "javafx-*mac-aarch64.jar"
+}
+
+tasks.register('jarLinux', org.gradle.jvm.tasks.Jar) {
+    group 'build'
+    dependsOn 'prepareJarsForLinux'
+
+    archiveBaseName = 'app-linux'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': 'time_tracker.Launcher'
+        )
+    }
+
+    from sourceSets.main.output
+    doFirst {
+        from fileTree('build/linux').collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    destinationDirectory = file("$buildDir/os-specific-jars")
+}
+
+tasks.register('prepareJarsForLinux', Copy) {
+    group 'build'
+    dependsOn 'assemble'
+
+    from configurations.runtimeClasspath
+    into 'build/linux'
+
+    exclude "javafx-*win.jar"
+    exclude "javafx-*mac.jar"
+    exclude "javafx-*mac-aarch64.jar"
+}
+
+tasks.named('build').configure {
+    dependsOn 'jarLinux'
+    dependsOn 'jarWin'
+    dependsOn 'jarMacAarch64'
+    dependsOn 'jarMac'
+}
+
+ext {
+    javafxVersion = '21-ea+24'
+}
+
 
 dependencies {
     implementation project(':core:repository')
@@ -29,15 +152,20 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac-aarch64"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:win"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-graphics:$javafxVersion:mac"
+    implementation("org.openjfx:javafx-graphics:$javafxVersion:mac-aarch64")
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:win"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-fxml:$javafxVersion:mac"
+    implementation("org.openjfx:javafx-fxml:$javafxVersion:mac-aarch64")
+    implementation "org.openjfx:javafx-controls:$javafxVersion:win"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-controls:$javafxVersion:mac"
+    implementation("org.openjfx:javafx-controls:$javafxVersion:mac-aarch64")
+    implementation "org.openjfx:javafx-base:$javafxVersion:win"
+    implementation "org.openjfx:javafx-base:$javafxVersion:linux"
+    implementation "org.openjfx:javafx-base:$javafxVersion:mac"
+    implementation("org.openjfx:javafx-base:$javafxVersion:mac-aarch64")
 }
-
-javafx {
-    version = '21-ea+24'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.swing', 'javafx.web']
-}
-
-
