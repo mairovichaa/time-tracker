@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import time_tracker.TimeTrackerApp;
 
@@ -28,8 +29,10 @@ public class Confirmation extends VBox {
         dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(TimeTrackerApp.primaryStage);
+        dialog.setResizable(false);
+        dialog.initStyle(StageStyle.UTILITY);
 
-        var dialogScene = new Scene(this, 200, 150);
+        var dialogScene = new Scene(this);
         dialog.setScene(dialogScene);
         dialog.show();
     }

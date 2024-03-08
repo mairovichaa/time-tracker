@@ -27,6 +27,7 @@ public class RecordRenameVBox extends VBox {
         load("/fxml/stopwatch/record/RecordRenameVBox.fxml", this);
         this.stage = stage;
         this.record = record;
+        this.nameTextField.setText(record.getName());
     }
 
     @FXML

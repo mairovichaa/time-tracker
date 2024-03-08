@@ -6,26 +6,20 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.common.GlobalContext;
+import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecordMeasurement;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static time_tracker.Utils.DATE_FORMAT_WITH_SHORT_DAY_NAME;
 import static time_tracker.component.Utils.load;
 
 @Log
 public class ListOfMeasurementsForChosenRecordVBox extends VBox {
 
-    @FXML
-    private Label recordNameLabel;
-    @FXML
-    private Label recordDateLabel;
     @FXML
     private VBox finishedMeasurementsVBox;
     @FXML
@@ -43,7 +37,7 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
         listOfMeasurementsWrapperVBox.visibleProperty()
                 .bind(stopWatchAppState.getHasChosenStopwatchRecord());
 
-        ObservableList<MeasurementVBox> measurementsVBoxes = FXCollections.observableArrayList();
+        ObservableList<MeasurementPane> measurementsVBoxes = FXCollections.observableArrayList();
         showNoMeasurementsInfoWhenThereIsNoMeasurement(measurementsVBoxes);
 
         AtomicReference<Runnable> removePreviousListener = new AtomicReference<>();
@@ -60,10 +54,6 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
             }
 
             var stopwatchRecord = chosenStopwatchRecordProperty.get();
-
-            recordNameLabel.setText(stopwatchRecord.getName());
-            recordDateLabel.setText(DATE_FORMAT_WITH_SHORT_DAY_NAME.format(stopwatchRecord.getDate()));
-
             var measurementsProperty = stopwatchRecord.getMeasurementsProperty();
 
             var invalidationListener = (InvalidationListener) ignored -> refreshMeasurements(measurementsVBoxes, measurementsProperty);
@@ -77,7 +67,7 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
     }
 
     private void showNoMeasurementsInfoWhenThereIsNoMeasurement(
-            @NonNull final ObservableList<MeasurementVBox> measurementsVBoxes) {
+            @NonNull final ObservableList<MeasurementPane> measurementsVBoxes) {
         noMeasurementsInfoVBox.visibleProperty()
                 .bind(new BooleanBinding() {
                     {
@@ -95,13 +85,13 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
     }
 
     private void refreshMeasurements(
-            @NonNull final ObservableList<MeasurementVBox> measurementsVBoxes,
+            @NonNull final ObservableList<MeasurementPane> measurementsVBoxes,
             @NonNull final ObservableList<StopwatchRecordMeasurement> measurementsProperty) {
         log.fine(() -> "refresh measurements");
         measurementsVBoxes.clear();
         measurementsProperty
                 .stream()
-                .map(MeasurementVBox::new)
+                .map(MeasurementPane::new)
                 .forEach(measurementsVBoxes::add);
     }
 

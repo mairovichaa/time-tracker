@@ -22,7 +22,7 @@ public class StopWatchTab extends Tab {
 
         var wrapperVBox = new VBox();
         var datePickerVBox = new DatePickerVBox();
-        var stopwatchDateStatisticVBox = new StopwatchDateStatisticVBox();
+        var stopwatchDateStatisticVBox = new StopwatchDateStatisticPane();
         wrapperVBox.setSpacing(10);
         wrapperVBox.getChildren().addAll(datePickerVBox, stopwatchDateStatisticVBox);
 

@@ -1,24 +1,22 @@
 package time_tracker.component.stopwatch.record;
 
-import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.extern.java.Log;
-import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
+import time_tracker.component.common.DialogFactory;
+import time_tracker.component.common.Icon;
 import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
@@ -32,18 +30,23 @@ import java.util.logging.Level;
 
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
+import static time_tracker.component.common.IconButton.initIconButton;
 
 @Log
-public class StopwatchRecordVBox extends VBox {
+public class StopwatchRecordVBox extends Pane {
 
+    @FXML
+    private VBox recordVBox;
     @FXML
     private Label recordIdLabel;
     @FXML
     private Label nameLabel;
     @FXML
+    private Label totalTimeIconLabel;
+    @FXML
     private Label totalTimeLabel;
     @FXML
-    private Label deleteLabel;
+    private Button deleteButton;
     @FXML
     private Label amountOfMeasurements;
     @FXML
@@ -51,9 +54,19 @@ public class StopwatchRecordVBox extends VBox {
     @FXML
     private Button stopButton;
     @FXML
-    private MFXToggleButton trackedToggle;
+    private Button editNameButton;
+    @FXML
+    private Button moveButton;
     @FXML
     private VBox inProgressMeasurementVBox;
+    @FXML
+    private VBox measurementInProgressVBoxWrapper;
+
+    @FXML
+    private Button trackButton;
+    @FXML
+    private Button notTrackButton;
+
     private final AppStateService appStateService;
 
     private final StopwatchRecord stopwatchRecord;
@@ -70,14 +83,23 @@ public class StopwatchRecordVBox extends VBox {
 
         nameLabel.textProperty().bind(stopwatchRecord.getNameProperty());
 
-        startButton.disableProperty()
-                .bind(stopwatchRecord.getHasMeasurementInProgressProperty());
+        initIconButton(startButton, 30, Icon.STOPWATCH);
+        initIconButton(stopButton, 30, Icon.STOPWATCH, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+
+        initIconButton(deleteButton, 15, Icon.DELETE);
+        initIconButton(moveButton, 15, Icon.CALENDAR);
+        initIconButton(editNameButton, 15, Icon.PEN);
+
         stopButton.disableProperty()
                 .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgressProperty()));
 
-        trackedToggle.selectedProperty()
-                .bindBidirectional(stopwatchRecord.getTrackedProperty());
+        initIconButton(trackButton, 20, Icon.CHECK);
+        trackButton.visibleProperty().bind(Bindings.not(stopwatchRecord.getTrackedProperty()));
+        trackButton.managedProperty().bind(Bindings.not(stopwatchRecord.getTrackedProperty()));
 
+        initIconButton(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+        notTrackButton.visibleProperty().bind(stopwatchRecord.getTrackedProperty());
+        notTrackButton.managedProperty().bind(stopwatchRecord.getTrackedProperty());
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
@@ -90,7 +112,8 @@ public class StopwatchRecordVBox extends VBox {
         var appProperties = GlobalContext.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         recordIdLabel.setVisible(isDevMode);
-        recordIdLabel.setText(Long.toString(stopwatchRecord.getId()));
+        recordIdLabel.setManaged(isDevMode);
+        recordIdLabel.setText("#" + stopwatchRecord.getId());
 
         bindTotalTime();
         bindAmountOfMeasurements();
@@ -103,16 +126,19 @@ public class StopwatchRecordVBox extends VBox {
             log.fine(() -> "chosen stopwatch record have been changed");
             var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
             if (stopwatchRecord.equals(chosenStopwatchRecord)) {
-                this.getStyleClass()
+                recordVBox.getStyleClass()
                         .add("record-chosen");
             } else {
-                this.getStyleClass()
+                recordVBox.getStyleClass()
                         .remove("record-chosen");
             }
         };
         stopWatchAppState.getChosenStopwatchRecord()
                 .addListener(new WeakInvalidationListener(chosenStopwatchRecordListener));
+
+        editNameButton.setOnMouseClicked(e -> rename());
     }
+
 
     private void bindAmountOfMeasurements() {
         var stopwatchRecords = stopwatchRecord.getMeasurementsProperty();
@@ -188,35 +214,52 @@ public class StopwatchRecordVBox extends VBox {
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue == null) {
                         inProgressMeasurementVBox.getChildren().clear();
+                        measurementInProgressVBoxWrapper.setVisible(false);
+                        measurementInProgressVBoxWrapper.setManaged(false);
+                        stopButton.setVisible(false);
+                        stopButton.setManaged(false);
+                        startButton.setManaged(true);
+                        startButton.setVisible(true);
                         return;
                     }
                     var hBox = new MeasurementInProgressVBox(newValue);
                     inProgressMeasurementVBox.getChildren().add(hBox);
+                    measurementInProgressVBoxWrapper.setVisible(true);
+                    measurementInProgressVBoxWrapper.setManaged(true);
+                    startButton.setManaged(false);
+                    startButton.setVisible(false);
+                    stopButton.setVisible(true);
+                    stopButton.setManaged(true);
                 });
     }
 
     @FXML
     protected void rename() {
         log.log(Level.FINE, "'Rename' button is clicked");
-
-        var dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(TimeTrackerApp.primaryStage);
-        var dialogVbox = new RecordRenameVBox(record, dialog);
-        var dialogScene = new Scene(dialogVbox, 200, 80);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        DialogFactory.createAndShow(
+                stage -> new RecordRenameVBox(record, stage),
+                "Rename record"
+        );
     }
 
     @FXML
     protected void move() {
         log.log(Level.FINE, "'Move' button is clicked");
-        var dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(TimeTrackerApp.primaryStage);
-        var dialogVbox = new RecordMoveVBox(record, dialog);
-        var dialogScene = new Scene(dialogVbox, 200, 150);
-        dialog.setScene(dialogScene);
-        dialog.show();
+        DialogFactory.createAndShow(
+                stage -> new RecordMoveVBox(record, stage),
+                "Change date"
+        );
+    }
+
+    @FXML
+    protected void track() {
+        log.log(Level.FINE, "'Track' button is clicked");
+        record.setTracked(true);
+    }
+
+    @FXML
+    protected void notTrack() {
+        log.log(Level.FINE, "'Not track' button is clicked");
+        record.setTracked(false);
     }
 }

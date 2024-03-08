@@ -1,51 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../../css/common.css"
-         styleClass="grid-background,record"
-         minWidth="320" maxWidth="320">
-    <HBox style="-fx-padding: 0 0 10 10;" minWidth="300" maxWidth="300">
-        <VBox style="-fx-padding: 10 0 0 0;" minWidth="290" spacing="5">
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../css/common.css">
+    <HBox>
+        <VBox fx:id="recordVBox" styleClass="grid-background,record"
+              minWidth="300" maxWidth="300" spacing="7">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Button fx:id="trackButton" onAction="#track">
+            </Button>
+            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false">
+            </Button>
+
+            <Label fx:id="recordIdLabel"/>
+
             <HBox>
-                <Label>#</Label>
-                <Label fx:id="recordIdLabel"/>
+                <Label wrapText="true" maxWidth="1.7976931348623157E308" styleClass="header-label"
+                       fx:id="nameLabel"/>
             </HBox>
 
-            <Label wrapText="true" maxWidth="1.7976931348623157E308" styleClass="header-label" fx:id="nameLabel"/>
-
-            <HBox spacing="3">
-                <Label>Amount of time:</Label>
-                <Label fx:id="totalTimeLabel" text="00:00:00"/>
-            </HBox>
-
-            <HBox spacing="3">
+            <HBox spacing="3" managed="false" visible="false">
                 <Label>Amount of measurements:</Label>
                 <Label fx:id="amountOfMeasurements"/>
             </HBox>
 
-            <VBox fx:id="measurementsVBox" spacing="5">
+            <HBox>
+                <Button fx:id="startButton" onAction="#start"/>
+                <Button fx:id="stopButton" onAction="#stop" managed="false" visible="false"/>
+                <Label fx:id="totalTimeLabel" text="00:00:00">
+                    <padding>
+                        <Insets top="10"/>
+                    </padding>
+                </Label>
+            </HBox>
+
+            <VBox fx:id="measurementInProgressVBoxWrapper" visible="false" managed="false" spacing="5">
+                <VBox.margin>
+                    <Insets top="5"/>
+                </VBox.margin>
+                <Separator maxWidth="280"/>
                 <VBox fx:id="inProgressMeasurementVBox"/>
             </VBox>
 
             <HBox>
-                <MFXToggleButton text="Tracked" fx:id="trackedToggle"/>
-                <MFXButton buttonType="RAISED" fx:id="startButton" text="Start" onAction="#start"/>
-                <MFXButton buttonType="RAISED" fx:id="stopButton" text="Stop" onAction="#stop"/>
             </HBox>
-            <HBox spacing="3">
-                <MFXButton buttonType="RAISED" text="Rename" onAction="#rename"/>
-                <MFXButton buttonType="RAISED" text="Move" onAction="#move"/>
-            </HBox>
-        </VBox>
-
-        <VBox>
-            <Label styleClass="delete-button" fx:id="deleteLabel" onMouseClicked="#delete">x</Label>
         </VBox>
     </HBox>
-
+    <!--    239 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 3 (amount of buttons) - 3 (spacing) * 2 (amount of spaces) -->
+    <HBox layoutX="239" layoutY="10" spacing="3">
+        <Button fx:id="editNameButton" styleClass="recVBoxTmp"/>
+        <Button fx:id="moveButton" onAction="#move"/>
+        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+    </HBox>
 
 </fx:root>

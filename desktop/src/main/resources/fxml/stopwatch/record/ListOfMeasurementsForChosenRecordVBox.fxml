@@ -5,25 +5,13 @@
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
-         maxHeight="600" minWidth="350" maxWidth="350" spacing="10">
+         maxHeight="600" minWidth="330" maxWidth="330">
 
     <VBox fx:id="listOfMeasurementsWrapperVBox" spacing="10">
-        <VBox styleClass="grid-background" fx:id="listOfMeasurementsInfoVBox">
-            <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">List of measurements
-                for
-            </Label>
-            <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label"
-                   fx:id="recordNameLabel"/>
-            <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">on</Label>
-            <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label"
-                   fx:id="recordDateLabel"/>
-
-            <padding>
-                <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
-            </padding>
-        </VBox>
-
-        <VBox styleClass="grid-background" fx:id="noMeasurementsInfoVBox">
+        <VBox styleClass="grid-background" minWidth="300" maxWidth="300" fx:id="noMeasurementsInfoVBox">
+            <VBox.margin>
+                <Insets left="11.0" top="6"/>
+            </VBox.margin>
             <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">There are no
                 measurements for the record
             </Label>
@@ -37,7 +25,7 @@
             <ScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
                 <VBox fx:id="finishedMeasurementsVBox" spacing="15">
                     <padding>
-                        <Insets left="10.0" right="20.0" bottom="10.0"/>
+                        <Insets left="10.0" top="5" right="20.0" bottom="10.0"/>
                     </padding>
                 </VBox>
             </ScrollPane>

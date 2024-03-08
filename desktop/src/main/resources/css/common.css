@@ -11,13 +11,9 @@
     -fx-background-color: #F3F3F3;
 }
 
-.delete-button {
-    -fx-font-size: 20;
-}
-
 .delete-button:hover {
     -fx-cursor: hand;
-    -fx-text-fill: #FF0000;
+    -fx-fill: #FF0000;
 }
 
 .grey-scroll-pane {
@@ -37,4 +33,45 @@
 
 .search-result-entry-chosen {
     -fx-background-color: #F3F3F3;
+}
+
+.icon-button {
+    -fx-background-color: transparent, transparent, transparent, transparent, transparent;
+}
+
+.icon-label-grey .label-icon-grey {
+    -fx-fill: #A0A0A0;
+}
+
+.icon-label-green .label-icon-green {
+    -fx-fill: #00D000;
+}
+
+/* set default fill of svg path */
+.icon-button-grey .button-icon-grey {
+    -fx-fill: #A0A0A0;
+}
+
+.icon-button-grey:pressed .button-icon-grey,
+.icon-button-grey:hover .button-icon-grey {
+    -fx-fill: #101010;
+}
+
+
+.icon-button-green .button-icon-green {
+    -fx-fill: #00D000;
+}
+
+.icon-button-green:pressed .button-icon-green,
+.icon-button-green:hover .button-icon-green {
+    -fx-fill: #00F000;
+}
+
+/* set default fill of svg path */
+.icon-button:focused {
+    -fx-background-radius: 0;
+}
+
+.icon-button:hover {
+    -fx-cursor: hand;
 }

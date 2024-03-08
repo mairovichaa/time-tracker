@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../css/common.css">
+    <VBox styleClass="grid-background">
+        <HBox minWidth="300" maxWidth="300">
+            <padding>
+                <Insets top="10" bottom="10" left="10" right="10"/>
+            </padding>
+            <VBox spacing="5">
+                <HBox fx:id="measurementIdWrapper">
+                    <Label>#</Label>
+                    <Label fx:id="measurementIdLabel"/>
+                </HBox>
+
+                <HBox spacing="3">
+                    <Label fx:id="startedAt"/>
+                    <Label>-></Label>
+                    <Label fx:id="finishedAt"/>
+                    <Label>=</Label>
+                    <Label fx:id="total"/>
+                </HBox>
+
+                <Label fx:id="comment" wrapText="true"/>
+
+            </VBox>
+        </HBox>
+    </VBox>
+    <!--    239 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 3 (amount of buttons) - 3 (spacing) * 2 (amount of spaces) -->
+    <HBox layoutX="239" layoutY="10" spacing="3">
+        <Button fx:id="editNameButton" onMouseClicked="#edit"/>
+        <Button fx:id="moveButton" onMouseClicked="#move"/>
+        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+    </HBox>
+</fx:root>

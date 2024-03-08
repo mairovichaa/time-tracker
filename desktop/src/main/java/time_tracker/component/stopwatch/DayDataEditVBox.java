@@ -20,6 +20,7 @@ import time_tracker.service.DayDataService;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static java.util.Comparator.comparing;
 import static time_tracker.component.Utils.load;
@@ -29,13 +30,13 @@ public class DayDataEditVBox extends VBox {
     private static final String LOCAL_TIME_FORMATTER_PATTERN = "HH:mm:ss";
     private static final DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_TIME_FORMATTER_PATTERN);
     @FXML
-    private Label dateLabel;
-    @FXML
     private MFXTextField expectedTotalField;
     @FXML
     private MFXTextField commentField;
     @FXML
     private FlowPane fastEditButtons;
+    @FXML
+    private Label errorLabel;
 
     private final DayData dayData;
     private final Stage stage;
@@ -50,12 +51,28 @@ public class DayDataEditVBox extends VBox {
         this.stage = stage;
         this.dayDataService = GlobalContext.get(DayDataService.class);
 
-        var date = dayData.getDate();
-        dateLabel.textProperty().setValue(Utils.formatLocalDate(date));
-
         var expectedTotalInSecs = dayData.getExpectedTotalInSecsProperty().getValue();
         var duration = Utils.formatDuration(expectedTotalInSecs);
         expectedTotalField.textProperty().setValue(duration);
+
+        expectedTotalField.textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    log.fine(() -> "Change expected value");
+                    try {
+                        LocalTime.parse(newValue, LOCAL_TIME_FORMATTER);
+                    } catch (
+                            DateTimeParseException exception) {
+                        log.fine(() -> "Can't parse expected: " + exception.getMessage());
+                        errorLabel.setText("Expected has wrong format: " + LOCAL_TIME_FORMATTER_PATTERN);
+                        errorLabel.setManaged(true);
+                        errorLabel.setVisible(true);
+                        stage.sizeToScene();
+                        return;
+                    }
+                    errorLabel.setManaged(false);
+                    errorLabel.setVisible(false);
+                    stage.sizeToScene();
+                });
 
         var noteValue = dayData.getNote();
         commentField.textProperty().setValue(noteValue);

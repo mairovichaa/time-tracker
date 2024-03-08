@@ -2,22 +2,18 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
+         minWidth="200"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5">
 
-    <HBox spacing="3">
-        <Label>Name:</Label>
-        <MFXTextField fx:id="nameTextField" floatMode="DISABLED"/>
-    </HBox>
+    <MFXTextField fx:id="nameTextField" floatMode="BORDER" floatingText="Name" maxWidth="Infinity"/>
 
-    <HBox>
+    <HBox spacing="5" alignment="CENTER_RIGHT">
         <MFXButton buttonType="RAISED" onMouseClicked="#save">Save</MFXButton>
         <MFXButton buttonType="RAISED" onMouseClicked="#cancel">Cancel</MFXButton>
     </HBox>
-
 
 </fx:root>

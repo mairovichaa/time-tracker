@@ -19,21 +19,22 @@ public class Utils {
     }
 
     public String formatDuration(final long seconds) {
-        var result = new StringBuilder();
-        long hours = seconds / 3600;
-        if (hours != 0) {
-            result.append(hours).append("h ");
-        }
-
-        long minutesInLastHour = (seconds % 3600) / 60;
-        if (hours != 0 || minutesInLastHour != 0) {
-            result.append(minutesInLastHour).append("m ");
-        }
-
-        long secondsInLastMinute = seconds % 60;
-        result.append(secondsInLastMinute).append("s");
-
-        return result.toString();
+        return String.format("%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, (seconds % 60));
+//        var result = new StringBuilder();
+//        long hours = seconds / 3600;
+//        if (hours != 0) {
+//            result.append(hours).append("h ");
+//        }
+//
+//        long minutesInLastHour = (seconds % 3600) / 60;
+//        if (hours != 0 || minutesInLastHour != 0) {
+//            result.append(minutesInLastHour).append("m ");
+//        }
+//
+//        long secondsInLastMinute = seconds % 60;
+//        result.append(secondsInLastMinute).append("s");
+//
+//        return result.toString();
     }
     public String formatLocalDate(@NonNull final LocalDate date) {
         return DATE_FORMAT.format(date);

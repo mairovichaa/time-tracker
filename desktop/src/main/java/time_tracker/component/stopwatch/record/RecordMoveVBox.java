@@ -18,8 +18,6 @@ import static time_tracker.component.Utils.load;
 public class RecordMoveVBox extends VBox {
 
     @FXML
-    private Label recordDateLabel;
-    @FXML
     private MFXDatePicker datePicker;
 
     private final Stage stage;
@@ -33,8 +31,7 @@ public class RecordMoveVBox extends VBox {
         this.stage = stage;
         this.record = record;
         var currentDate = record.getDate();
-        var currentDateFormatted = Utils.formatLocalDate(currentDate);
-        recordDateLabel.setText(currentDateFormatted);
+        datePicker.setValue(currentDate);
     }
 
     @FXML
