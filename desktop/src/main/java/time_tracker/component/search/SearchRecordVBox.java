@@ -12,8 +12,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.common.GlobalContext;
+import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -72,7 +72,7 @@ public class SearchRecordVBox extends VBox {
         var isDevMode = appProperties.isDevMode();
         recordIdLabel.setVisible(isDevMode);
         recordIdLabel.setManaged(isDevMode);
-        recordIdLabel.setText(Long.toString(record.getId()));
+        recordIdLabel.setText("#" + record.getId());
 
         bindTotalTime();
         measurementsChangesListener = bindAmountOfMeasurements();
@@ -119,7 +119,7 @@ public class SearchRecordVBox extends VBox {
     private void bindTotalTime() {
         LongBinding measurementsTotalInSecsLongBinding = record.getMeasurementsTotalInSecsLongBinding();
 
-        StringBinding longBinding =  createStringBinding(
+        StringBinding longBinding = createStringBinding(
                 () -> {
                     long totalInSecs = measurementsTotalInSecsLongBinding.get();
                     return Utils.formatDuration(totalInSecs);
