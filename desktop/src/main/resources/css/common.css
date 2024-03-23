@@ -43,6 +43,10 @@
     -fx-fill: #A0A0A0;
 }
 
+.icon-label-black .label-icon-black {
+    -fx-fill: -mfx-text-me;
+}
+
 .icon-label-green .label-icon-green {
     -fx-fill: #00D000;
 }
@@ -50,6 +54,10 @@
 /* set default fill of svg path */
 .icon-button-grey .button-icon-grey {
     -fx-fill: #A0A0A0;
+}
+
+.icon-button-black .button-icon-black {
+    -fx-fill: -mfx-text-me;
 }
 
 .icon-button-grey:pressed .button-icon-grey,

@@ -27,6 +27,14 @@ public class StopwatchDateStatisticPane extends Pane {
     @FXML
     private Label timeToWorkLeft;
     @FXML
+    private Label overtimeIconLabel;
+    @FXML
+    private Label expectedIconLabel;
+    @FXML
+    private Label timeToWorkLeftIconLabel;
+    @FXML
+    private Label totalAmountOfTimeIconLabel;
+    @FXML
     private Label overtime;
     @FXML
     private Label comment;
@@ -66,6 +74,11 @@ public class StopwatchDateStatisticPane extends Pane {
                         return Utils.formatDuration(measurementsTotalTimeInSecs.getValue());
                     }
                 });
+
+        initIconButton(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
 
         initIconButton(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-grey"), List.of("label-icon-grey"));
         initIconButton(trackedLabel, 20, Icon.CHECK, List.of("icon-label-green"), List.of("label-icon-green"));

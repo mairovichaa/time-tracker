@@ -7,7 +7,7 @@
          stylesheets="@../../css/common.css">
 
     <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;"
-          spacing="5" minWidth="220" maxWidth="220">
+          spacing="8" minWidth="220" maxWidth="220">
         <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Day statistic</Label>
 
 
@@ -16,12 +16,28 @@
                 <HBox.margin>
                     <Insets left="25"/>
                 </HBox.margin>
-                <Label>E:</Label>
-                <Label fx:id="expectedAmountOfTime"/>
+                <Label fx:id="expectedIconLabel">
+                    <tooltip>
+                        <Tooltip text="Expected time to work"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="expectedAmountOfTime">
+                    <tooltip>
+                        <Tooltip text="Expected time to work"/>
+                    </tooltip>
+                </Label>
             </HBox>
             <HBox spacing="2">
-                <Label>T:</Label>
-                <Label fx:id="totalAmountOfTimeLabel"/>
+                <Label fx:id="totalAmountOfTimeIconLabel">
+                    <tooltip>
+                        <Tooltip text="Passed time"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="totalAmountOfTimeLabel">
+                    <tooltip>
+                        <Tooltip text="Passed time"/>
+                    </tooltip>
+                </Label>
             </HBox>
         </HBox>
 
@@ -30,18 +46,42 @@
                 <HBox.margin>
                     <Insets left="25"/>
                 </HBox.margin>
-                <Label>L:</Label>
-                <Label fx:id="timeToWorkLeft"/>
+                <Label fx:id="timeToWorkLeftIconLabel">
+                    <tooltip>
+                        <Tooltip text="Time to work left"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="timeToWorkLeft">
+                    <tooltip>
+                        <Tooltip text="Time to work left"/>
+                    </tooltip>
+                </Label>
             </HBox>
             <HBox spacing="2">
-                <Label>O:</Label>
-                <Label fx:id="overtime"/>
+                <Label fx:id="overtimeIconLabel">
+                    <tooltip>
+                        <Tooltip text="Overtime"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="overtime">
+                    <tooltip>
+                        <Tooltip text="Overtime"/>
+                    </tooltip>
+                </Label>
             </HBox>
         </HBox>
 
         <HBox prefWidth="Infinity" alignment="CENTER">
-            <Label fx:id="nonTrackedLabel"/>
-            <Label fx:id="trackedLabel"/>
+            <Label fx:id="nonTrackedLabel">
+                <tooltip>
+                    <Tooltip text="Some records aren't tracked"/>
+                </tooltip>
+            </Label>
+            <Label fx:id="trackedLabel">
+                <tooltip>
+                    <Tooltip text="All records are tracked"/>
+                </tooltip>
+            </Label>
         </HBox>
 
         <Separator/>
