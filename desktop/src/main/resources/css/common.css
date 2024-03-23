@@ -9,6 +9,7 @@
 
 .record:hover, .record-chosen {
     -fx-background-color: #F3F3F3;
+    -fx-cursor: hand;
 }
 
 .delete-button:hover {
