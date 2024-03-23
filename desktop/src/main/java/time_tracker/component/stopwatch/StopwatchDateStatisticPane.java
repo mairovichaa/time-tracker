@@ -80,7 +80,7 @@ public class StopwatchDateStatisticPane extends Pane {
         initIconButton(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
         initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
 
-        initIconButton(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-grey"), List.of("label-icon-grey"));
+        initIconButton(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-black"), List.of("label-icon-black"));
         initIconButton(trackedLabel, 20, Icon.CHECK, List.of("icon-label-green"), List.of("label-icon-green"));
         dayData.getTracked()
                 .addListener((observable, oldValue, newValue) -> refreshTracked(newValue));
