@@ -1,3 +1,5 @@
+import java.util.stream.Collectors
+
 buildscript {
     ext {
         lombokVersion = '1.18.28'
@@ -30,5 +32,59 @@ subprojects {
 
     test {
         useJUnitPlatform()
+    }
+}
+
+tasks.register('prepareIndexHtmlForS3', Task) {
+    group 'documentation'
+
+    doFirst {
+        def changelogFile = file("$rootDir/CHANGELOG.md")
+        def changelogContent = changelogFile.readLines()
+
+        Map<String, List<String>> data = new LinkedHashMap<>()
+
+        def curVersion = null
+        for (i in 0..<changelogContent.size()) {
+            def currentLine = changelogContent.get(i)
+            if (currentLine.startsWith("## ")) {
+                curVersion = currentLine.substring("## ".size())
+                data.put(curVersion, new ArrayList<>())
+                continue
+            }
+            if (currentLine.startsWith("- ")) {
+                def changes = data.get(curVersion)
+                def change = currentLine.substring("- ".size())
+                changes.add(change)
+                continue
+            }
+        }
+        StringBuilder result = new StringBuilder();
+        data.each { version, changelog ->
+            result.append("<div id=\"${version}_wrapper\">")
+            result.append("<h1>${version}</h1>")
+            result.append("<ul>")
+            result.append("<li><a href=\"/1.1.7-SNAPSHOT/app-linux-1.1.7-SNAPSHOT.jar\" download=\"app-linux-1.1.7-SNAPSHOT.jar\">app-linux-1.1.7-SNAPSHOT.jar</a></li>")
+            result.append("<li><a href=\"/1.1.7-SNAPSHOT/app-mac-1.1.7-SNAPSHOT.jar\" download=\"app-mac-1.1.7-SNAPSHOT.jar\">app-mac-1.1.7-SNAPSHOT.jar</a></li>")
+            result.append("<li><a href=\"/1.1.7-SNAPSHOT/app-mac-aarch64-1.1.7-SNAPSHOT.jar\" download=\"app-mac-aarch64-1.1.7-SNAPSHOT.jar\">app-mac-aarch64-1.1.7-SNAPSHOT.jar</a></li>")
+            result.append("<li><a href=\"/1.1.7-SNAPSHOT/app-win-1.1.7-SNAPSHOT.jar\" download=\"app-win-1.1.7-SNAPSHOT.jar\">app-win-1.1.7-SNAPSHOT.jar</a></li>")
+            result.append("</ul>")
+            result.append("<h4>Changelog</h4>")
+            result.append("<ul>")
+            changelog.forEach { cl -> result.append("<li>$cl</li>")}
+            result.append("</ul>")
+            result.append("</div>")
+        }
+        def indexTemplateFile = file("$rootDir/other/s3/index-template.html")
+        String resultingIndexFile = indexTemplateFile.readLines()
+                .stream()
+                .collect(Collectors.joining(""))
+                .replace("{{listOfFilesToDownload}}", result.toString())
+
+        def outputFile = file("${buildDir}/s3/index.html")
+        outputFile.parentFile.mkdirs()
+        outputFile.withWriter('UTF-8') { writer ->
+            writer.write(resultingIndexFile)
+        }
     }
 }
