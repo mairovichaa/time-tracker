@@ -59,6 +59,19 @@ tasks.register('prepareIndexHtmlForS3', Task) {
                 continue
             }
         }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()
+        project.exec {
+            commandLine 'git', 'tag'
+            standardOutput = outputStream
+        }
+        String[] existingTags = outputStream.toString().trim().split("\n")
+        for (final def existingTag in existingTags) {
+            if (!data.containsKey(existingTag.toLowerCase())) {
+                throw new RuntimeException("Changelog doesn't contain info for '$existingTag'.")
+            }
+        }
+
         StringBuilder result = new StringBuilder();
         data.each { version, changelog ->
             result.append("<div id=\"${version}_wrapper\">")
