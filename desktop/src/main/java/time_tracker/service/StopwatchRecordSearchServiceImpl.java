@@ -13,9 +13,12 @@ import time_tracker.model.StopwatchSearchState;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -36,35 +39,17 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
             @NonNull final StopwatchSearchState stopwatchSearchState,
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordSearchService stopwatchRecordSearchService) {
-        var searchStateSearch = stopwatchSearchState.getSearch();
 
+
+        var searchStateSearch = stopwatchSearchState.getSearch();
         searchStateSearch.addListener((observable, oldValue, newSearchTerm) -> {
             log.fine(() -> "Search term has changed from " + oldValue + " to " + newSearchTerm);
-            debounceContext.runWithDebounce(
-                    () -> Platform.runLater(() -> {
-                        var found = stopwatchSearchState.getFound();
-                        if (newSearchTerm.isBlank()) {
-                            found.clear();
-                            List<StopwatchRecord> allExistingRecords = stopWatchAppState.getDateToRecords()
-                                    .values()
-                                    .stream()
-                                    .flatMap(Collection::stream)
-                                    .toList();
-                            found.addAll(allExistingRecords);
-                            return;
-                        }
-                        var foundNew = stopWatchAppState.getDateToRecords()
-                                .values()
-                                .stream()
-                                .flatMap(Collection::stream)
-                                .filter(it -> it.getName().contains(newSearchTerm) || searchTermInRecordMeasurements(newSearchTerm, it))
-                                .toList();
-                        log.finest(() -> "Found by term " + newSearchTerm + ": " + foundNew);
+            runSearch(stopwatchSearchState, stopWatchAppState);
+        });
 
-                        found.clear();
-                        found.addAll(foundNew);
-                    })
-            );
+        stopwatchSearchState.getTracked().addListener((observable, oldValue, newValue) -> {
+            log.fine(() -> "Tracked has changed from " + oldValue + " to " + newValue);
+            runSearch(stopwatchSearchState, stopWatchAppState);
         });
 
         stopwatchSearchState.getChosenRecordName()
@@ -75,6 +60,68 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                     stopwatchSearchState.getRecordsForChosenName().clear();
                     stopwatchSearchState.getRecordsForChosenName().addAll(recordsForName);
                 });
+    }
+
+    private void runSearch(final StopwatchSearchState stopwatchSearchState, final StopWatchAppState stopWatchAppState) {
+        String newSearchTerm = stopWatchAppState.getSearchState().getSearch().getValue();
+        debounceContext.runWithDebounce(
+                () -> Platform.runLater(() -> {
+                    var found = stopwatchSearchState.getFound();
+                    if (newSearchTerm.isBlank()) {
+                        found.clear();
+                        List<String> allExistingRecords = stopWatchAppState.getDateToRecords()
+                                .values()
+                                .stream()
+                                .flatMap(Collection::stream)
+                                .filter(it -> it.getMeasurementsTotalInSecs() > 0)
+                                .collect(Collectors.groupingBy(StopwatchRecord::getName))
+                                .entrySet()
+                                .stream()
+                                .filter(it -> filterByTracked(it, stopwatchSearchState))
+                                .map(Map.Entry::getKey)
+                                .toList();
+                        found.addAll(allExistingRecords);
+                        return;
+                    }
+                    List<String> foundNew = stopWatchAppState.getDateToRecords()
+                            .values()
+                            .stream()
+                            .flatMap(Collection::stream)
+                            .filter(it -> it.getMeasurementsTotalInSecs() > 0)
+                            .collect(Collectors.groupingBy(StopwatchRecord::getName))
+                            .entrySet()
+                            .stream()
+                            .filter(it -> filterByTerm(it.getValue(), newSearchTerm))
+                            .filter(it -> filterByTracked(it, stopwatchSearchState))
+                            .map(Map.Entry::getKey)
+                            .toList();
+                    log.finest(() -> "Found by term " + newSearchTerm + ": " + foundNew);
+
+                    found.clear();
+                    found.addAll(foundNew);
+                })
+        );
+    }
+
+    private boolean filterByTerm(
+            @NonNull final List<StopwatchRecord> records,
+            @NonNull final String searchTerm) {
+        return records.stream()
+                .anyMatch(it -> it.getName().toLowerCase().contains(searchTerm.toLowerCase()) || searchTermInRecordMeasurements(searchTerm, it));
+    }
+
+    private boolean filterByTracked(
+            @NonNull final Map.Entry<String, List<StopwatchRecord>> it,
+            @NonNull final StopwatchSearchState stopwatchSearchState) {
+        Boolean trackedValueForSearch = stopwatchSearchState.getTracked().getValue();
+        if (trackedValueForSearch == null) {
+            return true;
+        }
+        if (trackedValueForSearch == Boolean.TRUE) {
+            return it.getValue().stream().allMatch(StopwatchRecord::isTracked);
+        } else {
+            return it.getValue().stream().anyMatch(Predicate.not(StopwatchRecord::isTracked));
+        }
     }
 
     @Override
@@ -99,6 +146,6 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                 .stream()
                 .map(StopwatchRecordMeasurement::getNote)
                 .filter(Objects::nonNull)
-                .anyMatch(it -> it.contains(searchTerm));
+                .anyMatch(it -> it.toLowerCase().contains(searchTerm.toLowerCase()));
     }
 }

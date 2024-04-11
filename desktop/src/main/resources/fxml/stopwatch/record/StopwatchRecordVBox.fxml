@@ -24,11 +24,6 @@
                        fx:id="nameLabel"/>
             </HBox>
 
-            <HBox spacing="3" managed="false" visible="false">
-                <Label>Amount of measurements:</Label>
-                <Label fx:id="amountOfMeasurements"/>
-            </HBox>
-
             <HBox>
                 <Button fx:id="startButton" onAction="#start"/>
                 <Button fx:id="stopButton" onAction="#stop" managed="false" visible="false"/>

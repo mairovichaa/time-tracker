@@ -30,12 +30,12 @@
             <HBox spacing="2">
                 <Label fx:id="totalAmountOfTimeIconLabel">
                     <tooltip>
-                        <Tooltip text="Passed time"/>
+                        <Tooltip text="Measured time"/>
                     </tooltip>
                 </Label>
                 <Label fx:id="totalAmountOfTimeLabel">
                     <tooltip>
-                        <Tooltip text="Passed time"/>
+                        <Tooltip text="Measured time"/>
                     </tooltip>
                 </Label>
             </HBox>

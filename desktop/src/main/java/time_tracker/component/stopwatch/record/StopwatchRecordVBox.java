@@ -4,7 +4,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,7 +20,6 @@ import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.AppStateService;
 import time_tracker.service.StopwatchRecordService;
 
@@ -47,8 +45,6 @@ public class StopwatchRecordVBox extends Pane {
     private Label totalTimeLabel;
     @FXML
     private Button deleteButton;
-    @FXML
-    private Label amountOfMeasurements;
     @FXML
     private Button startButton;
     @FXML
@@ -116,7 +112,6 @@ public class StopwatchRecordVBox extends Pane {
         recordIdLabel.setText("#" + stopwatchRecord.getId());
 
         bindTotalTime();
-        bindAmountOfMeasurements();
         bindMeasurementInProgress();
 
         this.setOnMouseClicked(ignored -> chosen());
@@ -137,22 +132,6 @@ public class StopwatchRecordVBox extends Pane {
                 .addListener(new WeakInvalidationListener(chosenStopwatchRecordListener));
 
         editNameButton.setOnMouseClicked(e -> rename());
-    }
-
-
-    private void bindAmountOfMeasurements() {
-        var stopwatchRecords = stopwatchRecord.getMeasurementsProperty();
-        stopwatchRecords.addListener((ListChangeListener<StopwatchRecordMeasurement>) c -> {
-            log.fine(() -> "stopwatch records have been changed ");
-            log.finest(() -> "actual " + c);
-            setAmountOfMeasurements(c.getList());
-        });
-        setAmountOfMeasurements(stopwatchRecords);
-    }
-
-    private void setAmountOfMeasurements(List<? extends StopwatchRecordMeasurement> measurements) {
-        var amountOfMeasurements = measurements.size();
-        this.amountOfMeasurements.setText(Integer.toString(amountOfMeasurements));
     }
 
     @FXML
