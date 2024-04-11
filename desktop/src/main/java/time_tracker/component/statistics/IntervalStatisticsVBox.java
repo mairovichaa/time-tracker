@@ -1,22 +1,28 @@
 package time_tracker.component.statistics;
 
+import io.github.palexdev.materialfx.beans.Alignment;
 import io.github.palexdev.materialfx.controls.MFXDatePicker;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.common.GlobalContext;
+import time_tracker.common.annotation.NonNull;
+import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static time_tracker.component.Utils.load;
+import static time_tracker.component.common.IconButton.initIconButton;
 
 @Log
 public class IntervalStatisticsVBox extends VBox {
@@ -28,16 +34,24 @@ public class IntervalStatisticsVBox extends VBox {
     private MFXDatePicker endDatePicker;
 
     @FXML
-    private Label totalLabel;
+    private Label totalAmountOfTimeLabel;
+    @FXML
+    private Label totalAmountOfTimeIconLabel;
 
     @FXML
-    private Label expectedLabel;
+    private Label expectedAmountOfTimeLabel;
+    @FXML
+    private Label expectedIconLabel;
 
     @FXML
     private Label overtimeLabel;
+    @FXML
+    private Label overtimeIconLabel;
 
     @FXML
     private Label timeToWorkLeftLabel;
+    @FXML
+    private Label timeToWorkLeftIconLabel;
 
 
     public IntervalStatisticsVBox() {
@@ -45,9 +59,14 @@ public class IntervalStatisticsVBox extends VBox {
 
         startDatePicker.valueProperty()
                 .addListener((observable, oldValue, newValue) -> recalculateStatistics());
+        startDatePicker.popupAlignmentProperty()
+                .set(Alignment.of(HPos.RIGHT, VPos.BOTTOM));
 
         endDatePicker.valueProperty()
                 .addListener((observable, oldValue, newValue) -> recalculateStatistics());
+        endDatePicker.popupAlignmentProperty()
+                .set(Alignment.of(HPos.RIGHT, VPos.BOTTOM));
+
         var now = LocalDate.now();
         endDatePicker.valueProperty().set(now);
         startDatePicker.valueProperty().set(now.minusDays(7));
@@ -82,7 +101,7 @@ public class IntervalStatisticsVBox extends VBox {
                 .mapToLong(StopwatchRecord::getMeasurementsTotalInSecs)
                 .sum();
 
-        totalLabel.textProperty()
+        totalAmountOfTimeLabel.textProperty()
                 .set(Utils.formatDuration(totalInSecs));
 
         var dayDataList = stopWatchAppState.getDateToDayData()
@@ -95,7 +114,7 @@ public class IntervalStatisticsVBox extends VBox {
         var expectedTotal = dayDataList.stream()
                 .mapToLong(it -> it.getExpectedTotalInSecsProperty().get())
                 .sum();
-        expectedLabel.textProperty()
+        expectedAmountOfTimeLabel.textProperty()
                 .set(Utils.formatDuration(expectedTotal));
 
         var overtime = Math.max(totalInSecs - expectedTotal, 0);
@@ -105,6 +124,11 @@ public class IntervalStatisticsVBox extends VBox {
         var timeToWorkLeft = Math.max(expectedTotal - totalInSecs, 0);
         timeToWorkLeftLabel.textProperty()
                 .set(Utils.formatDuration(timeToWorkLeft));
+
+        initIconButton(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
     }
 
     private Predicate<LocalDate> createDateFilter(

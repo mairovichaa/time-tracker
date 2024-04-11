@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="640.0" prefWidth="1024">
+
+    <MFXDatePicker floatMode="BORDER" floatingText="Start" promptText="Pick a date..." fx:id="startDatePicker"/>
+    <MFXDatePicker floatMode="BORDER" floatingText="End" promptText="Pick a date..." fx:id="endDatePicker"/>
+
+</fx:root>

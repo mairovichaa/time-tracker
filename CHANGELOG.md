@@ -1,3 +1,6 @@
+## 1.1.9
+- 'Statistics' tab GUI improvement
+
 ## 1.1.8
 - 'Search' tab GUI improvement
 

@@ -1,43 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" maxHeight="640.0">
 
     <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Interval statistics</Label>
 
-    <HBox spacing="3">
-        <Label>Start date: </Label>
-        <MFXDatePicker promptText="Pick a date..." fx:id="startDatePicker"/>
-    </HBox>
-    <HBox spacing="3">
-        <Label>End date: </Label>
-        <MFXDatePicker promptText="Pick a date..." fx:id="endDatePicker"/>
+    <MFXDatePicker floatMode="BORDER" floatingText="Start" promptText="Pick a date..." fx:id="startDatePicker"/>
+    <MFXDatePicker floatMode="BORDER" floatingText="End" promptText="Pick a date..." fx:id="endDatePicker"/>
+
+    <HBox spacing="10">
+        <HBox spacing="2" minWidth="90">
+            <HBox.margin>
+                <Insets left="10"/>
+            </HBox.margin>
+            <Label fx:id="expectedIconLabel">
+                <tooltip>
+                    <Tooltip text="Expected time to work"/>
+                </tooltip>
+            </Label>
+            <Label fx:id="expectedAmountOfTimeLabel">
+                <tooltip>
+                    <Tooltip text="Expected time to work"/>
+                </tooltip>
+            </Label>
+        </HBox>
+        <HBox spacing="2">
+            <Label fx:id="totalAmountOfTimeIconLabel">
+                <tooltip>
+                    <Tooltip text="Measured time"/>
+                </tooltip>
+            </Label>
+            <Label fx:id="totalAmountOfTimeLabel">
+                <tooltip>
+                    <Tooltip text="Measured time"/>
+                </tooltip>
+            </Label>
+        </HBox>
     </HBox>
 
-
-    <HBox spacing="3">
-        <Label>Total:</Label>
-        <Label fx:id="totalLabel"/>
-    </HBox>
-
-    <HBox spacing="3">
-        <Label>Expected:</Label>
-        <Label fx:id="expectedLabel"/>
-    </HBox>
-
-    <HBox spacing="3">
-        <Label>Overtime:</Label>
-        <Label fx:id="overtimeLabel"/>
-    </HBox>
-
-    <HBox spacing="3">
-        <Label>Time to work left:</Label>
-        <Label fx:id="timeToWorkLeftLabel"/>
+    <HBox spacing="10">
+        <HBox spacing="2" minWidth="90">
+            <HBox.margin>
+                <Insets left="10"/>
+            </HBox.margin>
+            <Label fx:id="timeToWorkLeftIconLabel">
+                <tooltip>
+                    <Tooltip text="Time to work left"/>
+                </tooltip>
+            </Label>
+            <Label fx:id="timeToWorkLeftLabel">
+                <tooltip>
+                    <Tooltip text="Time to work left"/>
+                </tooltip>
+            </Label>
+        </HBox>
+        <HBox spacing="2">
+            <Label fx:id="overtimeIconLabel">
+                <tooltip>
+                    <Tooltip text="Overtime"/>
+                </tooltip>
+            </Label>
+            <Label fx:id="overtimeLabel">
+                <tooltip>
+                    <Tooltip text="Overtime"/>
+                </tooltip>
+            </Label>
+        </HBox>
     </HBox>
 
 </fx:root>

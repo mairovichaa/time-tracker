@@ -21,17 +21,21 @@ public class StatisticsTab extends Tab {
 
         var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
 
+        var secondColumn = new VBox();
+        secondColumn.setSpacing(10);
         var dailyStatisticsVBox = new DailyStatisticsVBox();
+        secondColumn.getChildren().add(dailyStatisticsVBox);
 
         var hBoxWrapper = new HBox();
         hBoxWrapper.setSpacing(10);
         hBoxWrapper.getChildren()
-                .addAll(firstColumn, dailyStatisticsVBox);
+                .addAll(firstColumn, secondColumn);
 
         if (stopwatchProperties.getStatistics().isShowWeekly()) {
             var weeklyStatisticsVBox = new WeeklyStatisticsVBox();
             hBoxWrapper.getChildren().add(weeklyStatisticsVBox);
         }
+        secondColumn.getChildren().add(new StatisticsChartsVBox());
 
         hBoxWrapper.setPadding(new Insets(10, 0, 0, 10));
 
