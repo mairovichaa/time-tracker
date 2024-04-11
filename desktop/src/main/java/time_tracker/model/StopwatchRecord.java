@@ -33,6 +33,18 @@ public class StopwatchRecord {
     @NonNull
     private LocalDate date;
 
+    private ObjectProperty<LocalDate> dateProperty = new SimpleObjectProperty<>();
+
+    @NonNull
+    public ObjectProperty<LocalDate> getDateProperty() {
+        return dateProperty;
+    }
+
+    public void setDate(@NonNull final LocalDate date) {
+        getDateProperty().setValue(date);
+        this.date = date;
+    }
+
     private BooleanProperty trackedProperty = new SimpleBooleanProperty(false);
 
     public String getName() {
@@ -138,7 +150,7 @@ public class StopwatchRecord {
                             log.fine(() -> "record with id = " + getId() + " has been changed. Change number = " + changeNumber);
                             return changeNumber;
                         },
-                        this.trackedProperty, this.measurementsProperty, this.measurementInProgressProperty, this.measurementsTotalInSecsLongBinding
+                        this.trackedProperty, this.measurementsProperty, this.measurementInProgressProperty, this.measurementsTotalInSecsLongBinding, this.dateProperty
                 )
         );
         this.isChangedProperty.addListener((observable, oldValue, newValue) -> log.fine("Listener to turn off lazy calculation"));

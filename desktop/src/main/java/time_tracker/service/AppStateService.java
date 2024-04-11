@@ -32,7 +32,7 @@ public class AppStateService {
 
             var chosenSearchRecordName = record.getName();
             searchState.getFound()
-                    .removeIf(it -> it.getName().equals(chosenSearchRecordName));
+                    .removeIf(it -> it.equals(chosenSearchRecordName));
         }
     }
 

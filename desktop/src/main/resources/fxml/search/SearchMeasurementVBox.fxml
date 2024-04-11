@@ -6,7 +6,7 @@
 <fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../css/common.css">
-    <HBox>
+    <HBox spacing="3">
         <Label fx:id="startedAt"/>
         <Label>-></Label>
         <Label fx:id="finishedAt"/>

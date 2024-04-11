@@ -3,6 +3,7 @@ package time_tracker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -31,8 +32,13 @@ public class TimeTrackerApp extends Application {
         launch();
     }
 
+    public static void onMainWindowSizeChange(ChangeListener<Number> listener) {
+        primaryStage.heightProperty().addListener(listener);
+    }
+
     @Override
     public void start(Stage primaryStage) {
+        TimeTrackerApp.primaryStage = primaryStage;
         log.log(Level.INFO, "Starting application");
 
         var stopwatchConfiguration = new StopwatchConfiguration();
@@ -100,7 +106,6 @@ public class TimeTrackerApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
-        TimeTrackerApp.primaryStage = primaryStage;
     }
 
     @Override

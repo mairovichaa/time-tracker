@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml">
+    <HBox>
+        <VBox stylesheets="@../../css/common.css"
+              styleClass="grid-background"
+              minWidth="300" maxWidth="300" style="-fx-padding: 10 10 10 10;" spacing="5">
+            <Label fx:id="recordIdLabel"/>
+            <Button fx:id="trackButton" onAction="#track"/>
+            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false"/>
+
+            <HBox spacing="3">
+                <Label wrapText="true" maxWidth="1.7976931348623157E308" styleClass="header-label" fx:id="dateLabel"/>
+                <Button fx:id="goToDateIconLabel" onMouseClicked="#goToDate">
+                    <tooltip>
+                        <Tooltip text="Go to date"/>
+                    </tooltip>
+                    <padding>
+                        <Insets top="7"/>
+                    </padding>
+                </Button>
+            </HBox>
+
+            <HBox spacing="3">
+                <Label fx:id="totalTimeIconLabel">
+                    <tooltip>
+                        <Tooltip text="Measured time"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="totalTimeLabel" text="00:00:00">
+                    <padding>
+                        <Insets top="4"/>
+                    </padding>
+                    <tooltip>
+                        <Tooltip text="Measured time"/>
+                    </tooltip>
+                </Label>
+            </HBox>
+
+            <Separator/>
+            <VBox fx:id="measurementsWrapperVBox" spacing="5"/>
+        </VBox>
+    </HBox>
+    <!--    275 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 1 (amount of buttons) - 3 (spacing) * 0 (amount of spaces) -->
+    <HBox layoutX="275" layoutY="10" spacing="3">
+        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+    </HBox>
+
+</fx:root>
