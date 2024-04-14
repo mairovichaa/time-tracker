@@ -38,7 +38,6 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
                 .addListener((ListChangeListener<StopwatchRecord>) c -> refresh(stopWatchAppState, records));
         Bindings.bindContent(recordsVBox.getChildren(), records);
         refresh(stopWatchAppState, records);
-
     }
 
     private static void refresh(StopWatchAppState stopWatchAppState, ObservableList<Node> records) {

@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
-<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
-<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx"
-         xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../css/common.css"
-         spacing="5"
-         maxWidth="300">
-    <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="5" fx:id="searchWrapperVBox">
-        <MFXTextField fx:id="searchInput" prefWidth="Infinity" alignment="CENTER" floatMode="BORDER"
-                      floatingText="Search for"/>
-        <MFXComboBox fx:id="trackedCombo" floatingText="Tracked" GridPane.rowIndex="1"/>
-    </VBox>
-    <MFXScrollPane fx:id="searchResultScrollPane" styleClass="grey-scroll-pane" hbarPolicy="NEVER" minWidth="300" maxWidth="300" minHeight="500">
-        <VBox fx:id="searchResultVBox" spacing="10" minWidth="290" maxWidth="290" >
-            <padding>
-                <Insets left="5.0" right="20.0" top="10.0" bottom="10.0"/>
-            </padding>
-        </VBox>
-    </MFXScrollPane>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import time_tracker.component.search.SearchAndSearchResultsVBox?>
+<?import time_tracker.component.search.SearchRecordDetailsVBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="16" right="10" bottom="0" left="10"/>
+    </padding>
+    <HBox spacing="20">
+        <SearchAndSearchResultsVBox/>
+        <SearchRecordDetailsVBox/>
+    </HBox>
+
 </fx:root>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<?import time_tracker.component.statistics.*?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="16" right="10" bottom="10" left="10"/>
+    </padding>
+    <HBox spacing="20">
+        <VBox spacing="15">
+            <TotalStatisticsVBox/>
+            <IntervalStatisticsVBox/>
+        </VBox>
+        <VBox spacing="15">
+            <DailyStatisticsVBox/>
+            <StatisticsChartsVBox/>
+        </VBox>
+        <WeeklyStatisticsVBox fx:id="weeklyStatisticsVBox"/>
+    </HBox>
+
+</fx:root>

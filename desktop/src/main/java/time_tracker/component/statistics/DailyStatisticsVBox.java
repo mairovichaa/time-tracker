@@ -9,9 +9,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
-import time_tracker.component.TimeTrackerTabPane;
 import time_tracker.component.statistics.model.DayStatistics;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
@@ -64,7 +64,7 @@ public class DailyStatisticsVBox extends VBox {
 
             Button button = new Button("See");
             button.setOnMouseClicked(e -> {
-                TimeTrackerTabPane.INSTANCE.openStopWatchTab();
+                TimeTrackerApp.showStopwatch();
                 LocalDate localDate = Utils.parseLocalDate(stats.getDate(), DATE_FORMAT_WITH_SHORT_DAY_NAME);
                 stopWatchAppState.setChosenDate(localDate);
             });

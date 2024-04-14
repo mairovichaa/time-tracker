@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../css/common.css,@../css/sidebar.css"
+         styleClass="sidebar"
+         spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <HBox spacing="5" styleClass="logo">
+        <Label fx:id="logoIconLabel"/>
+        <Label>TimeTracker</Label>
+    </HBox>
+
+    <Separator/>
+
+    <HBox spacing="3" styleClass="menu-item" onMouseClicked="#showStopwatch">
+        <Label fx:id="stopwatchIconLabel"/>
+        <Label fx:id="stopwatchLabel">Stopwatch</Label>
+    </HBox>
+    <HBox spacing="3" styleClass="menu-item" onMouseClicked="#showSearch">
+        <Label fx:id="searchIconLabel"/>
+        <Label fx:id="searchLabel">Search</Label>
+    </HBox>
+    <HBox spacing="3" styleClass="menu-item" onMouseClicked="#showStatistics">
+        <Label fx:id="statisticsIconLabel"/>
+        <Label>Statistics</Label>
+    </HBox>
+    <HBox spacing="3" styleClass="menu-item" onMouseClicked="#showReport">
+        <Label fx:id="reportIconLabel"/>
+        <Label>Report</Label>
+    </HBox>
+    <HBox spacing="3" styleClass="menu-item" onMouseClicked="#showConfiguration">
+        <Label fx:id="configurationIconLabel"/>
+        <Label>Configuration</Label>
+    </HBox>
+
+</fx:root>

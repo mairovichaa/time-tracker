@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import time_tracker.component.stopwatch.date.DatePickerVBox?>
+<?import time_tracker.component.stopwatch.DevVBox?>
+<?import time_tracker.component.stopwatch.measurement.ListOfMeasurementsForChosenRecordVBox?>
+<?import time_tracker.component.stopwatch.record.ListOfRecordsForChosenDateVBox?>
+<?import time_tracker.component.stopwatch.StopwatchDateStatisticPane?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
+    <HBox spacing="10">
+        <padding>
+            <Insets top="10" left="10"/>
+        </padding>
+        <VBox minHeight="500" spacing="15">
+            <DatePickerVBox/>
+            <StopwatchDateStatisticPane/>
+            <DevVBox fx:id="devVBox"/>
+        </VBox>
+        <ListOfRecordsForChosenDateVBox/>
+        <ListOfMeasurementsForChosenRecordVBox/>
+    </HBox>
+
+</fx:root>

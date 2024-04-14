@@ -4,8 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../../css/common.css"
-         maxHeight="600" minWidth="330" maxWidth="330">
+         stylesheets="@../../../css/common.css" minWidth="330" maxWidth="330">
 
     <VBox fx:id="listOfMeasurementsWrapperVBox" spacing="10">
         <VBox styleClass="grid-background" minWidth="300" maxWidth="300" fx:id="noMeasurementsInfoVBox">
@@ -22,7 +21,7 @@
         </VBox>
 
         <VBox>
-            <ScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
+            <ScrollPane styleClass="white-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
                 <VBox fx:id="finishedMeasurementsVBox" spacing="15">
                     <padding>
                         <Insets left="10.0" top="5" right="20.0" bottom="10.0"/>

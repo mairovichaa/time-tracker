@@ -7,7 +7,7 @@
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10"
-         maxWidth="275">
+         minWidth="220" maxWidth="220">
     <VBox.margin>
         <Insets top="6"/>
     </VBox.margin>

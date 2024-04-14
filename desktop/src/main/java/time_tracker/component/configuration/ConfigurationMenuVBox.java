@@ -15,9 +15,11 @@ public class ConfigurationMenuVBox extends VBox {
     @FXML
     protected ListView<String> configurationListView;
 
-    public ConfigurationMenuVBox(@NonNull final VBox configurationVBox) {
+    public ConfigurationMenuVBox() {
         load("/fxml/configuration/ConfigurationMenuVBox.fxml", this);
+    }
 
+    public void init(@NonNull final VBox configurationVBox) {
         var defaultRecordNamesWrapperVBox = new DefaultRecordConfigurationVBox();
         var fastEditButtonsConfigurationVBox = new FastEditButtonsConfigurationVBox();
 

@@ -5,11 +5,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import lombok.extern.java.Log;
 import time_tracker.common.GlobalContext;
-import time_tracker.component.TimeTrackerTabPane;
+import time_tracker.component.AppHBox;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.service.StopwatchRecordSearchService;
@@ -23,10 +22,13 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 
+
 @Log
 public class TimeTrackerApp extends Application {
 
     public static Stage primaryStage;
+
+    private static AppHBox appHBox;
 
     public static void main(String[] args) {
         launch();
@@ -34,6 +36,14 @@ public class TimeTrackerApp extends Application {
 
     public static void onMainWindowSizeChange(ChangeListener<Number> listener) {
         primaryStage.heightProperty().addListener(listener);
+    }
+
+    public static void onMainWindowHeightSizeChange(ChangeListener<Number> listener) {
+        primaryStage.getScene().heightProperty().addListener(listener);
+    }
+
+    public static void onMainWindowWidthSizeChange(ChangeListener<Number> listener) {
+        primaryStage.getScene().widthProperty().addListener(listener);
     }
 
     @Override
@@ -100,12 +110,18 @@ public class TimeTrackerApp extends Application {
         var stopwatchRecordSearchService = stopwatchConfiguration.stopwatchRecordSearchService();
         stopwatchRecordSearchService.initialize(searchState, stopWatchAppState, stopwatchRecordSearchService);
 
-        TabPane tabPane = new TimeTrackerTabPane();
-        Scene scene = new Scene(tabPane, 600, 600);
+        appHBox = new AppHBox();
+        Scene scene = new Scene(appHBox, 600, 600);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
+
         primaryStage.show();
+        primaryStage.setMaximized(true);
+        appHBox.init(primaryStage);
+    }
+
+    public static void showStopwatch() {
+        appHBox.showStopwatch();
     }
 
     @Override

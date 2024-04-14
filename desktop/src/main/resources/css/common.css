@@ -21,6 +21,10 @@
     -fx-background-color: #F3F3F3;
 }
 
+.white-scroll-pane {
+    -fx-background-color: white;
+}
+
 .header-label {
 	-fx-font-family: 'Visby Round CF Bold';
 	-fx-font-size: 14;

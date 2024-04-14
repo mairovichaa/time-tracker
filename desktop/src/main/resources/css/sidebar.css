@@ -1,0 +1,47 @@
+.sidebar {
+    -fx-background-color: #F3F3F3;
+    -fx-background-insets: -1 -5 -1 -1;
+    -fx-background-radius: 0 20 20 0;
+}
+
+.sidebar .menu-item {
+    -fx-font-size: 16;
+}
+
+.sidebar .menu-item Label {
+    -fx-text-fill: #505050;
+}
+
+.sidebar .menu-item:hover {
+    -fx-cursor: hand;
+}
+
+.sidebar .menu-item:hover Label {
+    -fx-text-fill: #101010;
+}
+
+.sidebar .menu-item:hover .icon-button-grey .button-icon-grey {
+    -fx-fill: #101010;
+}
+
+.sidebar .active-menu-item Label {
+    -fx-text-fill: #101010;
+}
+
+.sidebar .active-menu-item .icon-button-grey .button-icon-grey {
+    -fx-fill: #101010;
+}
+
+.sidebar .logo Label {
+    -fx-font-size: 20;
+    -fx-text-fill: #101010;
+}
+
+.sidebar .logo .icon-button-grey .button-icon-grey {
+    -fx-fill: #101010;
+    -fx-cursor: cursor;
+}
+
+.sidebar .logo .icon-button-grey {
+    -fx-cursor: cursor;
+}

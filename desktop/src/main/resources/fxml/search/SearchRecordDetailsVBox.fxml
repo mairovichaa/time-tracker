@@ -92,13 +92,10 @@
         </VBox>
 
         <VBox>
-            <VBox.margin>
-                <Insets top="8"/>
-            </VBox.margin>
-            <MFXScrollPane styleClass="grey-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
+            <MFXScrollPane styleClass="white-scroll-pane" fx:id="scrollPane" hbarPolicy="NEVER">
                 <VBox fx:id="recordsWrapperVBox" spacing="15">
                     <padding>
-                        <Insets left="20.0" right="20.0" bottom="10.0"/>
+                        <Insets left="20.0" right="20.0" bottom="10.0" top="10.0"/>
                     </padding>
                 </VBox>
             </MFXScrollPane>

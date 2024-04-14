@@ -13,10 +13,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
+import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
-import time_tracker.component.TimeTrackerTabPane;
 import time_tracker.component.common.Icon;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
@@ -175,7 +175,7 @@ public class SearchRecordPane extends Pane {
 
         stopWatchAppState.setChosenDate(date);
         stopWatchAppState.getChosenStopwatchRecord().set(record);
-        TimeTrackerTabPane.INSTANCE.openStopWatchTab();
+        TimeTrackerApp.showStopwatch();
     }
 
 }
