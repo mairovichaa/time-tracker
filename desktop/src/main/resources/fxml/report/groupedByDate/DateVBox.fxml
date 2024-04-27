@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;">
+
+    <Label fx:id="dateLabel" style="-fx-font-size: 20;" wrapText="true"/>
+    <VBox fx:id="dateRecordsWrapperVBox" spacing="8">
+        <VBox.margin>
+            <Insets top="6"/>
+        </VBox.margin>
+    </VBox>
+</fx:root>

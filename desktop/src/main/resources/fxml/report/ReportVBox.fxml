@@ -3,13 +3,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import time_tracker.component.report.ReportForChosenDateVBox?>
+<?import time_tracker.component.report.gropedByDate.ListOfDatesVBox?>
+<?import time_tracker.component.report.groupedByRecord.ListOfRecordsVBox?>
+<?import time_tracker.component.report.ReportControlsVBox?>
+<?import time_tracker.component.report.ReportExportControlsVBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
     <padding>
-        <Insets top="16" right="0" bottom="0" left="10"/>
+        <Insets top="10" left="10"/>
     </padding>
     <HBox spacing="10">
-        <ReportForChosenDateVBox/>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="6"/>
+            </padding>
+            <ReportControlsVBox/>
+            <ReportExportControlsVBox/>
+        </VBox>
+        <ListOfRecordsVBox fx:id="listOfRecordsVBox"/>
+        <ListOfDatesVBox fx:id="listOfDatesVBox"/>
     </HBox>
 
 </fx:root>

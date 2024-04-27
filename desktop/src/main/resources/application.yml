@@ -11,7 +11,7 @@ stopwatch:
       expected: "0S"
     - name: "Workday"
       expected: "8H00M"
-  devMode: true
+  devMode: false
   folderWithData: "<path-to-data>"
   defaultRecords:
   - "Daily"
@@ -19,4 +19,8 @@ stopwatch:
   - "Task 2"
   statistics:
     showWeekly: false
-
+  report:
+    numberOfDaysToShow: 2
+    showTime: true
+    groupBy: REPORT
+    exportFormat: JSON

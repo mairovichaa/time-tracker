@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Configure report</Label>
+
+    <MFXDatePicker floatMode="BORDER" floatingText="Start" promptText="Pick a date..." fx:id="startDatePicker"/>
+    <MFXDatePicker floatMode="BORDER" floatingText="End" promptText="Pick a date..." fx:id="endDatePicker"/>
+    <MFXToggleButton fx:id="showTimeToggle" text="Show measurement time"/>
+
+    <MFXComboBox fx:id="groupByComboBox" floatMode="BORDER" floatingText="Group by"/>
+</fx:root>

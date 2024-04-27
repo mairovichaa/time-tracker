@@ -1,5 +1,6 @@
 ## 1.1.9
-- 'Statistics' tab GUI improvement
+- 'Statistics' GUI improvement
+- 'Report' GUI improvement
 -  Replace tabs navigation with menu
 
 ## 1.1.8

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../css/common.css"
+         styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
+
+    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Export report</Label>
+    <MFXComboBox fx:id="formatComboBox" floatMode="BORDER" floatingText="Format"/>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <MFXButton buttonType="RAISED" text="Export" onAction="#export"
+                   alignment="CENTER"/>
+        <MFXButton buttonType="RAISED" text="Preview" onAction="#preview" alignment="CENTER"/>
+    </HBox>
+
+</fx:root>

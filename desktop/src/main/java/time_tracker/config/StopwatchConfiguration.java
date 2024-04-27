@@ -1,6 +1,7 @@
 package time_tracker.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.java.Log;
@@ -98,6 +99,7 @@ public class StopwatchConfiguration {
     @NonNull
     public StopwatchRecordRepository stopwatchRecordRepository(
             @NonNull final FileRepository fileRepository,
+            // TODO remove
             @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
             @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter
     ) {
@@ -166,6 +168,15 @@ public class StopwatchConfiguration {
                     objectMapper.registerModule(new JavaTimeModule());
                     return objectMapper;
                 }
+        );
+    }
+
+    @NonNull
+    public ObjectWriter objectWriter(@NonNull final ObjectMapper objectMapper) {
+        log.log(Level.FINE, "Creating objectWriter");
+        return GlobalContext.createStoreAndReturn(
+                ObjectWriter.class,
+                objectMapper::writerWithDefaultPrettyPrinter
         );
     }
 
