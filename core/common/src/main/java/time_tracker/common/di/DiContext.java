@@ -1,18 +1,19 @@
 package time_tracker.common.di;
 
+import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
+@Log
 public class DiContext {
 
+    private final BeanInitMethodRunner beanInitMethodRunner = new BeanInitMethodRunner();
     private final Map<Class<?>, Object> context = new HashMap<>();
 
     public <T> void register(Class<T> clazz, T object) {
@@ -20,6 +21,7 @@ public class DiContext {
     }
 
     public void register(Class<?> configuration) {
+        log.info(() -> "Register " + configuration);
         Method[] declaredMethods = configuration.getDeclaredMethods();
 
         try {
@@ -34,7 +36,8 @@ public class DiContext {
     }
 
     private void tryToCreate(Method method, Object configurationInstance, Method[] declaredMethods) throws InvocationTargetException, IllegalAccessException {
-        if (method.getAnnotation(Bean.class) == null) {
+        Bean beanAnnotation = method.getAnnotation(Bean.class);
+        if (beanAnnotation == null) {
             return;
         }
 
@@ -45,25 +48,26 @@ public class DiContext {
             return;
         }
 
-        if (parameters.length == 0) {
-            Object createdInstance = method.invoke(configurationInstance);
-            context.put(returnType, createdInstance);
-            return;
-        }
-
-        for (final Parameter parameter : parameters) {
-            Class<?> parameterType = parameter.getType();
-            if (!context.containsKey(parameterType)) {
-                lookForClassFactoryMethodAndCreateIt(parameterType, declaredMethods, configurationInstance);
+        Object[] arguments = null;
+        if (parameters.length != 0) {
+            for (final Parameter parameter : parameters) {
+                Class<?> parameterType = parameter.getType();
+                if (!context.containsKey(parameterType)) {
+                    lookForClassFactoryMethodAndCreateIt(parameterType, declaredMethods, configurationInstance);
+                }
             }
+            arguments = Arrays.stream(parameters)
+                    .map(Parameter::getType)
+                    .map(context::get)
+                    .toArray();
         }
-        Object[] arguments = Arrays.stream(parameters)
-                .map(Parameter::getType)
-                .map(context::get)
-                .toArray();
 
         Object createdInstance = method.invoke(configurationInstance, arguments);
         context.put(returnType, createdInstance);
+
+        if (!beanAnnotation.initMethod().isEmpty()) {
+            beanInitMethodRunner.run(createdInstance, beanAnnotation);
+        }
     }
 
     private void lookForClassFactoryMethodAndCreateIt(
@@ -90,5 +94,4 @@ public class DiContext {
         }
         return result;
     }
-
 }
