@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import time_tracker.component.configuration.ConfigurationVBox?>
+<?import time_tracker.component.report.ReportVBox?>
+<?import time_tracker.component.search.SearchVBox?>
+<?import time_tracker.component.SidebarVBox?>
+<?import time_tracker.component.statistics.StatisticsVBox?>
+<?import time_tracker.component.stopwatch.StopWatchVBox?>
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml"
+         spacing="20" style="-fx-background-color: white;">
+    <SidebarVBox fx:id="sidebarVBox"/>
+    <MFXScrollPane fx:id="workspaceScrollPane">
+        <VBox fx:id="workspaceVBox">
+            <StopWatchVBox fx:id="stopWatchVBox" managed="false" visible="false"/>
+            <SearchVBox fx:id="searchVBox" managed="false" visible="false"/>
+            <StatisticsVBox fx:id="statisticsVBox" managed="false" visible="false"/>
+            <ReportVBox fx:id="reportVBox" managed="false" visible="false"/>
+            <ConfigurationVBox fx:id="configurationVBox" managed="false" visible="false"/>
+        </VBox>
+    </MFXScrollPane>
+</fx:root>

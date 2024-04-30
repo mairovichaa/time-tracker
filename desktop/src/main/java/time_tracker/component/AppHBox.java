@@ -1,6 +1,7 @@
 package time_tracker.component;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -15,48 +16,88 @@ import time_tracker.model.StopWatchAppState;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.SidebarVBox.SIDEBAR_WIDTH;
+import static time_tracker.component.Utils.load;
 
 public class AppHBox extends HBox {
-
-    private SidebarVBox sidebarVBox;
-    private MFXScrollPane workspaceScrollPane = new MFXScrollPane();
-
-    private final StopWatchVBox stopWatchVBox = new StopWatchVBox();
-    private final SearchVBox searchVBox = new SearchVBox();
-    private final StatisticsVBox statisticsVBox = new StatisticsVBox();
-    private final ReportVBox reportVBox = new ReportVBox();
-    private final ConfigurationVBox configurationVBox = new ConfigurationVBox();
 
     public enum WorkspaceItem {
         STOPWATCH,
         SEARCH,
         STATISTICS,
         REPORT,
-        CONFIGURATION
+        CONFIGURATION;
     }
 
-    public AppHBox() {
-        VBox workspaceVBox = new VBox();
-        workspaceScrollPane.setContent(workspaceVBox);
+    @FXML
+    protected SidebarVBox sidebarVBox;
+    @FXML
+    protected VBox workspaceVBox;
+    @FXML
+    protected MFXScrollPane workspaceScrollPane;
+    @FXML
+    protected StopWatchVBox stopWatchVBox;
+    @FXML
+    protected SearchVBox searchVBox;
+    @FXML
+    protected StatisticsVBox statisticsVBox;
+    @FXML
+    protected ReportVBox reportVBox;
 
-        sidebarVBox = new SidebarVBox();
-        this.setSpacing(20);
+    @FXML
+    protected ConfigurationVBox configurationVBox;
+
+    public AppHBox() {
+        load("/fxml/AppHBox.fxml", this);
 
         StopWatchAppState appState = CONTEXT.get(StopWatchAppState.class);
         appState.getChosenWorkspaceItemObjectProperty().addListener((observable, oldValue, newValue) -> {
-            workspaceVBox.getChildren().clear();
+            if (oldValue != null) {
+                switch (oldValue) {
+                    case STOPWATCH -> {
+                        stopWatchVBox.setManaged(false);
+                        stopWatchVBox.setVisible(false);
+                    }
+                    case SEARCH -> {
+                        searchVBox.setManaged(false);
+                        searchVBox.setVisible(false);
+                    }
+                    case STATISTICS -> {
+                        statisticsVBox.setManaged(false);
+                        statisticsVBox.setVisible(false);
+                    }
+                    case REPORT -> {
+                        reportVBox.setManaged(false);
+                        reportVBox.setVisible(false);
+                    }
+                    case CONFIGURATION -> {
+                        configurationVBox.setManaged(false);
+                        configurationVBox.setVisible(false);
+                    }
+                }
+            }
             switch (newValue) {
-                case STOPWATCH -> workspaceVBox.getChildren().add(stopWatchVBox);
-                case SEARCH -> workspaceVBox.getChildren().add(searchVBox);
-                case STATISTICS -> workspaceVBox.getChildren().add(statisticsVBox);
-                case REPORT -> workspaceVBox.getChildren().add(reportVBox);
-                case CONFIGURATION -> workspaceVBox.getChildren().add(configurationVBox);
+                case STOPWATCH -> {
+                    stopWatchVBox.setManaged(true);
+                    stopWatchVBox.setVisible(true);
+                }
+                case SEARCH -> {
+                    searchVBox.setManaged(true);
+                    searchVBox.setVisible(true);
+                }
+                case STATISTICS -> {
+                    statisticsVBox.setManaged(true);
+                    statisticsVBox.setVisible(true);
+                }
+                case REPORT -> {
+                    reportVBox.setManaged(true);
+                    reportVBox.setVisible(true);
+                }
+                case CONFIGURATION -> {
+                    configurationVBox.setManaged(true);
+                    configurationVBox.setVisible(true);
+                }
             }
         });
-
-        this.setStyle("-fx-background-color: white;");
-        this.getChildren().add(sidebarVBox);
-        this.getChildren().add(workspaceScrollPane);
     }
 
     public void init(@NonNull final Stage primaryStage) {
