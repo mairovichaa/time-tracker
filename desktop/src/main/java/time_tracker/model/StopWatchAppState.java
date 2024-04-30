@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import lombok.Data;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.component.AppHBox;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -57,8 +58,15 @@ public class StopWatchAppState {
     @NonNull
     private ObservableList<StopwatchRecord> recordsForChosenDate = FXCollections.observableArrayList();
 
+    @NonNull
+    private ObjectProperty<AppHBox.WorkspaceItem> chosenWorkspaceItemObjectProperty = new SimpleObjectProperty<>();
+
     public void setChosenDate(@NonNull final LocalDate chosenDate) {
         this.chosenDate = chosenDate;
         this.chosenDateProperty.set(chosenDate);
+    }
+
+    public void setChosenWorkspace(@NonNull final AppHBox.WorkspaceItem workspaceItem) {
+        chosenWorkspaceItemObjectProperty.setValue(workspaceItem);
     }
 }

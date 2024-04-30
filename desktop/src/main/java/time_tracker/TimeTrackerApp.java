@@ -106,6 +106,7 @@ public class TimeTrackerApp extends Application {
         Scene scene = new Scene(appHBox, 600, 600);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
+        stopWatchAppState.setChosenWorkspace(AppHBox.WorkspaceItem.REPORT);
 
         primaryStage.show();
         primaryStage.setMaximized(true);

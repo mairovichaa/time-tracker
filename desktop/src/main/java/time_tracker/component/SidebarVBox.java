@@ -4,29 +4,18 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
-import time_tracker.component.configuration.ConfigurationVBox;
-import time_tracker.component.report.ReportVBox;
-import time_tracker.component.search.SearchVBox;
-import time_tracker.component.statistics.StatisticsVBox;
-import time_tracker.component.stopwatch.StopWatchVBox;
+import time_tracker.model.StopWatchAppState;
 
 import java.util.List;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.IconButton.initIconButton;
 
 public class SidebarVBox extends VBox {
     public final static Double SIDEBAR_WIDTH = 200d;
     private final static Double SIDEBAR_PADDING_WIDTH = 20d;
-
-    private final VBox workspaceVBox;
-    private final StopWatchVBox stopWatchVBox = new StopWatchVBox();
-    private final SearchVBox searchVBox = new SearchVBox();
-    private final StatisticsVBox statisticsVBox = new StatisticsVBox();
-    private final ReportVBox reportVBox = new ReportVBox();
-    private final ConfigurationVBox configurationVBox = new ConfigurationVBox();
 
     @FXML
     private Label stopwatchLabel;
@@ -44,16 +33,16 @@ public class SidebarVBox extends VBox {
     private Label configurationIconLabel;
     @FXML
     private Label logoIconLabel;
+    private final StopWatchAppState appState;
 
-    public SidebarVBox(final VBox workspaceVBox) {
+    public SidebarVBox() {
         load("/fxml/SidebarVBox.fxml", this);
 
         this.setWidth(SIDEBAR_WIDTH - SIDEBAR_PADDING_WIDTH);
         this.setMinWidth(SIDEBAR_WIDTH - SIDEBAR_PADDING_WIDTH);
         this.setPrefWidth(SIDEBAR_WIDTH - SIDEBAR_PADDING_WIDTH);
 
-        this.workspaceVBox = workspaceVBox;
-        showStopwatch();
+        appState = CONTEXT.get(StopWatchAppState.class);
 
         initIconButton(stopwatchIconLabel, 20, Icon.STOPWATCH);
         initIconButton(searchIconLabel, 20, Icon.SEARCH);
@@ -61,38 +50,45 @@ public class SidebarVBox extends VBox {
         initIconButton(reportIconLabel, 20, Icon.SUMMARIZE);
         initIconButton(configurationIconLabel, 20, Icon.SETTINGS);
         initIconButton(logoIconLabel, 26, Icon.ALL_INCLUSIVE);
+
+        appState.getChosenWorkspaceItemObjectProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case STOPWATCH -> chooseMenuItem(0);
+                case SEARCH -> chooseMenuItem(1);
+                case STATISTICS -> chooseMenuItem(2);
+                case REPORT -> chooseMenuItem(3);
+                case CONFIGURATION -> chooseMenuItem(4);
+            }
+
+        });
     }
 
     @FXML
     public void showStopwatch() {
-        chooseMenuItem(stopWatchVBox, 0);
-
+        appState.setChosenWorkspace(AppHBox.WorkspaceItem.STOPWATCH);
     }
 
     @FXML
     public void showSearch() {
-        chooseMenuItem(searchVBox, 1);
+        appState.setChosenWorkspace(AppHBox.WorkspaceItem.SEARCH);
     }
 
     @FXML
     public void showStatistics() {
-        chooseMenuItem(statisticsVBox, 2);
+        appState.setChosenWorkspace(AppHBox.WorkspaceItem.STATISTICS);
     }
 
     @FXML
     public void showReport() {
-        chooseMenuItem(reportVBox, 3);
+        appState.setChosenWorkspace(AppHBox.WorkspaceItem.REPORT);
     }
 
     @FXML
     public void showConfiguration() {
-        chooseMenuItem(configurationVBox, 4);
+        appState.setChosenWorkspace(AppHBox.WorkspaceItem.CONFIGURATION);
     }
 
-    private void chooseMenuItem(@NonNull final Node chosenElement, int menuItemIndex) {
-        workspaceVBox.getChildren().clear();
-        workspaceVBox.getChildren().add(chosenElement);
-
+    private void chooseMenuItem(final int menuItemIndex) {
         List<Node> menuItems = this.getChildren()
                 .stream().filter(it -> it.getStyleClass().contains("menu-item"))
                 .toList();

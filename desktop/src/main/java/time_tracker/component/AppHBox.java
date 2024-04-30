@@ -6,7 +6,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import time_tracker.TimeTrackerApp;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.component.configuration.ConfigurationVBox;
+import time_tracker.component.report.ReportVBox;
+import time_tracker.component.search.SearchVBox;
+import time_tracker.component.statistics.StatisticsVBox;
+import time_tracker.component.stopwatch.StopWatchVBox;
+import time_tracker.model.StopWatchAppState;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.SidebarVBox.SIDEBAR_WIDTH;
 
 public class AppHBox extends HBox {
@@ -14,11 +21,38 @@ public class AppHBox extends HBox {
     private SidebarVBox sidebarVBox;
     private MFXScrollPane workspaceScrollPane = new MFXScrollPane();
 
+    private final StopWatchVBox stopWatchVBox = new StopWatchVBox();
+    private final SearchVBox searchVBox = new SearchVBox();
+    private final StatisticsVBox statisticsVBox = new StatisticsVBox();
+    private final ReportVBox reportVBox = new ReportVBox();
+    private final ConfigurationVBox configurationVBox = new ConfigurationVBox();
+
+    public enum WorkspaceItem {
+        STOPWATCH,
+        SEARCH,
+        STATISTICS,
+        REPORT,
+        CONFIGURATION
+    }
+
     public AppHBox() {
         VBox workspaceVBox = new VBox();
         workspaceScrollPane.setContent(workspaceVBox);
-        sidebarVBox = new SidebarVBox(workspaceVBox);
+
+        sidebarVBox = new SidebarVBox();
         this.setSpacing(20);
+
+        StopWatchAppState appState = CONTEXT.get(StopWatchAppState.class);
+        appState.getChosenWorkspaceItemObjectProperty().addListener((observable, oldValue, newValue) -> {
+            workspaceVBox.getChildren().clear();
+            switch (newValue) {
+                case STOPWATCH -> workspaceVBox.getChildren().add(stopWatchVBox);
+                case SEARCH -> workspaceVBox.getChildren().add(searchVBox);
+                case STATISTICS -> workspaceVBox.getChildren().add(statisticsVBox);
+                case REPORT -> workspaceVBox.getChildren().add(reportVBox);
+                case CONFIGURATION -> workspaceVBox.getChildren().add(configurationVBox);
+            }
+        });
 
         this.setStyle("-fx-background-color: white;");
         this.getChildren().add(sidebarVBox);
