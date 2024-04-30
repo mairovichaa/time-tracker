@@ -6,11 +6,11 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.ReportState;
 import time_tracker.service.report.ReportGenerator;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class ReportExportPreviewVBox extends VBox {
@@ -25,9 +25,9 @@ public class ReportExportPreviewVBox extends VBox {
         load("/fxml/report/ReportExportPreviewVBox.fxml", this);
 
         this.stage = stage;
-        this.reportGenerator = GlobalContext.get(ReportGenerator.class);
+        this.reportGenerator = CONTEXT.get(ReportGenerator.class);
 
-        var reportState = GlobalContext.get(ReportState.class);
+        var reportState = CONTEXT.get(ReportState.class);
         String report = reportGenerator.generate(reportState);
         previewText.setText(report);
     }

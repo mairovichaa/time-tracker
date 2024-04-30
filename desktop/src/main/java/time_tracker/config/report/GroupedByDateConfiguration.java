@@ -2,8 +2,8 @@ package time_tracker.config.report;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.common.di.Bean;
 import time_tracker.service.report.common.StopwatchMeasurementExportDtoCustomFormatWriter;
 import time_tracker.service.report.common.StopwatchRecordMeasurementToStopwatchMeasurementExportDtoMapper;
 import time_tracker.service.report.groupedByDate.CustomFormatWriter;
@@ -16,26 +16,29 @@ import java.util.logging.Level;
 public class GroupedByDateConfiguration {
 
     @NonNull
+    @Bean
     public GroupedByDateReportGenerator groupedByDateReportGenerator(
             @NonNull final CustomFormatWriter customFormatWriter,
             @NonNull final ObjectWriter prettyJsonWriter,
             @NonNull final ExportDtoMappers mapper
     ) {
         log.log(Level.FINE, "Creating groupedByDateReportGenerator");
-        return GlobalContext.createStoreAndReturn(GroupedByDateReportGenerator.class, () -> new GroupedByDateReportGenerator(customFormatWriter, prettyJsonWriter, mapper));
+        return new GroupedByDateReportGenerator(customFormatWriter, prettyJsonWriter, mapper);
     }
 
     @NonNull
+    @Bean
     public ExportDtoMappers exportDtoMappers(
             @NonNull final StopwatchRecordMeasurementToStopwatchMeasurementExportDtoMapper mapper
     ) {
         log.log(Level.FINE, "Creating exportDtoMappers");
-        return GlobalContext.createStoreAndReturn(ExportDtoMappers.class, () -> new ExportDtoMappers(mapper));
+        return new ExportDtoMappers(mapper);
     }
 
     @NonNull
+    @Bean
     public CustomFormatWriter customFormatMapper(@NonNull final StopwatchMeasurementExportDtoCustomFormatWriter writer) {
         log.log(Level.FINE, "Creating exportDtoMappers");
-        return GlobalContext.createStoreAndReturn(CustomFormatWriter.class, () -> new CustomFormatWriter(writer));
+        return new CustomFormatWriter(writer);
     }
 }

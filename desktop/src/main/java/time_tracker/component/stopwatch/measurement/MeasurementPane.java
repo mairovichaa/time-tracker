@@ -9,7 +9,6 @@ import javafx.scene.layout.Pane;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
 import time_tracker.config.properties.StopwatchProperties;
@@ -18,6 +17,7 @@ import time_tracker.service.StopwatchMeasurementService;
 import time_tracker.service.StopwatchRecordService;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
 import static time_tracker.component.common.IconButton.initIconButton;
@@ -53,14 +53,14 @@ public class MeasurementPane extends Pane {
 
         this.measurement = measurement;
 
-        var appProperties = GlobalContext.get(StopwatchProperties.class);
+        var appProperties = CONTEXT.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         measurementIdWrapper.setVisible(isDevMode);
         measurementIdWrapper.setManaged(isDevMode);
         measurementIdLabel.setText(Long.toString(measurement.getId()));
 
-        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
-        this.stopwatchMeasurementService = GlobalContext.get(StopwatchMeasurementService.class);
+        this.stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
+        this.stopwatchMeasurementService = CONTEXT.get(StopwatchMeasurementService.class);
 
         startedAt.textProperty()
                 .bind(new StringBinding() {

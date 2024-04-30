@@ -9,12 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.IconButton.initIconButton;
 
@@ -31,7 +31,7 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
         load("/fxml/stopwatch/record/ListOfRecordsForChosenDateVBox.fxml", this);
         initIconButton(addRecordButton, 30, Icon.ADD_CIRCLE);
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         ObservableList<Node> records = FXCollections.observableArrayList();
         stopWatchAppState.getRecordsForChosenDate()

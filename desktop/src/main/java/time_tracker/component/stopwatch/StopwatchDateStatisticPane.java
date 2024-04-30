@@ -7,13 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
 
 import java.util.List;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.IconButton.initIconButton;
 
@@ -51,7 +51,7 @@ public class StopwatchDateStatisticPane extends Pane {
     public StopwatchDateStatisticPane() {
         load("/fxml/stopwatch/StopwatchDateStatisticPane.fxml", this);
 
-        stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         stopWatchAppState.getChosenDateProperty()
                 .addListener((observable, oldValue, newValue) -> rebind());

@@ -9,10 +9,7 @@ import java.util.List;
 
 public interface StopwatchRecordSearchService {
 
-    void initialize(
-            @NonNull final StopwatchSearchState stopwatchSearchState,
-            @NonNull final StopWatchAppState stopWatchAppState,
-            @NonNull final StopwatchRecordSearchService stopwatchRecordSearchService);
+    void initialize();
 
     void shutdown();
 

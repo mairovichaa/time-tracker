@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
@@ -23,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import static java.util.Comparator.comparing;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -49,7 +49,7 @@ public class DayDataEditVBox extends VBox {
         load("/fxml/stopwatch/DayDataEditVBox.fxml", this);
         this.dayData = dayData;
         this.stage = stage;
-        this.dayDataService = GlobalContext.get(DayDataService.class);
+        this.dayDataService = CONTEXT.get(DayDataService.class);
 
         var expectedTotalInSecs = dayData.getExpectedTotalInSecsProperty().getValue();
         var duration = Utils.formatDuration(expectedTotalInSecs);
@@ -81,7 +81,7 @@ public class DayDataEditVBox extends VBox {
     }
 
     private void createFastEditFlowPane() {
-        var stopwatchProperties = GlobalContext.get(StopwatchProperties.class);
+        var stopwatchProperties = CONTEXT.get(StopwatchProperties.class);
         stopwatchProperties.getDates()
                 .getFastEditButtons()
                 .stream()

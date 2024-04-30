@@ -8,13 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecordMeasurement;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -30,7 +30,7 @@ public class ListOfMeasurementsForChosenRecordVBox extends VBox {
     public ListOfMeasurementsForChosenRecordVBox() {
         load("/fxml/stopwatch/record/ListOfMeasurementsForChosenRecordVBox.fxml", this);
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         var chosenStopwatchRecordProperty = stopWatchAppState.getChosenStopwatchRecord();
 

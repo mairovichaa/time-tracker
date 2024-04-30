@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopwatchRecordMeasurement;
 import time_tracker.service.StopwatchRecordService;
 
@@ -20,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER_2;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -50,7 +50,7 @@ public class MeasurementEditVBox extends VBox {
             @NonNull final Stage stage
     ) {
         load("/fxml/stopwatch/measurement/MeasurementEditVBox.fxml", this);
-        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        var stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
 
         var startedAtValue = measurement.getStartedAt();
         var startedAtFormatted = DATA_TIME_FORMATTER_2.format(startedAtValue);

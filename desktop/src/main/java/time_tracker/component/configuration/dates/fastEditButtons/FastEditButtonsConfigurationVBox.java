@@ -8,11 +8,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
 import time_tracker.service.ConfigurationService;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -26,7 +26,7 @@ public class FastEditButtonsConfigurationVBox extends VBox {
     public FastEditButtonsConfigurationVBox() {
         load("/fxml/configuration/dates/fastEditButtons/FastEditButtonsConfigurationVBox.fxml", this);
 
-        configurationService = GlobalContext.get(ConfigurationService.class);
+        configurationService = CONTEXT.get(ConfigurationService.class);
 
         log.finest("Bind default record names to UI nodes");
         ObservableList<FastEditButtonProperties> fastEditButtons = configurationService.getFastEditButtons();

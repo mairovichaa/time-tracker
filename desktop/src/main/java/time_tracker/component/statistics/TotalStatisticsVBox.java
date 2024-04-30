@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -15,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.IconButton.initIconButton;
 
@@ -58,7 +58,7 @@ public class TotalStatisticsVBox extends VBox {
     private void recalculateStatistics() {
         log.fine(() -> "calculate total statistics");
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         var records = stopWatchAppState.getDateToRecords()
                 .keySet()

@@ -17,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
@@ -34,6 +33,7 @@ import java.util.logging.Level;
 import static java.util.Comparator.comparing;
 import static time_tracker.Constants.AMOUNT_OF_RECORDS_TO_SHOW_IN_A_BATCH;
 import static time_tracker.Constants.THRESHOLD_TO_LOAD_NEXT_BATCH;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.IconButton.initIconButton;
 
@@ -105,7 +105,8 @@ public class SearchRecordDetailsVBox extends VBox {
                     }
                 });
 
-        var appState = GlobalContext.get(StopWatchAppState.class);
+        var appState = CONTEXT.get(StopWatchAppState.class);
+        var stopwatchRecordSearchService = CONTEXT.get(StopwatchRecordSearchService.class);
         searchState = appState.getSearchState();
         searchState.getChosenRecordName()
                 .addListener((observable, oldValue, newRecordName) -> {
@@ -113,7 +114,6 @@ public class SearchRecordDetailsVBox extends VBox {
                     if (newRecordName != null) {
                         recordNameLabel.setText(newRecordName);
 
-                        var stopwatchRecordSearchService = GlobalContext.get(StopwatchRecordSearchService.class);
                         var recordsForName = stopwatchRecordSearchService.recordsByName(newRecordName);
                         recordsForName.sort(comparing(StopwatchRecord::getDate).reversed());
                         noRecordIsChosenInfoVBox.setVisible(false);

@@ -6,10 +6,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.service.StopwatchRecordService;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -37,7 +37,7 @@ public class RecordRenameVBox extends VBox {
         var newName = nameTextField.getText();
         record.setName(newName);
 
-        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        var stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
         stopwatchRecordService.store(record);
 
         stage.close();

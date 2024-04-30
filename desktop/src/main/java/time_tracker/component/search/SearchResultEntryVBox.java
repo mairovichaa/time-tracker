@@ -7,10 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchSearchState;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 
@@ -28,8 +28,7 @@ public class SearchResultEntryVBox extends VBox {
         load("/fxml/search/SearchResultEntryVBox.fxml", this);
         nameLabel.setText(recordName);
         this.recordName = recordName;
-
-        StopWatchAppState stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        StopWatchAppState stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         StopwatchSearchState searchState = stopWatchAppState.getSearchState();
 
         this.chosenStopwatchRecordListener = (observable, oldVal, newVal) -> {
@@ -51,7 +50,7 @@ public class SearchResultEntryVBox extends VBox {
 
     @FXML
     public void chooseRecord() {
-        StopWatchAppState appState = GlobalContext.get(StopWatchAppState.class);
+        StopWatchAppState appState = CONTEXT.get(StopWatchAppState.class);
         StopwatchSearchState searchState = appState.getSearchState();
         searchState.getChosenRecordName()
                 .setValue(recordName);

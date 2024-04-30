@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -21,6 +20,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+
+import static time_tracker.TimeTrackerApp.CONTEXT;
 
 @RequiredArgsConstructor
 @Log
@@ -36,6 +37,8 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     private final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter;
     @NonNull
     private final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter;
+    @NonNull
+    private final DayDataService dayDataService;
 
     @Getter
     private final Map<LocalDate, List<StopwatchRecord>> loaded = new HashMap<>();
@@ -165,7 +168,8 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
                 .get(newDate);
         if (stopwatchRecords == null) {
             log.fine(() -> "There is no data for " + Utils.formatLocalDate(newDate) + " date");
-            var dayDataService = GlobalContext.get(DayDataService.class);
+            // TODO get rid of this
+            var dayDataService = CONTEXT.get(DayDataService.class);
             dayDataService.create(newDate);
             stopwatchRecords = stopWatchAppState.getDateToRecords()
                     .get(newDate);

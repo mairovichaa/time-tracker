@@ -8,13 +8,13 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 
 import java.time.LocalDate;
 
 import static java.util.Comparator.comparing;
 import static java.util.function.Function.identity;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -28,7 +28,7 @@ public class DatePickerVBox extends VBox {
     public DatePickerVBox() {
         load("/fxml/stopwatch/date/DatePickerVBox.fxml", this);
 
-        stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         var date = getInitialDate();
         stopWatchAppState.setChosenDate(date);

@@ -5,10 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.service.StopwatchRecordService;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -22,7 +22,7 @@ public class CreateRecordVBoxModal extends VBox {
 
     public CreateRecordVBoxModal(@NonNull Stage stage) {
         load("/fxml/stopwatch/record/CreateRecordVBoxModal.fxml", this);
-        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+        this.stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
         this.stage = stage;
     }
 

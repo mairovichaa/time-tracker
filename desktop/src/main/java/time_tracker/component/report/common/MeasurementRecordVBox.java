@@ -4,12 +4,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.ReportState;
 import time_tracker.model.StopwatchRecordMeasurement;
 
 import static time_tracker.Constants.DATA_TIME_FORMATTER;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class MeasurementRecordVBox extends VBox {
@@ -32,7 +32,7 @@ public class MeasurementRecordVBox extends VBox {
         String note = measurement.getNote().isEmpty() ? "-" : measurement.getNote();
         noteLabel.setText(note);
 
-        var reportState = GlobalContext.get(ReportState.class);
+        var reportState = CONTEXT.get(ReportState.class);
         reportState.getShowTimeProperty().addListener((observable, oldValue, newIsShowTime) -> {
             if (!newIsShowTime && measurement.getNote().isEmpty()) {
                 this.setManaged(false);

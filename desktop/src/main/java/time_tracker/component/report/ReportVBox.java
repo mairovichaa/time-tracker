@@ -3,13 +3,13 @@ package time_tracker.component.report;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.report.gropedByDate.ListOfDatesVBox;
 import time_tracker.component.report.groupedByRecord.ListOfRecordsVBox;
 import time_tracker.model.ReportState;
 
 import java.util.logging.Level;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -25,7 +25,7 @@ public class ReportVBox extends VBox {
         load("/fxml/report/ReportVBox.fxml", this);
         log.log(Level.FINE, "Create ReportVBox");
 
-        ReportState reportState = GlobalContext.get(ReportState.class);
+        ReportState reportState = CONTEXT.get(ReportState.class);
         reportState.getGroupByRecord()
                 .addListener((observable, oldValue, newValue) -> showUsingCorrectGrouping(newValue));
         showUsingCorrectGrouping(reportState.getGroupByRecord().getValue());

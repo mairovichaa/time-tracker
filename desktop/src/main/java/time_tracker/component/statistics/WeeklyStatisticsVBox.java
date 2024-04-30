@@ -3,16 +3,12 @@ package time_tracker.component.statistics;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import javafx.beans.property.LongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import time_tracker.Utils;
-import time_tracker.component.statistics.model.DayStatistics;
 import time_tracker.component.statistics.model.WeeklyStatistics;
-import time_tracker.common.GlobalContext;
-import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.service.TimeService;
@@ -20,13 +16,12 @@ import time_tracker.service.TimeService;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.Utils.DATE_FORMAT;
 import static time_tracker.component.Utils.load;
 
@@ -41,8 +36,8 @@ public class WeeklyStatisticsVBox extends VBox {
     public WeeklyStatisticsVBox() {
         load("/fxml/statistics/WeeklyStatisticsVBox.fxml", this);
 
-        stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
-        timeService = GlobalContext.get(TimeService.class);
+        stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
+        timeService = CONTEXT.get(TimeService.class);
 
         MFXTableColumn<WeeklyStatistics> startAtColumn = new MFXTableColumn<>("Start at");
         startAtColumn.setRowCellFactory(stats -> new MFXTableRowCell<>(WeeklyStatistics::getStartDate));

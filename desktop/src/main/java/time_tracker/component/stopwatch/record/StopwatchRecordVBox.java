@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
 import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
@@ -26,6 +25,7 @@ import time_tracker.service.StopwatchRecordService;
 import java.util.List;
 import java.util.logging.Level;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
 import static time_tracker.component.common.IconButton.initIconButton;
@@ -98,14 +98,14 @@ public class StopwatchRecordVBox extends Pane {
         notTrackButton.managedProperty().bind(stopwatchRecord.getTrackedProperty());
 
         this.stopwatchRecord = stopwatchRecord;
-        this.stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
-        this.appStateService = GlobalContext.get(AppStateService.class);
+        this.stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
+        this.appStateService = CONTEXT.get(AppStateService.class);
 
         // TODO it seems that listener has to be removed or to be moved to another place
         stopwatchRecord.getTrackedProperty()
                 .addListener((observable, oldValue, newValue) -> stopwatchRecordService.store());
 
-        var appProperties = GlobalContext.get(StopwatchProperties.class);
+        var appProperties = CONTEXT.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         recordIdLabel.setVisible(isDevMode);
         recordIdLabel.setManaged(isDevMode);
@@ -116,7 +116,7 @@ public class StopwatchRecordVBox extends Pane {
 
         this.setOnMouseClicked(ignored -> chosen());
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         this.chosenStopwatchRecordListener = c -> {
             log.fine(() -> "chosen stopwatch record have been changed");
             var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord().get();
@@ -165,7 +165,7 @@ public class StopwatchRecordVBox extends Pane {
     private void chosen() {
         log.log(Level.FINE, "stopwatchChosenButton is clicked");
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         stopWatchAppState.getChosenStopwatchRecord().set(stopwatchRecord);
     }
 

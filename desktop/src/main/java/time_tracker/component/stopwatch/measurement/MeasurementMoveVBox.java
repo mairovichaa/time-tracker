@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
@@ -20,6 +19,7 @@ import time_tracker.service.StopwatchRecordService;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -39,7 +39,7 @@ public class MeasurementMoveVBox extends VBox {
         load("/fxml/stopwatch/measurement/MeasurementMoveVBox.fxml", this);
         this.stage = stage;
 
-        var stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         var chosenStopwatchRecord = stopWatchAppState.getChosenStopwatchRecord()
                 .get();
 
@@ -64,7 +64,7 @@ public class MeasurementMoveVBox extends VBox {
                         var measurements = chosenRecord.getMeasurementsProperty();
                         chosenStopwatchRecord.getMeasurementsProperty().remove(measurement);
                         measurements.add(measurement);
-                        var stopwatchRecordService = GlobalContext.get(StopwatchRecordService.class);
+                        var stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
                         stopwatchRecordService.store();
                         stage.close();
                     }

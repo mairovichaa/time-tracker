@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import lombok.extern.java.Log;
 import time_tracker.TimeTrackerApp;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Error;
 import time_tracker.config.properties.StopwatchProperties;
@@ -17,6 +16,7 @@ import time_tracker.service.report.ReportExporter;
 
 import java.io.File;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.config.properties.StopwatchProperties.ReportProperties.ExportFormat.CUSTOM;
 import static time_tracker.config.properties.StopwatchProperties.ReportProperties.ExportFormat.JSON;
@@ -34,8 +34,8 @@ public class ReportExportControlsVBox extends VBox {
     public ReportExportControlsVBox() {
         load("/fxml/report/ReportExportControlsVBox.fxml", this);
 
-        reportState = GlobalContext.get(ReportState.class);
-        reportExporter = GlobalContext.get(ReportExporter.class);
+        reportState = CONTEXT.get(ReportState.class);
+        reportExporter = CONTEXT.get(ReportExporter.class);
         formatComboBox.setItems(FORMAT_OPTIONS);
         if (reportState.getExportFormat().get() == JSON) {
             formatComboBox.selectFirst();

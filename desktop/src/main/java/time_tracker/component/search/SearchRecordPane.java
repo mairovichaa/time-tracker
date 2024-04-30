@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
 import time_tracker.config.properties.StopwatchProperties;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import static javafx.beans.binding.Bindings.createStringBinding;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
 import static time_tracker.component.common.IconButton.initIconButton;
@@ -70,14 +70,14 @@ public class SearchRecordPane extends Pane {
         // TODO make it a property
         dateLabel.textProperty().set(formattedLocalDate);
 
-        this.appStateService = GlobalContext.get(AppStateService.class);
-        stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        this.appStateService = CONTEXT.get(AppStateService.class);
+        stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         // TODO it seems that listener has to be removed or to be moved to another place
         record.getTrackedProperty()
                 .addListener((observable, oldValue, newValue) -> appStateService.store());
 
-        StopwatchProperties appProperties = GlobalContext.get(StopwatchProperties.class);
+        StopwatchProperties appProperties = CONTEXT.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
         recordIdLabel.setVisible(isDevMode);
         recordIdLabel.setManaged(isDevMode);

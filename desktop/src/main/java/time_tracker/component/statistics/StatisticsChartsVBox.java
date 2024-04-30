@@ -11,12 +11,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
 import java.util.Comparator;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class StatisticsChartsVBox extends VBox {
@@ -50,7 +50,7 @@ public class StatisticsChartsVBox extends VBox {
     }
 
     private void recalculateStatistics() {
-        StopWatchAppState stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        StopWatchAppState stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
         series1.setName("Measured time");
         stopWatchAppState.getDateToDayData()

@@ -1,9 +1,9 @@
 package time_tracker.service;
 
 import javafx.application.Platform;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.common.DebounceContext;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -24,23 +24,23 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Log
+@RequiredArgsConstructor
 public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchService {
 
     // TODO move to configs
     private static final String LOG_PATTERN = "Chosen record name is changed from %s to %s";
     private final static Duration DEBOUNCE_DURATION_FOR_SEARCH = Duration.ofMillis(500);
+
+    private final StopWatchAppState stopWatchAppState;
+
     @NonNull
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     @NonNull
     private final DebounceContext debounceContext = new DebounceContext(scheduledExecutorService, DEBOUNCE_DURATION_FOR_SEARCH);
 
     @Override
-    public void initialize(
-            @NonNull final StopwatchSearchState stopwatchSearchState,
-            @NonNull final StopWatchAppState stopWatchAppState,
-            @NonNull final StopwatchRecordSearchService stopwatchRecordSearchService) {
-
-
+    public void initialize() {
+        StopwatchSearchState stopwatchSearchState = stopWatchAppState.getSearchState();
         var searchStateSearch = stopwatchSearchState.getSearch();
         searchStateSearch.addListener((observable, oldValue, newSearchTerm) -> {
             log.fine(() -> "Search term has changed from " + oldValue + " to " + newSearchTerm);
@@ -55,7 +55,7 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
         stopwatchSearchState.getChosenRecordName()
                 .addListener((observable, oldValue, newRecordName) -> {
                     log.fine(() -> String.format(LOG_PATTERN, oldValue, newRecordName));
-                    var recordsForName = stopwatchRecordSearchService.recordsByName(newRecordName);
+                    var recordsForName = this.recordsByName(newRecordName);
                     recordsForName.sort(comparing(StopwatchRecord::getDate).reversed());
                     stopwatchSearchState.getRecordsForChosenName().clear();
                     stopwatchSearchState.getRecordsForChosenName().addAll(recordsForName);
@@ -132,8 +132,7 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
     @Override
     @NonNull
     public List<StopwatchRecord> recordsByName(@NonNull final String name) {
-        var appState = GlobalContext.get(StopWatchAppState.class);
-        return appState.getDateToRecords()
+        return stopWatchAppState.getDateToRecords()
                 .values()
                 .stream()
                 .flatMap(List::stream)

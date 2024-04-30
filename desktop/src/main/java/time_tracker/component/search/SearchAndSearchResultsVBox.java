@@ -10,7 +10,6 @@ import javafx.collections.WeakListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 import time_tracker.TimeTrackerApp;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchSearchState;
 
@@ -20,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static time_tracker.Constants.AMOUNT_OF_RECORDS_TO_SHOW_IN_A_BATCH;
 import static time_tracker.Constants.THRESHOLD_TO_LOAD_NEXT_BATCH;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class SearchAndSearchResultsVBox extends VBox {
@@ -45,7 +45,7 @@ public class SearchAndSearchResultsVBox extends VBox {
 
     public SearchAndSearchResultsVBox() {
         load("/fxml/search/SearchAndSearchResultsVBox.fxml", this);
-        StopWatchAppState stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        StopWatchAppState stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         StopwatchSearchState searchState = stopWatchAppState.getSearchState();
 
         ObservableList<String> trackedComboItems = FXCollections.observableArrayList("All", "Yes", "No");
@@ -99,7 +99,13 @@ public class SearchAndSearchResultsVBox extends VBox {
                 .skip(amountOfShownRecords)
                 .limit(AMOUNT_OF_RECORDS_TO_SHOW_IN_A_BATCH)
                 .map(SearchResultEntryVBox::new)
-                .forEach(searchResultVBox.getChildren()::add);
+                .forEach(it -> {
+                    searchResultVBox.getChildren().add(it);
+                    // TODO doesn't work - need to investigate
+//                    searchResultVBox.autosize();
+//                    it.autosize();
+//                    it.adjustSize();
+                });
         amountOfShownRecords += AMOUNT_OF_RECORDS_TO_SHOW_IN_A_BATCH;
     }
 

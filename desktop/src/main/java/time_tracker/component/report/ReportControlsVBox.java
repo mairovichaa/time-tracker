@@ -7,9 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import time_tracker.common.GlobalContext;
 import time_tracker.model.ReportState;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class ReportControlsVBox extends VBox {
@@ -28,7 +28,7 @@ public class ReportControlsVBox extends VBox {
     public ReportControlsVBox() {
         load("/fxml/report/ReportControlsVBox.fxml", this);
 
-        ReportState reportState = GlobalContext.get(ReportState.class);
+        ReportState reportState = CONTEXT.get(ReportState.class);
         startDatePicker.valueProperty().bindBidirectional(reportState.getStartDateProperty());
         endDatePicker.valueProperty().bindBidirectional(reportState.getEndDateProperty());
         showTimeToggle.selectedProperty().bindBidirectional(reportState.getShowTimeProperty());

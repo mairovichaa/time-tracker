@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
-import time_tracker.common.GlobalContext;
 import time_tracker.component.statistics.model.DayStatistics;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
@@ -23,6 +22,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static javafx.collections.FXCollections.observableArrayList;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.Utils.DATE_FORMAT_WITH_SHORT_DAY_NAME;
 import static time_tracker.component.Utils.load;
 
@@ -36,7 +36,7 @@ public class DailyStatisticsVBox extends VBox {
 
     public DailyStatisticsVBox() {
         load("/fxml/statistics/DailyStatisticsVBox.fxml", this);
-        stopWatchAppState = GlobalContext.get(StopWatchAppState.class);
+        stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 
         trackedComboBox.selectIndex(0);
 

@@ -3,10 +3,9 @@ package time_tracker.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.java.Log;
-import time_tracker.common.GlobalContext;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.common.di.Bean;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.configuration.RepositoryConfiguration;
@@ -30,66 +29,60 @@ public class StopwatchConfiguration {
     private final RepositoryConfiguration repositoryConfiguration = new RepositoryConfiguration();
 
     @NonNull
+    @Bean
     public AppStateService appStateService(
             @NonNull final StopwatchRecordService stopwatchRecordService,
             @NonNull final StopWatchAppState stopWatchAppState) {
         log.log(Level.FINE, "Creating appStateService");
-        return GlobalContext.createStoreAndReturn(
-                AppStateService.class,
-                () -> new AppStateService(stopwatchRecordService, stopWatchAppState)
-        );
+        return new AppStateService(stopwatchRecordService, stopWatchAppState);
     }
 
     @NonNull
+    @Bean
     public StopwatchRecordService stopwatchRecordService(
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
             @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory,
             @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
-            @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter
+            @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter,
+            @NonNull final DayDataService dayDataService
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchRecordService.class,
-                () -> {
-                    var service = new DefaultStopwatchRecordService(
-                            stopWatchAppState, stopwatchRecordRepository,
-                            stopwatchRecordOnLoadFactory,
-                            stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter);
-                    service.loadAll();
-                    return service;
-                }
-        );
+        var service = new DefaultStopwatchRecordService(
+                stopWatchAppState, stopwatchRecordRepository,
+                stopwatchRecordOnLoadFactory,
+                stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter, dayDataService);
+        service.loadAll();
+        return service;
+
     }
 
     @NonNull
+    @Bean
     public DayStatisticsService dayStatisticsService(@NonNull final DayStatisticsRepository dayStatisticsRepository) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
-        return GlobalContext.createStoreAndReturn(
-                DayStatisticsService.class,
-                () -> new DefaultDayStatisticsService(dayStatisticsRepository)
-        );
+        return new DefaultDayStatisticsService(dayStatisticsRepository);
     }
 
     @NonNull
+    @Bean
     public StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory(
             @NonNull final StopwatchProperties stopwatchProperties,
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordOnLoadFactory");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchRecordOnLoadFactory.class,
-                () -> new StopwatchRecordOnLoadFactoryImpl(stopwatchProperties, stopwatchRecordRepository)
-        );
+        return new StopwatchRecordOnLoadFactoryImpl(stopwatchProperties, stopwatchRecordRepository);
     }
 
     @NonNull
+    @Bean
     public StopWatchAppState stopWatchAppState() {
         log.log(Level.FINE, "Creating stopWatchAppState");
-        return GlobalContext.createStoreAndReturn(StopWatchAppState::new);
+        return new StopWatchAppState();
     }
 
     @NonNull
+    @Bean
     public DayStatisticsRepository dayStatisticsRepository(
             @NonNull final FileRepository fileRepository
     ) {
@@ -97,6 +90,7 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
+    @Bean
     public StopwatchRecordRepository stopwatchRecordRepository(
             @NonNull final FileRepository fileRepository,
             // TODO remove
@@ -107,6 +101,7 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
+    @Bean
     public FileRepository fileRepository(
             @NonNull final StopwatchProperties stopwatchProperties,
             @NonNull final ObjectMapper objectMapper
@@ -115,83 +110,62 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
+    @Bean
     public StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter() {
         log.log(Level.FINE, "Creating stopwatchRecordToRecordConverter");
-        return GlobalContext.createStoreAndReturn(StopwatchRecordToRecordConverter.class, () -> {
-            var measurementConverter = new StopwatchRecordMeasurementToMeasurementConverter();
-            return new StopwatchRecordToRecordConverter(measurementConverter);
-        });
+        var measurementConverter = new StopwatchRecordMeasurementToMeasurementConverter();
+        return new StopwatchRecordToRecordConverter(measurementConverter);
     }
 
     @NonNull
+    @Bean
     public RecordToStopwatchRecordConverter recordToStopwatchRecordConverter() {
         log.log(Level.FINE, "Creating recordToStopwatchRecordConverter");
-        return GlobalContext.createStoreAndReturn(RecordToStopwatchRecordConverter.class, () -> {
-            var measurementConverter = new MeasurementToStopwatchRecordMeasurementConverter();
-            return new RecordToStopwatchRecordConverter(measurementConverter);
-        });
+        var measurementConverter = new MeasurementToStopwatchRecordMeasurementConverter();
+        return new RecordToStopwatchRecordConverter(measurementConverter);
     }
 
     @NonNull
+    @Bean
     public TimeService timeService() {
         log.log(Level.FINE, "Creating timeService");
-        return GlobalContext.createStoreAndReturn(TimeService::new);
+        return new TimeService();
     }
 
     @NonNull
-    public StopwatchRecordSearchService stopwatchRecordSearchService() {
+    @Bean(initMethod = "initialize")
+    public StopwatchRecordSearchService stopwatchRecordSearchService(@NonNull final StopWatchAppState stopWatchAppState) {
         log.log(Level.FINE, "Creating stopwatchRecordSearchService");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchRecordSearchService.class,
-                StopwatchRecordSearchServiceImpl::new
-        );
+        return new StopwatchRecordSearchServiceImpl(stopWatchAppState);
     }
 
     @NonNull
+    @Bean
     public RandomStopwatchRecordFactory randomStopwatchRecordFactory(
             @NonNull final StopwatchRecordService stopwatchRecordService
     ) {
         log.log(Level.FINE, "Creating randomStopwatchRecordFactory");
-        return GlobalContext.createStoreAndReturn(
-                RandomStopwatchRecordFactory.class,
-                () -> new RandomStopwatchRecordFactory(stopwatchRecordService)
-        );
+        return new RandomStopwatchRecordFactory(stopwatchRecordService);
     }
 
     @NonNull
-    public ObjectMapper objectMapper() {
-        log.log(Level.FINE, "Creating objectMapper");
-        return GlobalContext.createStoreAndReturn(
-                ObjectMapper.class,
-                () -> {
-                    var objectMapper = new ObjectMapper();
-                    objectMapper.registerModule(new JavaTimeModule());
-                    return objectMapper;
-                }
-        );
-    }
-
-    @NonNull
+    @Bean
     public ObjectWriter objectWriter(@NonNull final ObjectMapper objectMapper) {
         log.log(Level.FINE, "Creating objectWriter");
-        return GlobalContext.createStoreAndReturn(
-                ObjectWriter.class,
-                objectMapper::writerWithDefaultPrettyPrinter
-        );
+        return objectMapper.writerWithDefaultPrettyPrinter();
     }
 
     @NonNull
+    @Bean
     public StopwatchMeasurementService stopwatchMeasurementService(
             @NonNull final StopWatchAppState stopWatchAppState
     ) {
         log.log(Level.FINE, "Creating stopwatchMeasurementService");
-        return GlobalContext.createStoreAndReturn(
-                StopwatchMeasurementService.class,
-                () -> new DefaultStopwatchMeasurementService(stopWatchAppState)
-        );
+        return new DefaultStopwatchMeasurementService(stopWatchAppState);
     }
 
     @NonNull
+    @Bean(initMethod = "load")
     public InitialDataLoadService initialDataLoadService(
             @NonNull final StopwatchRecordService stopwatchRecordService,
             @NonNull final StopWatchAppState stopWatchAppState,
@@ -200,34 +174,29 @@ public class StopwatchConfiguration {
             @NonNull final DayStatisticsService dayStatisticsService
     ) {
         log.log(Level.FINE, "Creating initialDataLoadService");
-        return GlobalContext.createStoreAndReturn(
-                InitialDataLoadService.class,
-                () -> new InitialDataLoadService(stopwatchRecordService, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService)
-        );
+        return new InitialDataLoadService(stopwatchRecordService, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService);
     }
 
     @NonNull
+    @Bean
     public DayDataService dayDataService(
             @NonNull final StopWatchAppState stopWatchAppState,
             @NonNull final DayStatisticsService dayStatisticsService,
             @NonNull final StopwatchRecordService stopwatchRecordService
     ) {
         log.log(Level.FINE, "Creating dayDataService");
-        return GlobalContext.createStoreAndReturn(
-                DayDataService.class,
-                () -> new DayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService)
-        );
+        return new DayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService);
     }
 
     @NonNull
+    @Bean
     public AppProperties appProperties(String pathToPropertiesFile) {
         log.log(Level.INFO, () -> "Trying to read properties from " + pathToPropertiesFile);
         var objectMapper = new ObjectMapper(new YAMLFactory());
         try {
             // TODO add default configs
             var propertiesFile = new File(pathToPropertiesFile);
-            var appProperties = objectMapper.readValue(propertiesFile, AppProperties.class);
-            return GlobalContext.createStoreAndReturn(AppProperties.class, () -> appProperties);
+            return objectMapper.readValue(propertiesFile, AppProperties.class);
         } catch (IOException e) {
             log.severe("Can't read properties by path: " + pathToPropertiesFile);
             throw new RuntimeException(e);
@@ -235,12 +204,13 @@ public class StopwatchConfiguration {
     }
 
     @NonNull
+    @Bean
     public ConfigurationService configurationService(
             @NonNull final AppProperties appProperties,
             @NonNull final String pathToPropertiesFile,
             @NonNull final ObjectMapper yamlObjectMapper
     ) {
         log.log(Level.FINE, "Creating configurationService");
-        return GlobalContext.createStoreAndReturn(ConfigurationService.class, () -> new ConfigurationService(appProperties, pathToPropertiesFile, yamlObjectMapper));
+        return new ConfigurationService(appProperties, pathToPropertiesFile, yamlObjectMapper);
     }
 }
