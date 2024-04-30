@@ -37,8 +37,6 @@ public class DefaultStopwatchRecordService implements StopwatchRecordService {
     private final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter;
     @NonNull
     private final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter;
-    @NonNull
-    private final DayDataService dayDataService;
 
     @Getter
     private final Map<LocalDate, List<StopwatchRecord>> loaded = new HashMap<>();

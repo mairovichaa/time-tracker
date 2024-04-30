@@ -44,14 +44,13 @@ public class StopwatchConfiguration {
             @NonNull final StopwatchRecordRepository stopwatchRecordRepository,
             @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory,
             @NonNull final StopwatchRecordToRecordConverter stopwatchRecordToRecordConverter,
-            @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter,
-            @NonNull final DayDataService dayDataService
+            @NonNull final RecordToStopwatchRecordConverter recordToStopwatchRecordConverter
     ) {
         log.log(Level.FINE, "Creating stopwatchRecordService");
         var service = new DefaultStopwatchRecordService(
                 stopWatchAppState, stopwatchRecordRepository,
                 stopwatchRecordOnLoadFactory,
-                stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter, dayDataService);
+                stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter);
         service.loadAll();
         return service;
 
