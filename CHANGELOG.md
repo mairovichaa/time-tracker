@@ -1,7 +1,8 @@
 ## 1.1.9
 - 'Statistics' GUI improvement
 - 'Report' GUI improvement
--  Replace tabs navigation with menu
+- Replace tabs navigation with menu
+- Implement DI context
 
 ## 1.1.8
 - 'Search' tab GUI improvement
