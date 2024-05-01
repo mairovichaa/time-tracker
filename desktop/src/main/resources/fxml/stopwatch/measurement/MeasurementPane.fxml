@@ -17,11 +17,23 @@
                 </HBox>
 
                 <HBox spacing="3">
-                    <Label fx:id="startedAt"/>
+                    <Label fx:id="startedAt">
+                        <tooltip>
+                            <Tooltip text="Started at"/>
+                        </tooltip>
+                    </Label>
                     <Label>-></Label>
-                    <Label fx:id="finishedAt"/>
+                    <Label fx:id="finishedAt">
+                        <tooltip>
+                            <Tooltip text="Finished at"/>
+                        </tooltip>
+                    </Label>
                     <Label>=</Label>
-                    <Label fx:id="total"/>
+                    <Label fx:id="total">
+                        <tooltip>
+                            <Tooltip text="Total time"/>
+                        </tooltip>
+                    </Label>
                 </HBox>
 
                 <Label fx:id="comment" wrapText="true"/>
@@ -31,8 +43,20 @@
     </VBox>
     <!--    239 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 3 (amount of buttons) - 3 (spacing) * 2 (amount of spaces) -->
     <HBox layoutX="239" layoutY="10" spacing="3">
-        <Button fx:id="editNameButton" onMouseClicked="#edit"/>
-        <Button fx:id="moveButton" onMouseClicked="#move"/>
-        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+        <Button fx:id="editNameButton" onMouseClicked="#edit">
+            <tooltip>
+                <Tooltip text="Edit measurement"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="moveButton" onMouseClicked="#move">
+            <tooltip>
+                <Tooltip text="Move to another record"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="deleteButton" onMouseClicked="#delete">
+            <tooltip>
+                <Tooltip text="Delete measurement"/>
+            </tooltip>
+        </Button>
     </HBox>
 </fx:root>

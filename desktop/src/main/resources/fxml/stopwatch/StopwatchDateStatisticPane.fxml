@@ -93,6 +93,10 @@
 
     <!--    195 = 220 (panel width) - 10 (padding) - 15 (width of buttons) * 1 (amount of buttons) - 3 (spacing) * 0 (amount of spaces) -->
     <HBox layoutX="195" layoutY="10" spacing="3">
-        <Button fx:id="editButton"/>
+        <Button fx:id="editButton">
+            <tooltip>
+                <Tooltip text="Edit date info"/>
+            </tooltip>
+        </Button>
     </HBox>
 </fx:root>

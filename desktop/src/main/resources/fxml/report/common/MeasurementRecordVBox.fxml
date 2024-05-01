@@ -2,8 +2,29 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Tooltip?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
 
-    <Label fx:id="fromToAndTotalDurationLabel"/>
+    <HBox fx:id="fromToAndTotalDurationHBox" spacing="3">
+        <Label fx:id="startedAt">
+            <tooltip>
+                <Tooltip text="Started at"/>
+            </tooltip>
+        </Label>
+        <Label>-></Label>
+        <Label fx:id="finishedAt">
+            <tooltip>
+                <Tooltip text="Finished at"/>
+            </tooltip>
+        </Label>
+        <Label>=</Label>
+        <Label fx:id="total">
+            <tooltip>
+                <Tooltip text="Total time"/>
+            </tooltip>
+        </Label>
+    </HBox>
+
     <Label fx:id="noteLabel" wrapText="true"/>
 </fx:root>

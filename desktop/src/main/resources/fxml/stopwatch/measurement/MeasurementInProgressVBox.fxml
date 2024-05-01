@@ -12,11 +12,23 @@
         <Insets top="5" right="10"/>
     </padding>
     <HBox spacing="3">
-        <Label fx:id="startedAt"/>
+        <Label fx:id="startedAt">
+            <tooltip>
+                <Tooltip text="Started at"/>
+            </tooltip>
+        </Label>
         <Label>-></Label>
-        <Label fx:id="finishedAt"/>
+        <Label fx:id="finishedAt">
+            <tooltip>
+                <Tooltip text="Finished at"/>
+            </tooltip>
+        </Label>
         <Label>=</Label>
-        <Label fx:id="total"/>
+        <Label fx:id="total">
+            <tooltip>
+                <Tooltip text="Total time"/>
+            </tooltip>
+        </Label>
     </HBox>
     <MFXTextField fx:id="commentInput" floatMode="BORDER" floatingText="Comment"
                   maxWidth="Infinity"/>

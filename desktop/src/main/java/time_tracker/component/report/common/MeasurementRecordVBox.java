@@ -2,6 +2,7 @@ package time_tracker.component.report.common;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import time_tracker.Utils;
 import time_tracker.common.annotation.NonNull;
@@ -14,20 +15,26 @@ import static time_tracker.component.Utils.load;
 
 public class MeasurementRecordVBox extends VBox {
 
-    private final static String DURATION_FORMAT = "%s -> %s = %s";
+    @FXML
+    private HBox fromToAndTotalDurationHBox;
 
     @FXML
-    private Label fromToAndTotalDurationLabel;
+    private Label startedAt;
+
+    @FXML
+    private Label finishedAt;
+
+    @FXML
+    private Label total;
     @FXML
     private Label noteLabel;
 
     public MeasurementRecordVBox(@NonNull final StopwatchRecordMeasurement measurement) {
         load("/fxml/report/common/MeasurementRecordVBox.fxml", this);
 
-        String fromToAndTotalTime = String.format(DURATION_FORMAT, DATA_TIME_FORMATTER.format(measurement.getStartedAt()), DATA_TIME_FORMATTER.format(measurement.getStoppedAt()), Utils.formatDuration(measurement.getDuration())
-        );
-        fromToAndTotalDurationLabel.setText(fromToAndTotalTime);
-
+        startedAt.setText(DATA_TIME_FORMATTER.format(measurement.getStartedAt()));
+        finishedAt.setText(DATA_TIME_FORMATTER.format(measurement.getStoppedAt()));
+        total.setText(Utils.formatDuration(measurement.getDuration()));
 
         String note = measurement.getNote().isEmpty() ? "-" : measurement.getNote();
         noteLabel.setText(note);
@@ -43,8 +50,8 @@ public class MeasurementRecordVBox extends VBox {
                 this.setVisible(true);
             }
 
-            fromToAndTotalDurationLabel.managedProperty().set(newIsShowTime);
-            fromToAndTotalDurationLabel.visibleProperty().set(newIsShowTime);
+            fromToAndTotalDurationHBox.managedProperty().set(newIsShowTime);
+            fromToAndTotalDurationHBox.visibleProperty().set(newIsShowTime);
         });
     }
 }

@@ -17,8 +17,16 @@
 
     <VBox fx:id="searchRecordsDetailsWrapperVBox" spacing="5">
         <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="3">
-            <Button fx:id="trackButton" onAction="#track"/>
-            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false"/>
+            <Button fx:id="trackButton" onAction="#track">
+                <tooltip>
+                    <Tooltip text="Track record (all dates)"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false">
+                <tooltip>
+                    <Tooltip text="Cancel track record (all dates)"/>
+                </tooltip>
+            </Button>
 
             <Text fx:id="recordNameLabel" wrappingWidth="330" style="-fx-font-size: 16px;"/>
             <HBox spacing="5">

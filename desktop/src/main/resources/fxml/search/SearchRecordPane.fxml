@@ -9,8 +9,16 @@
               styleClass="grid-background"
               minWidth="300" maxWidth="300" style="-fx-padding: 10 10 10 10;" spacing="5">
             <Label fx:id="recordIdLabel"/>
-            <Button fx:id="trackButton" onAction="#track"/>
-            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false"/>
+            <Button fx:id="trackButton" onAction="#track">
+                <tooltip>
+                    <Tooltip text="Track record"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false">
+                <tooltip>
+                    <Tooltip text="Cancel track record"/>
+                </tooltip>
+            </Button>
 
             <HBox spacing="3">
                 <Label wrapText="true" maxWidth="1.7976931348623157E308" styleClass="header-label" fx:id="dateLabel"/>
@@ -46,7 +54,11 @@
     </HBox>
     <!--    275 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 1 (amount of buttons) - 3 (spacing) * 0 (amount of spaces) -->
     <HBox layoutX="275" layoutY="10" spacing="3">
-        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+        <Button fx:id="deleteButton" onMouseClicked="#delete">
+            <tooltip>
+                <Tooltip text="Delete record"/>
+            </tooltip>
+        </Button>
     </HBox>
 
 </fx:root>

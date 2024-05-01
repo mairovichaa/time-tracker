@@ -13,8 +13,14 @@
             </padding>
 
             <Button fx:id="trackButton" onAction="#track">
+                <tooltip>
+                    <Tooltip text="Track record"/>
+                </tooltip>
             </Button>
             <Button fx:id="notTrackButton" onAction="#notTrack" managed="false" visible="false">
+                <tooltip>
+                    <Tooltip text="Cancel track record"/>
+                </tooltip>
             </Button>
 
             <Label fx:id="recordIdLabel"/>
@@ -25,12 +31,23 @@
             </HBox>
 
             <HBox>
-                <Button fx:id="startButton" onAction="#start"/>
-                <Button fx:id="stopButton" onAction="#stop" managed="false" visible="false"/>
+                <Button fx:id="startButton" onAction="#start">
+                    <tooltip>
+                        <Tooltip text="Start stopwatch"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="stopButton" onAction="#stop" managed="false" visible="false">
+                    <tooltip>
+                        <Tooltip text="Stop stopwatch"/>
+                    </tooltip>
+                </Button>
                 <Label fx:id="totalTimeLabel" text="00:00:00">
                     <padding>
                         <Insets top="10"/>
                     </padding>
+                    <tooltip>
+                        <Tooltip text="Total time for the date"/>
+                    </tooltip>
                 </Label>
             </HBox>
 
@@ -41,16 +58,25 @@
                 <Separator maxWidth="280"/>
                 <VBox fx:id="inProgressMeasurementVBox"/>
             </VBox>
-
-            <HBox>
-            </HBox>
         </VBox>
     </HBox>
     <!--    239 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 3 (amount of buttons) - 3 (spacing) * 2 (amount of spaces) -->
     <HBox layoutX="239" layoutY="10" spacing="3">
-        <Button fx:id="editNameButton" styleClass="recVBoxTmp"/>
-        <Button fx:id="moveButton" onAction="#move"/>
-        <Button fx:id="deleteButton" onMouseClicked="#delete"/>
+        <Button fx:id="editNameButton" styleClass="recVBoxTmp">
+            <tooltip>
+                <Tooltip text="Rename record"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="moveButton" onAction="#move">
+            <tooltip>
+                <Tooltip text="Move to another date"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="deleteButton" onMouseClicked="#delete">
+            <tooltip>
+                <Tooltip text="Delete record"/>
+            </tooltip>
+        </Button>
     </HBox>
 
 </fx:root>
