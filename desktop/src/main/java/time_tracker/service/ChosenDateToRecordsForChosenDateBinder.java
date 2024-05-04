@@ -4,10 +4,11 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
 
-import static time_tracker.service.DayDataService.DEFAULT_EXPECTED_TOTAL_IN_SECS;
+import java.time.Duration;
 
 
 @Log
@@ -15,6 +16,7 @@ import static time_tracker.service.DayDataService.DEFAULT_EXPECTED_TOTAL_IN_SECS
 public class ChosenDateToRecordsForChosenDateBinder {
 
     private final StopWatchAppState appState;
+    private final StopwatchProperties.DefaultDayStatisticProperties defaultDayStatisticProperties;
     private final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory;
 
     public void bind() {
@@ -29,10 +31,14 @@ public class ChosenDateToRecordsForChosenDateBinder {
                         appState.getDateToRecords().put(chosenDate, newRecords);
 
                         var existingDayData = appState.getDateToDayData().get(chosenDate);
+                        // TODO move creation of DayData to DayDataService
                         var dayData = new DayData(chosenDate, newRecords);
                         if (existingDayData == null) {
-                            dayData.getExpectedTotalInSecsProperty()
-                                    .setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS);
+                            String duration = defaultDayStatisticProperties.getExpectedWorkTime();
+                            String comment = defaultDayStatisticProperties.getComment();
+                            Duration durationParsed = Duration.parse("PT" + duration);
+                            dayData.setExpected(durationParsed);
+                            dayData.setNote(comment);
                         } else {
                             dayData.setExpected(existingDayData.getExpected());
                             dayData.setNote(existingDayData.getNote());

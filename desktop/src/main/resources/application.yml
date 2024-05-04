@@ -1,7 +1,13 @@
 ---
 stopwatch:
+  stopwatch:
+    dayStatistic:
+      default:
+        expectedWorkTime: "6H40M"
+        comment: "No comment"
   dates:
     amountOfDaysToShow: 600
+    defaultFastEditButtonName: null
     fastEditButtons:
     - name: "Holiday"
       expected: "0S"
@@ -22,5 +28,5 @@ stopwatch:
   report:
     numberOfDaysToShow: 2
     showTime: true
-    groupBy: REPORT
-    exportFormat: JSON
+    groupBy: "REPORT"
+    exportFormat: "JSON"

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.AppProperties;
+import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
 
@@ -30,10 +31,10 @@ public class ConfigurationService {
 
     public ConfigurationService(
             @NonNull final AppProperties appProperties,
-            @NonNull final String pathToPropertiesFile,
+            @NonNull final StartProperties startProperties,
             @NonNull final ObjectMapper yamlObjectMapper) {
         this.appProperties = appProperties;
-        this.pathToPropertiesFile = pathToPropertiesFile;
+        this.pathToPropertiesFile = startProperties.getPathToPropertiesFile();
         this.yamlObjectMapper = yamlObjectMapper;
 
         defaultRecordNames.addAll(appProperties.getStopwatch().getDefaultRecords());
@@ -84,6 +85,13 @@ public class ConfigurationService {
         updatePropertiesFile(appProperties);
 
         defaultRecordNames.remove(recordName);
+    }
+
+    public void updateStopwatchDayStatisticDefaultProperties(@NonNull final String durationInConfigsFormat, @NonNull final String comment) {
+        StopwatchProperties.DefaultDayStatisticProperties defaultData = appProperties.getStopwatch().getStopwatch().getDayStatistic().getDefaultData();
+        defaultData.setExpectedWorkTime(durationInConfigsFormat);
+        defaultData.setComment(comment);
+        updatePropertiesFile(appProperties);
     }
 
     private void updatePropertiesFile(@NonNull final AppProperties appProperties) {

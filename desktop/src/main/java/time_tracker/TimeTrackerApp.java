@@ -11,6 +11,7 @@ import time_tracker.component.AppHBox;
 import time_tracker.config.CommonConfiguration;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
+import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.config.report.GroupedByDateConfiguration;
 import time_tracker.config.report.GroupedByRecordConfiguration;
@@ -83,7 +84,7 @@ public class TimeTrackerApp extends Application {
                 });
 
         TimeTrackerApp.CONTEXT = new DiContext();
-
+        CONTEXT.register(StartProperties.class, new StartProperties(pathToPropertiesFile));
         CONTEXT.register(CommonConfiguration.class);
         CONTEXT.register(AppProperties.class, appProperties);
         CONTEXT.register(StopwatchProperties.class, appProperties.getStopwatch());
@@ -106,7 +107,7 @@ public class TimeTrackerApp extends Application {
         Scene scene = new Scene(appHBox, 600, 600);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
-        stopWatchAppState.setChosenWorkspace(AppHBox.WorkspaceItem.REPORT);
+        stopWatchAppState.setChosenWorkspace(AppHBox.WorkspaceItem.CONFIGURATION);
 
         primaryStage.show();
         primaryStage.setMaximized(true);

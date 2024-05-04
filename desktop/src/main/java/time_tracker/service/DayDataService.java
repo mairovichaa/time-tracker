@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.domain.DayStatistics;
 import time_tracker.model.DayData;
 import time_tracker.model.StopWatchAppState;
@@ -17,10 +18,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DayDataService {
 
-    // TODO move to configs?
-    public final static Long DEFAULT_EXPECTED_TOTAL_IN_SECS = (6 * 60 + 40L) * 60;
-
     private final StopWatchAppState stopWatchAppState;
+    private final StopwatchProperties.DefaultDayStatisticProperties defaultDayStatisticProperties;
     private final DayStatisticsService dayStatisticsService;
     private final StopwatchRecordService stopwatchRecordService;
 
@@ -53,11 +52,16 @@ public class DayDataService {
                     dayData.getExpectedTotalInSecsProperty().setValue(it.getExpectedTotalInSecs());
                 });
 
+        String duration = defaultDayStatisticProperties.getExpectedWorkTime();
+        String comment = defaultDayStatisticProperties.getComment();
         dateToDayData.values()
                 .stream()
                 .filter(it -> !it.isExpectedTotalInSecsInitialized())
-                .forEach(it -> it.getExpectedTotalInSecsProperty().setValue(DEFAULT_EXPECTED_TOTAL_IN_SECS));
-
+                .forEach(it -> {
+                    Duration durationParsed = Duration.parse("PT" + duration);
+                    it.setExpected(durationParsed);
+                    it.setNote(comment);
+                });
         return dateToDayData;
     }
 

@@ -7,6 +7,7 @@ import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.common.di.Bean;
 import time_tracker.config.properties.AppProperties;
+import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.configuration.RepositoryConfiguration;
 import time_tracker.model.StopWatchAppState;
@@ -168,23 +169,29 @@ public class StopwatchConfiguration {
     public InitialDataLoadService initialDataLoadService(
             @NonNull final StopwatchRecordService stopwatchRecordService,
             @NonNull final StopWatchAppState stopWatchAppState,
+            @NonNull final StopwatchProperties stopwatchProperties,
             @NonNull final StopwatchRecordOnLoadFactory stopwatchRecordOnLoadFactory,
             @NonNull final DayDataService dayDataService,
             @NonNull final DayStatisticsService dayStatisticsService
     ) {
         log.log(Level.FINE, "Creating initialDataLoadService");
-        return new InitialDataLoadService(stopwatchRecordService, stopWatchAppState, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService);
+        StopwatchProperties.DayStatisticProperties dayStatistic = stopwatchProperties.getStopwatch().getDayStatistic();
+        StopwatchProperties.DefaultDayStatisticProperties defaultData = dayStatistic.getDefaultData();
+        return new InitialDataLoadService(stopwatchRecordService, stopWatchAppState, defaultData, stopwatchRecordOnLoadFactory, dayDataService, dayStatisticsService);
     }
 
     @NonNull
     @Bean
     public DayDataService dayDataService(
             @NonNull final StopWatchAppState stopWatchAppState,
+            @NonNull final StopwatchProperties stopwatchProperties,
             @NonNull final DayStatisticsService dayStatisticsService,
             @NonNull final StopwatchRecordService stopwatchRecordService
     ) {
         log.log(Level.FINE, "Creating dayDataService");
-        return new DayDataService(stopWatchAppState, dayStatisticsService, stopwatchRecordService);
+        StopwatchProperties.DayStatisticProperties dayStatistic = stopwatchProperties.getStopwatch().getDayStatistic();
+        StopwatchProperties.DefaultDayStatisticProperties defaultData = dayStatistic.getDefaultData();
+        return new DayDataService(stopWatchAppState, defaultData, dayStatisticsService, stopwatchRecordService);
     }
 
     @NonNull
@@ -206,10 +213,11 @@ public class StopwatchConfiguration {
     @Bean
     public ConfigurationService configurationService(
             @NonNull final AppProperties appProperties,
-            @NonNull final String pathToPropertiesFile,
-            @NonNull final ObjectMapper yamlObjectMapper
+            @NonNull final StartProperties startProperties
     ) {
         log.log(Level.FINE, "Creating configurationService");
-        return new ConfigurationService(appProperties, pathToPropertiesFile, yamlObjectMapper);
+        // TODO create dedicated ObjectMapper for yaml - need qualifier support
+        var yamlObjectMapper = new ObjectMapper(new YAMLFactory());
+        return new ConfigurationService(appProperties, startProperties, yamlObjectMapper);
     }
 }
