@@ -8,7 +8,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Log
 public class DiContext {
@@ -22,12 +24,17 @@ public class DiContext {
 
     public void register(Class<?> configuration) {
         log.info(() -> "Register " + configuration);
-        Method[] declaredMethods = configuration.getDeclaredMethods();
+        List<Method> beanMethods = Arrays.stream(configuration.getDeclaredMethods())
+                .filter(it -> {
+                    Bean bean = it.getAnnotation(Bean.class);
+                    return bean != null;
+                })
+                .collect(Collectors.toList());
 
         try {
             Object configurationInstance = configuration.getDeclaredConstructor().newInstance();
-            for (final Method method : declaredMethods) {
-                tryToCreate(method, configurationInstance, declaredMethods);
+            for (final Method method : beanMethods) {
+                tryToCreate(method, configurationInstance, beanMethods);
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
@@ -35,12 +42,7 @@ public class DiContext {
         }
     }
 
-    private void tryToCreate(Method method, Object configurationInstance, Method[] declaredMethods) throws InvocationTargetException, IllegalAccessException {
-        Bean beanAnnotation = method.getAnnotation(Bean.class);
-        if (beanAnnotation == null) {
-            return;
-        }
-
+    private void tryToCreate(Method method, Object configurationInstance, List<Method> beanMethods) throws InvocationTargetException, IllegalAccessException {
         Parameter[] parameters = method.getParameters();
         Class<?> returnType = method.getReturnType();
 
@@ -53,7 +55,7 @@ public class DiContext {
             for (final Parameter parameter : parameters) {
                 Class<?> parameterType = parameter.getType();
                 if (!context.containsKey(parameterType)) {
-                    lookForClassFactoryMethodAndCreateIt(parameterType, declaredMethods, configurationInstance);
+                    lookForClassFactoryMethodAndCreateIt(parameterType, beanMethods, configurationInstance);
                 }
             }
             arguments = Arrays.stream(parameters)
@@ -65,6 +67,7 @@ public class DiContext {
         Object createdInstance = method.invoke(configurationInstance, arguments);
         context.put(returnType, createdInstance);
 
+        var beanAnnotation = method.getAnnotation(Bean.class);
         if (!beanAnnotation.initMethod().isEmpty()) {
             beanInitMethodRunner.run(createdInstance, beanAnnotation);
         }
@@ -72,13 +75,13 @@ public class DiContext {
 
     private void lookForClassFactoryMethodAndCreateIt(
             final Class<?> parameterType,
-            final Method[] declaredMethods,
+            final List<Method> beanMethods,
             final Object configurationInstance
     ) throws InvocationTargetException, IllegalAccessException {
-        for (final Method method : declaredMethods) {
+        for (final Method method : beanMethods) {
             Class<?> returnType = method.getReturnType();
             if (returnType == parameterType) {
-                tryToCreate(method, configurationInstance, declaredMethods);
+                tryToCreate(method, configurationInstance, beanMethods);
                 return;
             }
         }

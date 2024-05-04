@@ -169,4 +169,27 @@ class DiContextTest {
             return new Class5();
         }
     }
+
+    @Test
+    public void whenBeanRequiresTypePresentInNonBeanMethodsThenShouldFail() {
+        // given
+        var diContext = new DiContext();
+
+        // when, then
+        assertThatThrownBy(() -> diContext.register(ConfigurationWithParameterWhichCouldBeTakenFromNonBeanMethods.class))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("Can't find factory method for class java.lang.String");
+    }
+
+    public static class ConfigurationWithParameterWhichCouldBeTakenFromNonBeanMethods {
+        @Bean
+        public Class1 class1(String string) {
+            return new Class1();
+        }
+
+        public String str() {
+            return "not bean";
+        }
+
+    }
 }
