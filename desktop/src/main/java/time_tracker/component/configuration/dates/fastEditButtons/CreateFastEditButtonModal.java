@@ -7,8 +7,9 @@ import javafx.stage.Stage;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
-import time_tracker.service.ConfigurationService;
+import time_tracker.controller.configuration.ConfigurationController;
 
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 @Log
@@ -24,14 +25,12 @@ public class CreateFastEditButtonModal extends VBox {
     private MFXTextField fastEditButtonSecondsTextField;
 
     private final Stage stage;
-    private final ConfigurationService configurationService;
+    private final ConfigurationController configurationController;
 
-    public CreateFastEditButtonModal(
-            @NonNull Stage stage,
-            @NonNull ConfigurationService configurationService) {
+    public CreateFastEditButtonModal(@NonNull Stage stage) {
         load("/fxml/configuration/dates/fastEditButtons/CreateFastEditButtonModal.fxml", this);
         this.stage = stage;
-        this.configurationService = configurationService;
+        configurationController = CONTEXT.get(ConfigurationController.class);
     }
 
     @FXML
@@ -46,7 +45,7 @@ public class CreateFastEditButtonModal extends VBox {
                 fastEditButtonSecondsTextField.getText());
         props.setExpected(expected);
 
-        configurationService.addFastEditButton(props);
+        configurationController.addFastEditButton(props);
         stage.close();
     }
 

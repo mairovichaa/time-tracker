@@ -10,7 +10,8 @@ import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
-import time_tracker.service.ConfigurationService;
+import time_tracker.model.StopWatchAppState;
+import time_tracker.model.configuration.ConfigurationState;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
@@ -21,15 +22,14 @@ public class FastEditButtonsConfigurationVBox extends VBox {
     @FXML
     protected VBox fastEditButtonsVBox;
 
-    private final ConfigurationService configurationService;
-
     public FastEditButtonsConfigurationVBox() {
         load("/fxml/configuration/dates/fastEditButtons/FastEditButtonsConfigurationVBox.fxml", this);
 
-        configurationService = CONTEXT.get(ConfigurationService.class);
+        StopWatchAppState stopwatchAppState = CONTEXT.get(StopWatchAppState.class);
+        ConfigurationState configurationState = stopwatchAppState.getConfigurationState();
 
         log.finest("Bind default record names to UI nodes");
-        ObservableList<FastEditButtonProperties> fastEditButtons = configurationService.getFastEditButtons();
+        ObservableList<FastEditButtonProperties> fastEditButtons = configurationState.getFastEditButtons();
         ObservableList<Node> defaultEntries = FXCollections.observableArrayList();
 
         fastEditButtons.forEach(it -> defaultEntries.add(new FastEditButtonEntryVBox(it)));
@@ -45,11 +45,8 @@ public class FastEditButtonsConfigurationVBox extends VBox {
 
     @FXML
     protected void add() {
-        log.fine(() -> "'addFastEditButton' button is clicked");
-        DialogFactory.createAndShow(
-                stage -> new CreateFastEditButtonModal(stage, configurationService),
-                "Rename record"
-        );
+        log.fine("'addFastEditButton' button is clicked");
+        DialogFactory.createAndShow(CreateFastEditButtonModal::new, "Rename record");
     }
 
 }

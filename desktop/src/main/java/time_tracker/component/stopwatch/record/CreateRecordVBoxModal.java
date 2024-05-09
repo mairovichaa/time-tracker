@@ -11,8 +11,9 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.model.StopWatchAppState;
 import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
-import time_tracker.service.ConfigurationService;
+import time_tracker.model.configuration.ConfigurationState;
 import time_tracker.service.StopwatchRecordService;
 
 import java.util.List;
@@ -35,9 +36,10 @@ public class CreateRecordVBoxModal extends VBox {
     public CreateRecordVBoxModal(@NonNull Stage stage) {
         load("/fxml/stopwatch/record/CreateRecordVBoxModal.fxml", this);
         this.stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
-        ConfigurationService configurationService = CONTEXT.get(ConfigurationService.class);
+        StopWatchAppState stopwatchAppState = CONTEXT.get(StopWatchAppState.class);
+        ConfigurationState configurationState = stopwatchAppState.getConfigurationState();
 
-        List<ConfigurationDefaultRecordModel> defaultRecordButtons = configurationService.getConfigurationDefaultRecords()
+        List<ConfigurationDefaultRecordModel> defaultRecordButtons = configurationState.getConfigurationDefaultRecords()
                 .stream()
                 .filter(it -> it.getDisplay() == CREATE)
                 .toList();

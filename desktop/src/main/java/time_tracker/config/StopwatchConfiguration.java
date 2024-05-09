@@ -7,7 +7,6 @@ import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.common.di.Bean;
 import time_tracker.config.properties.AppProperties;
-import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.configuration.RepositoryConfiguration;
 import time_tracker.model.StopWatchAppState;
@@ -54,7 +53,6 @@ public class StopwatchConfiguration {
                 stopwatchRecordToRecordConverter, recordToStopwatchRecordConverter);
         service.loadAll();
         return service;
-
     }
 
     @NonNull
@@ -207,17 +205,5 @@ public class StopwatchConfiguration {
             log.severe("Can't read properties by path: " + pathToPropertiesFile);
             throw new RuntimeException(e);
         }
-    }
-
-    @NonNull
-    @Bean
-    public ConfigurationService configurationService(
-            @NonNull final AppProperties appProperties,
-            @NonNull final StartProperties startProperties
-    ) {
-        log.log(Level.FINE, "Creating configurationService");
-        // TODO create dedicated ObjectMapper for yaml - need qualifier support
-        var yamlObjectMapper = new ObjectMapper(new YAMLFactory());
-        return new ConfigurationService(appProperties, startProperties, yamlObjectMapper);
     }
 }

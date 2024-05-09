@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.controller.configuration.ConfigurationController;
 import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
-import time_tracker.service.ConfigurationService;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
@@ -29,7 +29,7 @@ public class DefaultRecordEntryVBox extends VBox {
     protected MFXComboBox<String> displayByDefaultComboBox;
     private final String deleteDefaultRecordName;
     private final ConfigurationDefaultRecordModel record;
-    private final ConfigurationService configurationService = CONTEXT.get(ConfigurationService.class);
+    private final ConfigurationController configurationController = CONTEXT.get(ConfigurationController.class);
 
 
     public DefaultRecordEntryVBox(@NonNull final ConfigurationDefaultRecordModel record) {
@@ -56,13 +56,13 @@ public class DefaultRecordEntryVBox extends VBox {
                         default -> throw new RuntimeException();
                     };
 
-                    configurationService.changeRecordDisplay(deleteDefaultRecordName, option);
+                    configurationController.changeRecordDisplay(deleteDefaultRecordName, option);
                 });
     }
 
     @FXML
     protected void delete() {
         log.info(() -> "'deleteDefaultRecord' is clicked");
-        configurationService.deleteDefaultRecord(deleteDefaultRecordName);
+        configurationController.deleteDefaultRecord(deleteDefaultRecordName);
     }
 }

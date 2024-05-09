@@ -9,7 +9,7 @@ import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.common.annotation.Nullable;
 import time_tracker.config.properties.StopwatchProperties;
-import time_tracker.service.ConfigurationService;
+import time_tracker.controller.configuration.ConfigurationController;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
@@ -102,13 +102,13 @@ public class DayStatisticDefaultVBox extends VBox {
     @FXML
     protected void save() {
         log.fine("'Save' button is clicked");
-        ConfigurationService configurationService = CONTEXT.get(ConfigurationService.class);
+        ConfigurationController configurationController = CONTEXT.get(ConfigurationController.class);
 
         String duration = expectedWorkTimeTextField.getText();
         String durationInConfigsFormat = getDurationInPropertiesFormatOrNull(duration);
         String comment = commentTextField.getText();
 
-        configurationService.updateStopwatchDayStatisticDefaultProperties(durationInConfigsFormat, comment);
+        configurationController.updateStopwatchDayStatisticDefaultProperties(durationInConfigsFormat, comment);
         disableButtonsIfValuesAreNotChangedOrInvalid(comment, duration);
     }
 

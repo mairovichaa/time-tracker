@@ -9,8 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.component.common.DialogFactory;
+import time_tracker.model.StopWatchAppState;
 import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
-import time_tracker.service.ConfigurationService;
+import time_tracker.model.configuration.ConfigurationState;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
@@ -21,20 +22,16 @@ public class DefaultRecordConfigurationVBox extends VBox {
     @FXML
     protected VBox defaultRecordNamesVBox;
 
-    private final ConfigurationService configurationService;
-
-
     public DefaultRecordConfigurationVBox() {
         load("/fxml/configuration/defaultRecordNames/DefaultRecordConfigurationVBox.fxml", this);
 
-        configurationService = CONTEXT.get(ConfigurationService.class);
-
         log.finest("Bind default record names to UI nodes");
-        ObservableList<ConfigurationDefaultRecordModel> defaultRecords = configurationService.getConfigurationDefaultRecords();
+        StopWatchAppState stopwatchAppState = CONTEXT.get(StopWatchAppState.class);
+        ConfigurationState configurationState = stopwatchAppState.getConfigurationState();
+
+        ObservableList<ConfigurationDefaultRecordModel> defaultRecords = configurationState.getConfigurationDefaultRecords();
         ObservableList<Node> defaultEntries = FXCollections.observableArrayList();
-
         defaultRecords.forEach(it -> defaultEntries.add(new DefaultRecordEntryVBox(it)));
-
         defaultRecords.addListener((ListChangeListener<ConfigurationDefaultRecordModel>) c -> {
             defaultEntries.clear();
             ObservableList<? extends ConfigurationDefaultRecordModel> current = c.getList();
@@ -47,9 +44,6 @@ public class DefaultRecordConfigurationVBox extends VBox {
     @FXML
     protected void add() {
         log.fine(() -> "'addDefaultRecord' button is clicked");
-        DialogFactory.createAndShow(
-                stage -> new CreateDefaultRecordModal(stage, configurationService),
-                "Add record"
-        );
+        DialogFactory.createAndShow(CreateDefaultRecordModal::new, "Add record");
     }
 }

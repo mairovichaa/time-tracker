@@ -9,6 +9,7 @@ import javafx.collections.ObservableMap;
 import lombok.Data;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.AppHBox;
+import time_tracker.model.configuration.ConfigurationState;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -48,6 +49,9 @@ public class StopWatchAppState {
 
     @NonNull
     private StopwatchSearchState searchState = new StopwatchSearchState();
+
+    @NonNull
+    private ConfigurationState configurationState = new ConfigurationState();
 
     @NonNull
     private Map<LocalDate, ObservableList<StopwatchRecord>> dateToRecords = new HashMap<>();

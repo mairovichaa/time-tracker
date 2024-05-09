@@ -9,6 +9,7 @@ import lombok.extern.java.Log;
 import time_tracker.common.di.DiContext;
 import time_tracker.component.AppHBox;
 import time_tracker.config.CommonConfiguration;
+import time_tracker.config.ConfigurationConfiguration;
 import time_tracker.config.StopwatchConfiguration;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StartProperties;
@@ -98,6 +99,7 @@ public class TimeTrackerApp extends Application {
         CONTEXT.register(GroupedByDateConfiguration.class);
         CONTEXT.register(GroupedByRecordConfiguration.class);
         CONTEXT.register(ReportConfiguration.class);
+        CONTEXT.register(ConfigurationConfiguration.class);
 
         StopWatchAppState stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
         TimeService timeService = CONTEXT.get(TimeService.class);

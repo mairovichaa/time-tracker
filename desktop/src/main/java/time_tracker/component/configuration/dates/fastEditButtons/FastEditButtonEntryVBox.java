@@ -6,7 +6,7 @@ import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
-import time_tracker.service.ConfigurationService;
+import time_tracker.controller.configuration.ConfigurationController;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
@@ -33,8 +33,8 @@ public class FastEditButtonEntryVBox extends VBox {
     @FXML
     protected void delete() {
         log.info(() -> "'deleteDefaultRecord' is clicked");
-        var configurationService = CONTEXT.get(ConfigurationService.class);
-        configurationService.deleteFastEditButton(properties);
+        var configurationController = CONTEXT.get(ConfigurationController.class);
+        configurationController.deleteFastEditButton(properties);
     }
 
 }

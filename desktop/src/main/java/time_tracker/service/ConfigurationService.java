@@ -1,8 +1,6 @@
 package time_tracker.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
@@ -11,7 +9,6 @@ import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
-import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,9 +21,6 @@ import static java.lang.String.format;
 @Getter
 public class ConfigurationService {
 
-    private final ObservableList<ConfigurationDefaultRecordModel> configurationDefaultRecords = FXCollections.observableArrayList();
-    private final ObservableList<FastEditButtonProperties> fastEditButtons = FXCollections.observableArrayList();
-
     private final AppProperties appProperties;
     private final String pathToPropertiesFile;
     private final ObjectMapper yamlObjectMapper;
@@ -38,13 +32,6 @@ public class ConfigurationService {
         this.appProperties = appProperties;
         this.pathToPropertiesFile = startProperties.getPathToPropertiesFile();
         this.yamlObjectMapper = yamlObjectMapper;
-
-        appProperties.getStopwatch()
-                .getDefaultRecords()
-                .stream()
-                .map(this::map)
-                .forEach(configurationDefaultRecords::add);
-        fastEditButtons.addAll(appProperties.getStopwatch().getDates().getFastEditButtons());
     }
 
     public void addFastEditButton(@NonNull final FastEditButtonProperties properties) {
@@ -55,8 +42,6 @@ public class ConfigurationService {
         fastEditButtonsProps.add(properties);
 
         updatePropertiesFile(appProperties);
-
-        fastEditButtons.add(properties);
     }
 
     public void deleteFastEditButton(@NonNull final FastEditButtonProperties properties) {
@@ -66,11 +51,9 @@ public class ConfigurationService {
         fastEditButtonsProps.remove(properties);
 
         updatePropertiesFile(appProperties);
-
-        fastEditButtons.remove(properties);
     }
 
-    public void addDefaultRecord(final String recordName) {
+    public void addDefaultRecord(@NonNull final String recordName) {
         log.fine(() -> format("Add '%s' to default record names set", recordName));
 
         StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
@@ -81,13 +64,9 @@ public class ConfigurationService {
         defaultRecords.add(record);
 
         updatePropertiesFile(appProperties);
-
-        ConfigurationDefaultRecordModel configurationDefaultRecordModel = this.map(record);
-        configurationDefaultRecords.add(configurationDefaultRecordModel);
     }
 
-    // TODO use ConfigurationDefaultRecordModel
-    public void deleteDefaultRecord(final String recordName) {
+    public void deleteDefaultRecord(@NonNull final String recordName) {
         log.fine(() -> format("Delete '%s' from default record names set", recordName));
         StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
         List<StopwatchProperties.ConfigurationDefaultRecord> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
@@ -97,12 +76,9 @@ public class ConfigurationService {
                 .orElseThrow();
         defaultRecords.remove(record);
         updatePropertiesFile(appProperties);
-
-        ConfigurationDefaultRecordModel foundConfigurationDefaultRecord = findConfigurationDefaultRecordModelByName(recordName);
-        configurationDefaultRecords.remove(foundConfigurationDefaultRecord);
     }
 
-    public void changeRecordDisplay(final String recordName, final DefaultRecordEntryVBox.DisplayOption option) {
+    public void changeRecordDisplay(@NonNull final String recordName, @NonNull final DefaultRecordEntryVBox.DisplayOption option) {
         log.fine(() -> format("Change display option of default record '%s' to '%s", recordName, option));
         StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
         List<StopwatchProperties.ConfigurationDefaultRecord> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
@@ -113,7 +89,6 @@ public class ConfigurationService {
                 .setDisplay(option);
 
         updatePropertiesFile(appProperties);
-        findConfigurationDefaultRecordModelByName(recordName).setDisplay(option);
     }
 
     public void updateStopwatchDayStatisticDefaultProperties(@NonNull final String durationInConfigsFormat, @NonNull final String comment) {
@@ -130,21 +105,5 @@ public class ConfigurationService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @NonNull
-    private ConfigurationDefaultRecordModel map(@NonNull final StopwatchProperties.ConfigurationDefaultRecord src) {
-        ConfigurationDefaultRecordModel result = new ConfigurationDefaultRecordModel();
-        result.setName(src.getName());
-        result.setDisplay(src.getDisplay());
-        return result;
-    }
-
-    @NonNull
-    private ConfigurationDefaultRecordModel findConfigurationDefaultRecordModelByName(@NonNull final String name) {
-        return configurationDefaultRecords.stream()
-                .filter(it -> it.getName().equals(name))
-                .findFirst()
-                .orElseThrow();
     }
 }
