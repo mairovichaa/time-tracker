@@ -1,16 +1,17 @@
-package time_tracker.service;
+package time_tracker.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
+import time_tracker.service.StopwatchRecordService;
 
 import java.util.logging.Level;
 
 @Log
 @RequiredArgsConstructor
-public class AppStateService {
+public class AppStateController {
 
     @NonNull
     private final StopwatchRecordService stopwatchRecordService;
@@ -36,7 +37,7 @@ public class AppStateService {
         }
     }
 
-    public void store() {
+    public void store(@NonNull final StopwatchRecord record) {
         log.log(Level.FINE, "store");
         stopwatchRecordService.store();
     }

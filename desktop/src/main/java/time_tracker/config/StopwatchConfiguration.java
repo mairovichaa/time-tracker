@@ -9,6 +9,8 @@ import time_tracker.common.di.Bean;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.configuration.RepositoryConfiguration;
+import time_tracker.controller.AppStateController;
+import time_tracker.controller.search.StopwatchRecordSearchController;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.mapper.MeasurementToStopwatchRecordMeasurementConverter;
 import time_tracker.model.mapper.RecordToStopwatchRecordConverter;
@@ -30,11 +32,11 @@ public class StopwatchConfiguration {
 
     @NonNull
     @Bean
-    public AppStateService appStateService(
+    public AppStateController appStateService(
             @NonNull final StopwatchRecordService stopwatchRecordService,
             @NonNull final StopWatchAppState stopWatchAppState) {
         log.log(Level.FINE, "Creating appStateService");
-        return new AppStateService(stopwatchRecordService, stopWatchAppState);
+        return new AppStateController(stopwatchRecordService, stopWatchAppState);
     }
 
     @NonNull
@@ -132,9 +134,9 @@ public class StopwatchConfiguration {
 
     @NonNull
     @Bean(initMethod = "initialize")
-    public StopwatchRecordSearchService stopwatchRecordSearchService(@NonNull final StopWatchAppState stopWatchAppState) {
-        log.log(Level.FINE, "Creating stopwatchRecordSearchService");
-        return new StopwatchRecordSearchServiceImpl(stopWatchAppState);
+    public StopwatchRecordSearchController stopwatchRecordSearchController(@NonNull final StopWatchAppState stopWatchAppState) {
+        log.log(Level.FINE, "Creating stopwatchRecordSearchController");
+        return new StopwatchRecordSearchController(stopWatchAppState);
     }
 
     @NonNull

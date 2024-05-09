@@ -1,4 +1,4 @@
-package time_tracker.service.report;
+package time_tracker.controller.report;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Log
-public class ReportService {
-
+public class ReportController {
 
     private final ReportState reportState;
     private final StopWatchAppState stopWatchAppState;

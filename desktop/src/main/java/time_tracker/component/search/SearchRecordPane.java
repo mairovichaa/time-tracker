@@ -21,7 +21,7 @@ import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
-import time_tracker.service.AppStateService;
+import time_tracker.controller.AppStateController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,7 +55,7 @@ public class SearchRecordPane extends Pane {
     @FXML
     private Button deleteButton;
 
-    private final AppStateService appStateService;
+    private final AppStateController appStateController;
     private final StopwatchRecord record;
     // reference has to be stored as WeakListChangeListener is used to register it
     private final ListChangeListener<StopwatchRecordMeasurement> measurementsChangesListener;
@@ -70,12 +70,8 @@ public class SearchRecordPane extends Pane {
         // TODO make it a property
         dateLabel.textProperty().set(formattedLocalDate);
 
-        this.appStateService = CONTEXT.get(AppStateService.class);
+        this.appStateController = CONTEXT.get(AppStateController.class);
         stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
-
-        // TODO it seems that listener has to be removed or to be moved to another place
-        record.getTrackedProperty()
-                .addListener((observable, oldValue, newValue) -> appStateService.store());
 
         StopwatchProperties appProperties = CONTEXT.get(StopwatchProperties.class);
         var isDevMode = appProperties.isDevMode();
@@ -130,7 +126,7 @@ public class SearchRecordPane extends Pane {
 
         requireConfirmation().whenComplete((it, ex) -> {
             if (it) {
-                appStateService.delete(record);
+                appStateController.delete(record);
             } else {
                 log.fine(() -> "'No' button is clicked");
             }
@@ -157,12 +153,14 @@ public class SearchRecordPane extends Pane {
     protected void track() {
         log.log(Level.FINE, "'Track' button is clicked");
         record.setTracked(true);
+        appStateController.store(record);
     }
 
     @FXML
     protected void notTrack() {
         log.log(Level.FINE, "'Not track' button is clicked");
         record.setTracked(false);
+        appStateController.store(record);
     }
 
     @FXML

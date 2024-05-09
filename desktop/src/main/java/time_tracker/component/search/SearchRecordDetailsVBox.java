@@ -19,10 +19,10 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
+import time_tracker.controller.search.StopwatchRecordSearchController;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchSearchState;
-import time_tracker.service.StopwatchRecordSearchService;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -106,7 +106,7 @@ public class SearchRecordDetailsVBox extends VBox {
                 });
 
         var appState = CONTEXT.get(StopWatchAppState.class);
-        var stopwatchRecordSearchService = CONTEXT.get(StopwatchRecordSearchService.class);
+        var stopwatchRecordSearchController = CONTEXT.get(StopwatchRecordSearchController.class);
         searchState = appState.getSearchState();
         searchState.getChosenRecordName()
                 .addListener((observable, oldValue, newRecordName) -> {
@@ -114,7 +114,7 @@ public class SearchRecordDetailsVBox extends VBox {
                     if (newRecordName != null) {
                         recordNameLabel.setText(newRecordName);
 
-                        var recordsForName = stopwatchRecordSearchService.recordsByName(newRecordName);
+                        var recordsForName = stopwatchRecordSearchController.recordsByName(newRecordName);
                         recordsForName.sort(comparing(StopwatchRecord::getDate).reversed());
                         noRecordIsChosenInfoVBox.setVisible(false);
                         noRecordIsChosenInfoVBox.setManaged(false);

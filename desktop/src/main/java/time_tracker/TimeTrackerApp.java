@@ -19,9 +19,9 @@ import time_tracker.config.report.GroupedByRecordConfiguration;
 import time_tracker.config.report.MeasurementReportConfiguration;
 import time_tracker.config.report.ReportConfiguration;
 import time_tracker.configuration.RepositoryConfiguration;
+import time_tracker.controller.search.StopwatchRecordSearchController;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.repository.FileRepository;
-import time_tracker.service.StopwatchRecordSearchService;
 import time_tracker.service.TimeService;
 
 import java.io.File;
@@ -123,7 +123,7 @@ public class TimeTrackerApp extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        var stopwatchRecordSearchService = CONTEXT.get(StopwatchRecordSearchService.class);
+        var stopwatchRecordSearchService = CONTEXT.get(StopwatchRecordSearchController.class);
         stopwatchRecordSearchService.shutdown();
     }
 }

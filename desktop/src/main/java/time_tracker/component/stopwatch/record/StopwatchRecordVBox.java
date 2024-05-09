@@ -19,7 +19,7 @@ import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
-import time_tracker.service.AppStateService;
+import time_tracker.controller.AppStateController;
 import time_tracker.service.StopwatchRecordService;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public class StopwatchRecordVBox extends Pane {
     @FXML
     private Button notTrackButton;
 
-    private final AppStateService appStateService;
+    private final AppStateController appStateController;
 
     private final StopwatchRecord stopwatchRecord;
     private final StopwatchRecordService stopwatchRecordService;
@@ -99,7 +99,7 @@ public class StopwatchRecordVBox extends Pane {
 
         this.stopwatchRecord = stopwatchRecord;
         this.stopwatchRecordService = CONTEXT.get(StopwatchRecordService.class);
-        this.appStateService = CONTEXT.get(AppStateService.class);
+        this.appStateController = CONTEXT.get(AppStateController.class);
 
         // TODO it seems that listener has to be removed or to be moved to another place
         stopwatchRecord.getTrackedProperty()
@@ -153,7 +153,7 @@ public class StopwatchRecordVBox extends Pane {
 
         requireConfirmation().whenComplete((it, ex) -> {
             if (it) {
-                appStateService.delete(stopwatchRecord);
+                appStateController.delete(stopwatchRecord);
             } else {
                 log.fine(() -> "'No' button is clicked");
             }

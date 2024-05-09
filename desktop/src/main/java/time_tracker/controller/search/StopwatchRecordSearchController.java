@@ -1,4 +1,4 @@
-package time_tracker.service;
+package time_tracker.controller.search;
 
 import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
@@ -25,31 +25,35 @@ import static java.util.stream.Collectors.toList;
 
 @Log
 @RequiredArgsConstructor
-public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchService {
+public class StopwatchRecordSearchController {
 
     // TODO move to configs
     private static final String LOG_PATTERN = "Chosen record name is changed from %s to %s";
     private final static Duration DEBOUNCE_DURATION_FOR_SEARCH = Duration.ofMillis(500);
 
     private final StopWatchAppState stopWatchAppState;
+    private final StopwatchSearchState stopwatchSearchState;
+
+    public StopwatchRecordSearchController(@NonNull final StopWatchAppState stopWatchAppState) {
+        this.stopWatchAppState = stopWatchAppState;
+        stopwatchSearchState = stopWatchAppState.getSearchState();
+    }
 
     @NonNull
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     @NonNull
     private final DebounceContext debounceContext = new DebounceContext(scheduledExecutorService, DEBOUNCE_DURATION_FOR_SEARCH);
 
-    @Override
     public void initialize() {
-        StopwatchSearchState stopwatchSearchState = stopWatchAppState.getSearchState();
         var searchStateSearch = stopwatchSearchState.getSearch();
         searchStateSearch.addListener((observable, oldValue, newSearchTerm) -> {
             log.fine(() -> "Search term has changed from " + oldValue + " to " + newSearchTerm);
-            runSearch(stopwatchSearchState, stopWatchAppState);
+            runSearch();
         });
 
         stopwatchSearchState.getTracked().addListener((observable, oldValue, newValue) -> {
             log.fine(() -> "Tracked has changed from " + oldValue + " to " + newValue);
-            runSearch(stopwatchSearchState, stopWatchAppState);
+            runSearch();
         });
 
         stopwatchSearchState.getChosenRecordName()
@@ -62,8 +66,8 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
                 });
     }
 
-    private void runSearch(final StopwatchSearchState stopwatchSearchState, final StopWatchAppState stopWatchAppState) {
-        String newSearchTerm = stopWatchAppState.getSearchState().getSearch().getValue();
+    private void runSearch() {
+        String newSearchTerm = stopwatchSearchState.getSearch().getValue();
         debounceContext.runWithDebounce(
                 () -> Platform.runLater(() -> {
                     var found = stopwatchSearchState.getFound();
@@ -124,12 +128,10 @@ public class StopwatchRecordSearchServiceImpl implements StopwatchRecordSearchSe
         }
     }
 
-    @Override
     public void shutdown() {
         scheduledExecutorService.shutdown();
     }
 
-    @Override
     @NonNull
     public List<StopwatchRecord> recordsByName(@NonNull final String name) {
         return stopWatchAppState.getDateToRecords()

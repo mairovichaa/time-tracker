@@ -7,7 +7,7 @@ import time_tracker.model.ReportState;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.service.report.ReportExporter;
 import time_tracker.service.report.ReportGenerator;
-import time_tracker.service.report.ReportService;
+import time_tracker.controller.report.ReportController;
 import time_tracker.service.report.groupedByDate.GroupedByDateReportGenerator;
 import time_tracker.service.report.groupedByRecord.GroupedByRecordReportGenerator;
 
@@ -27,9 +27,9 @@ public class ReportConfiguration {
 
     @NonNull
     @Bean(initMethod = "init")
-    public ReportService reportService(@NonNull final ReportState reportState, @NonNull final StopWatchAppState stopWatchAppState) {
-        log.log(Level.FINE, "Creating reportService");
-        return new ReportService(reportState, stopWatchAppState);
+    public ReportController reportController(@NonNull final ReportState reportState, @NonNull final StopWatchAppState stopWatchAppState) {
+        log.log(Level.FINE, "Creating reportController");
+        return new ReportController(reportState, stopWatchAppState);
     }
 
     @NonNull
