@@ -1,4 +1,4 @@
-package time_tracker.model.mapper;
+package time_tracker.service.converter;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

@@ -11,8 +11,8 @@ import time_tracker.common.annotation.NonNull;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 import time_tracker.model.StopwatchRecordMeasurement;
-import time_tracker.model.mapper.RecordToStopwatchRecordConverter;
-import time_tracker.model.mapper.StopwatchRecordToRecordConverter;
+import time_tracker.service.converter.RecordToStopwatchRecordConverter;
+import time_tracker.service.converter.StopwatchRecordToRecordConverter;
 import time_tracker.repository.StopwatchRecordRepository;
 
 import java.time.LocalDate;

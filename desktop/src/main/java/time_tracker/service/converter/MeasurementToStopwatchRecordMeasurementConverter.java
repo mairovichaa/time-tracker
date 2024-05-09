@@ -1,4 +1,4 @@
-package time_tracker.model.mapper;
+package time_tracker.service.converter;
 
 import time_tracker.domain.Measurement;
 import time_tracker.model.StopwatchRecordMeasurement;
