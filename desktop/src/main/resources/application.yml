@@ -20,9 +20,12 @@ stopwatch:
   devMode: false
   folderWithData: "<path-to-data>"
   defaultRecords:
-  - "Daily"
-  - "Task 1"
-  - "Task 2"
+  - name: "Daily"
+    display: "ALWAYS"
+  - name: "Task 1"
+    display: "CREATE"
+  - name: "Task 2"
+    display: "NO"
   statistics:
     showWeekly: false
   report:

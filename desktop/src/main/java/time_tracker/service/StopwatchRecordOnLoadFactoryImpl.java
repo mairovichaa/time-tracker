@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static time_tracker.component.configuration.defaultRecordNames.DefaultRecordEntryVBox.DisplayOption.ALWAYS;
 
 @Log
 @RequiredArgsConstructor
@@ -24,10 +25,11 @@ public class StopwatchRecordOnLoadFactoryImpl implements StopwatchRecordOnLoadFa
         var defaultRecords = stopwatchProperties.getDefaultRecords();
         log.fine(() -> "Create default on load records " + defaultRecords);
         return defaultRecords.stream()
+                .filter(it -> it.getDisplay() == ALWAYS)
                 .map(it -> {
                     var record = new StopwatchRecord();
                     record.setId(stopwatchRecordRepository.nextIdForRecord());
-                    record.setName(it);
+                    record.setName(it.getName());
                     record.setDate(date);
                     return record;
                 })

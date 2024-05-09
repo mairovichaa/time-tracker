@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import lombok.extern.java.Log;
 import time_tracker.component.common.DialogFactory;
+import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
 import time_tracker.service.ConfigurationService;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
@@ -29,14 +30,14 @@ public class DefaultRecordConfigurationVBox extends VBox {
         configurationService = CONTEXT.get(ConfigurationService.class);
 
         log.finest("Bind default record names to UI nodes");
-        ObservableList<String> defaultRecordNames = configurationService.getDefaultRecordNames();
+        ObservableList<ConfigurationDefaultRecordModel> defaultRecords = configurationService.getConfigurationDefaultRecords();
         ObservableList<Node> defaultEntries = FXCollections.observableArrayList();
 
-        defaultRecordNames.forEach(it -> defaultEntries.add(new DefaultRecordEntryVBox(it)));
+        defaultRecords.forEach(it -> defaultEntries.add(new DefaultRecordEntryVBox(it)));
 
-        defaultRecordNames.addListener((ListChangeListener<String>) c -> {
+        defaultRecords.addListener((ListChangeListener<ConfigurationDefaultRecordModel>) c -> {
             defaultEntries.clear();
-            ObservableList<? extends String> current = c.getList();
+            ObservableList<? extends ConfigurationDefaultRecordModel> current = c.getList();
             current.forEach(it -> defaultEntries.add(new DefaultRecordEntryVBox(it)));
         });
 

@@ -3,10 +3,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10">
 
     <Text fx:id="defaultRecordNameText"/>
+    <MFXComboBox fx:id="displayByDefaultComboBox" floatMode="BORDER" floatingText="Display"/>
     <Button onMouseClicked="#delete">Delete</Button>
 </fx:root>

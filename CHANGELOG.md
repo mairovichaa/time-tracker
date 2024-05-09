@@ -3,6 +3,7 @@
 - 'Report' GUI improvement
 - Replace tabs navigation with menu
 - Implement DI context
+- Add possibility to choose display option for default records
 
 ## 1.1.8
 - 'Search' tab GUI improvement

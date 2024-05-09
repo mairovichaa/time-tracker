@@ -6,10 +6,12 @@ import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
+import time_tracker.component.configuration.defaultRecordNames.DefaultRecordEntryVBox;
 import time_tracker.config.properties.AppProperties;
 import time_tracker.config.properties.StartProperties;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
+import time_tracker.model.configuration.ConfigurationDefaultRecordModel;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +24,7 @@ import static java.lang.String.format;
 @Getter
 public class ConfigurationService {
 
-    private final ObservableList<String> defaultRecordNames = FXCollections.observableArrayList();
+    private final ObservableList<ConfigurationDefaultRecordModel> configurationDefaultRecords = FXCollections.observableArrayList();
     private final ObservableList<FastEditButtonProperties> fastEditButtons = FXCollections.observableArrayList();
 
     private final AppProperties appProperties;
@@ -37,7 +39,11 @@ public class ConfigurationService {
         this.pathToPropertiesFile = startProperties.getPathToPropertiesFile();
         this.yamlObjectMapper = yamlObjectMapper;
 
-        defaultRecordNames.addAll(appProperties.getStopwatch().getDefaultRecords());
+        appProperties.getStopwatch()
+                .getDefaultRecords()
+                .stream()
+                .map(this::map)
+                .forEach(configurationDefaultRecords::add);
         fastEditButtons.addAll(appProperties.getStopwatch().getDates().getFastEditButtons());
     }
 
@@ -68,23 +74,46 @@ public class ConfigurationService {
         log.fine(() -> format("Add '%s' to default record names set", recordName));
 
         StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
-        List<String> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
-        defaultRecords.add(recordName);
+        List<StopwatchProperties.ConfigurationDefaultRecord> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
+        StopwatchProperties.ConfigurationDefaultRecord record = new StopwatchProperties.ConfigurationDefaultRecord();
+        record.setName(recordName);
+        record.setDisplay(DefaultRecordEntryVBox.DisplayOption.ALWAYS);
+        defaultRecords.add(record);
 
         updatePropertiesFile(appProperties);
 
-        defaultRecordNames.add(recordName);
+        ConfigurationDefaultRecordModel configurationDefaultRecordModel = this.map(record);
+        configurationDefaultRecords.add(configurationDefaultRecordModel);
     }
 
+    // TODO use ConfigurationDefaultRecordModel
     public void deleteDefaultRecord(final String recordName) {
         log.fine(() -> format("Delete '%s' from default record names set", recordName));
         StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
-        List<String> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
-        defaultRecords.remove(recordName);
-
+        List<StopwatchProperties.ConfigurationDefaultRecord> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
+        StopwatchProperties.ConfigurationDefaultRecord record = defaultRecords.stream()
+                .filter(it -> it.getName().equals(recordName))
+                .findFirst()
+                .orElseThrow();
+        defaultRecords.remove(record);
         updatePropertiesFile(appProperties);
 
-        defaultRecordNames.remove(recordName);
+        ConfigurationDefaultRecordModel foundConfigurationDefaultRecord = findConfigurationDefaultRecordModelByName(recordName);
+        configurationDefaultRecords.remove(foundConfigurationDefaultRecord);
+    }
+
+    public void changeRecordDisplay(final String recordName, final DefaultRecordEntryVBox.DisplayOption option) {
+        log.fine(() -> format("Change display option of default record '%s' to '%s", recordName, option));
+        StopwatchProperties appPropertiesStopwatch = appProperties.getStopwatch();
+        List<StopwatchProperties.ConfigurationDefaultRecord> defaultRecords = appPropertiesStopwatch.getDefaultRecords();
+        defaultRecords.stream()
+                .filter(it -> it.getName().equals(recordName))
+                .findFirst()
+                .orElseThrow()
+                .setDisplay(option);
+
+        updatePropertiesFile(appProperties);
+        findConfigurationDefaultRecordModelByName(recordName).setDisplay(option);
     }
 
     public void updateStopwatchDayStatisticDefaultProperties(@NonNull final String durationInConfigsFormat, @NonNull final String comment) {
@@ -101,5 +130,21 @@ public class ConfigurationService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @NonNull
+    private ConfigurationDefaultRecordModel map(@NonNull final StopwatchProperties.ConfigurationDefaultRecord src) {
+        ConfigurationDefaultRecordModel result = new ConfigurationDefaultRecordModel();
+        result.setName(src.getName());
+        result.setDisplay(src.getDisplay());
+        return result;
+    }
+
+    @NonNull
+    private ConfigurationDefaultRecordModel findConfigurationDefaultRecordModelByName(@NonNull final String name) {
+        return configurationDefaultRecords.stream()
+                .filter(it -> it.getName().equals(name))
+                .findFirst()
+                .orElseThrow();
     }
 }

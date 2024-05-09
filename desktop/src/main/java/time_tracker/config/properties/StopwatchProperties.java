@@ -2,6 +2,7 @@ package time_tracker.config.properties;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import time_tracker.component.configuration.defaultRecordNames.DefaultRecordEntryVBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,16 @@ public class StopwatchProperties {
     private StopwatchDatesProperties dates;
     private boolean devMode;
     private String folderWithData;
-    private List<String> defaultRecords = new ArrayList<>();
+    private List<ConfigurationDefaultRecord> defaultRecords = new ArrayList<>();
     private StatisticsProperties statistics;
     private ReportProperties report;
 
+
+    @Data
+    public static class ConfigurationDefaultRecord {
+        private String name;
+        private DefaultRecordEntryVBox.DisplayOption display;
+    }
 
     @Data
     public static class StopwatchPanelProperties {
