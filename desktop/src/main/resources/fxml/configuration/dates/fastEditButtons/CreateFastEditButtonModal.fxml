@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXTextField?>
-<?import javafx.scene.control.Label?>
+<?import io.github.palexdev.materialfx.controls.*?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.layout.Pane?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
          stylesheets="@../../../../css/common.css"
          styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" minWidth="300">
 
-    <Label maxWidth="1.7976931348623157E308" alignment="CENTER" styleClass="header-label">Create record</Label>
-    <MFXTextField fx:id="fastEditButtonTextField" maxWidth="1.7976931348623157E308" alignment="CENTER" floatMode="BORDER" floatingText="Name"/>
-    <MFXTextField fx:id="fastEditButtonHoursTextField" maxWidth="1.7976931348623157E308" alignment="CENTER" floatMode="BORDER" floatingText="Hours"/>
-    <MFXTextField fx:id="fastEditButtonMinutesTextField" maxWidth="1.7976931348623157E308" alignment="CENTER" floatMode="BORDER" floatingText="Minutes"/>
-    <MFXTextField fx:id="fastEditButtonSecondsTextField" maxWidth="1.7976931348623157E308" alignment="CENTER" floatMode="BORDER" floatingText="Seconds"/>
+    <MFXTextField fx:id="fastEditButtonTextField" maxWidth="1.7976931348623157E308" alignment="CENTER"
+                  floatMode="BORDER" floatingText="Name"/>
+    <MFXTextField fx:id="fastEditButtonHoursTextField" maxWidth="1.7976931348623157E308" alignment="CENTER"
+                  floatMode="BORDER" floatingText="Hours"/>
+    <MFXTextField fx:id="fastEditButtonMinutesTextField" maxWidth="1.7976931348623157E308" alignment="CENTER"
+                  floatMode="BORDER" floatingText="Minutes"/>
+    <MFXTextField fx:id="fastEditButtonSecondsTextField" maxWidth="1.7976931348623157E308" alignment="CENTER"
+                  floatMode="BORDER" floatingText="Seconds"/>
     <HBox spacing="3">
         <MFXButton buttonType="RAISED" text="Add" onAction="#add" maxWidth="1.7976931348623157E308"
                    alignment="CENTER"/>

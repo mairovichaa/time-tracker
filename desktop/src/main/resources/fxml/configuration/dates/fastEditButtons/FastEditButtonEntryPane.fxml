@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.control.Label?>
+<fx:root type="javafx.scene.layout.Pane" xmlns:fx="http://javafx.com/fxml"
+         stylesheets="@../../../../css/common.css">
+    <HBox>
+        <VBox styleClass="grid-background" style="-fx-padding: 10 10 10 10;" spacing="10" minWidth="300" maxWidth="300">
+            <!-- 270 - to avoid overlapping of text with delete button -->
+            <Text fx:id="fastButtonNameText" wrappingWidth="270"/>
+            <HBox spacing="3">
+                <Label fx:id="expectedIconLabel">
+                    <tooltip>
+                        <Tooltip text="Expected time to work"/>
+                    </tooltip>
+                </Label>
+                <Label fx:id="fastButtonTimeLabel">
+                    <tooltip>
+                        <Tooltip text="Expected time to work"/>
+                    </tooltip>
+                </Label>
+            </HBox>
+        </VBox>
+    </HBox>
+    <!-- 275 = 300 (panel width) - 10 (padding) - 15 (width of buttons) * 1 (amount of buttons) - 0 (spacing) * 2 (amount of spaces) -->
+    <HBox layoutX="275" layoutY="10" spacing="3">
+        <Button fx:id="deleteButton" onMouseClicked="#delete">
+            <tooltip>
+                <Tooltip text="Delete fast edit button"/>
+            </tooltip>
+        </Button>
+    </HBox>
+</fx:root>

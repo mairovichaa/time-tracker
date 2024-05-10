@@ -1,7 +1,9 @@
 package time_tracker.component.configuration;
 
+import io.github.palexdev.materialfx.controls.MFXListView;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import time_tracker.common.annotation.NonNull;
@@ -14,7 +16,7 @@ import static time_tracker.component.Utils.load;
 public class ConfigurationMenuVBox extends VBox {
 
     @FXML
-    protected ListView<String> configurationListView;
+    protected MFXListView<String> configurationListView;
 
     public ConfigurationMenuVBox() {
         load("/fxml/configuration/ConfigurationMenuVBox.fxml", this);
@@ -25,17 +27,25 @@ public class ConfigurationMenuVBox extends VBox {
         var fastEditButtonsConfigurationVBox = new FastEditButtonsConfigurationVBox();
         var dayStatisticDefaultVBox = new DayStatisticDefaultVBox();
 
-        configurationListView.getItems().setAll("stopwatch.dayStatistic.default", "dates.fastEditButtons", "defaultRecords");
-        configurationListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            configurationVBox.getChildren().clear();
+        configurationListView.setItems(FXCollections.observableArrayList("stopwatch.dayStatistic.default", "dates.fastEditButtons", "defaultRecords"));
+        configurationListView.getSelectionModel().selectionProperty()
+                .addListener((MapChangeListener<Integer, String>) change -> {
+                            if (change.wasAdded()) {
+                                configurationVBox.getChildren().clear();
 
-            switch (newValue) {
-                case "defaultRecords" -> configurationVBox.getChildren().add(defaultRecordNamesWrapperVBox);
-                case "stopwatch.dayStatistic.default" -> configurationVBox.getChildren().add(dayStatisticDefaultVBox);
-                case "dates.fastEditButtons" -> configurationVBox.getChildren().add(fastEditButtonsConfigurationVBox);
-                default -> configurationVBox.getChildren().add(new Text("TODO add edit node"));
-            }
-        });
-        configurationListView.getSelectionModel().select(0);
+                                String valueAdded = change.getValueAdded();
+                                switch (valueAdded) {
+                                    case "defaultRecords" -> configurationVBox.getChildren().add(defaultRecordNamesWrapperVBox);
+                                    case "stopwatch.dayStatistic.default" ->
+                                            configurationVBox.getChildren().add(dayStatisticDefaultVBox);
+                                    case "dates.fastEditButtons" ->
+                                            configurationVBox.getChildren().add(fastEditButtonsConfigurationVBox);
+                                    default -> configurationVBox.getChildren().add(new Text("TODO add edit node"));
+                                }
+                            }
+                        }
+                );
+
+        configurationListView.getSelectionModel().selectIndex(0);
     }
 }
