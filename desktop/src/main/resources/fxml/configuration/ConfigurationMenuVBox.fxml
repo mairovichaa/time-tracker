@@ -3,7 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXListView?>
 <?import javafx.scene.layout.VBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml"
-         stylesheets="@../../css/common.css"
+         stylesheets="@../../css/common.css,@../../css/configuration.css"
 >
-    <MFXListView fx:id="configurationListView" minWidth="300" maxWidth="300"/>
+    <MFXListView fx:id="configurationListView" minWidth="300" maxWidth="300" maxHeight="96"/>
 </fx:root>

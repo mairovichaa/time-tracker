@@ -1,0 +1,18 @@
+#configurationListView .virtual-flow {
+    -fx-background-radius: 10;
+}
+
+
+.mfx-list-cell-first {
+	-fx-background-radius: 10 10 0 0;
+	-fx-border-radius: 10 10 0 0;
+}
+
+.mfx-list-cell-last {
+	-fx-background-radius: 0 0 10 10;
+	-fx-border-radius: 0 0 10 10;
+}
+
+.mfx-list-cell {
+    -fx-cursor: hand;
+}
