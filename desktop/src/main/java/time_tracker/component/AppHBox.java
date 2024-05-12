@@ -20,14 +20,6 @@ import static time_tracker.component.Utils.load;
 
 public class AppHBox extends HBox {
 
-    public enum WorkspaceItem {
-        STOPWATCH,
-        SEARCH,
-        STATISTICS,
-        REPORT,
-        CONFIGURATION;
-    }
-
     @FXML
     protected SidebarVBox sidebarVBox;
     @FXML

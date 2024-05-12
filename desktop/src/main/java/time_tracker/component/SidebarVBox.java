@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import time_tracker.component.common.Icon;
 import time_tracker.model.StopWatchAppState;
+import time_tracker.model.WorkspaceItem;
 
 import java.util.List;
 
@@ -65,27 +66,27 @@ public class SidebarVBox extends VBox {
 
     @FXML
     public void showStopwatch() {
-        appState.setChosenWorkspace(AppHBox.WorkspaceItem.STOPWATCH);
+        appState.setChosenWorkspace(WorkspaceItem.STOPWATCH);
     }
 
     @FXML
     public void showSearch() {
-        appState.setChosenWorkspace(AppHBox.WorkspaceItem.SEARCH);
+        appState.setChosenWorkspace(WorkspaceItem.SEARCH);
     }
 
     @FXML
     public void showStatistics() {
-        appState.setChosenWorkspace(AppHBox.WorkspaceItem.STATISTICS);
+        appState.setChosenWorkspace(WorkspaceItem.STATISTICS);
     }
 
     @FXML
     public void showReport() {
-        appState.setChosenWorkspace(AppHBox.WorkspaceItem.REPORT);
+        appState.setChosenWorkspace(WorkspaceItem.REPORT);
     }
 
     @FXML
     public void showConfiguration() {
-        appState.setChosenWorkspace(AppHBox.WorkspaceItem.CONFIGURATION);
+        appState.setChosenWorkspace(WorkspaceItem.CONFIGURATION);
     }
 
     private void chooseMenuItem(final int menuItemIndex) {

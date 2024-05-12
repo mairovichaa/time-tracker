@@ -21,6 +21,7 @@ import time_tracker.config.report.ReportConfiguration;
 import time_tracker.configuration.RepositoryConfiguration;
 import time_tracker.controller.search.StopwatchRecordSearchController;
 import time_tracker.model.StopWatchAppState;
+import time_tracker.model.WorkspaceItem;
 import time_tracker.repository.FileRepository;
 import time_tracker.service.TimeService;
 
@@ -109,7 +110,7 @@ public class TimeTrackerApp extends Application {
         Scene scene = new Scene(appHBox, 600, 600);
         scene.getStylesheets().add("style.css");
         primaryStage.setScene(scene);
-        stopWatchAppState.setChosenWorkspace(AppHBox.WorkspaceItem.CONFIGURATION);
+        stopWatchAppState.setChosenWorkspace(WorkspaceItem.CONFIGURATION);
 
         primaryStage.show();
         primaryStage.setMaximized(true);
