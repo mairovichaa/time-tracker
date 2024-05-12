@@ -20,7 +20,7 @@ import static time_tracker.Constants.DATA_TIME_FORMATTER;
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class MeasurementPane extends Pane {
@@ -117,9 +117,9 @@ public class MeasurementPane extends Pane {
                     }
                 });
 
-        initIconButton(deleteButton, 15, Icon.DELETE);
-        initIconButton(moveButton, 15, Icon.MOVE_GROUP);
-        initIconButton(editNameButton, 15, Icon.PEN);
+        initIconLabeled(deleteButton, 15, Icon.DELETE);
+        initIconLabeled(moveButton, 15, Icon.MOVE_GROUP);
+        initIconLabeled(editNameButton, 15, Icon.PEN);
     }
 
     @FXML

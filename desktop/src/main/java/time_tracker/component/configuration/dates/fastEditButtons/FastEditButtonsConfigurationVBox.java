@@ -18,7 +18,7 @@ import time_tracker.model.configuration.ConfigurationState;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class FastEditButtonsConfigurationVBox extends VBox {
@@ -30,7 +30,7 @@ public class FastEditButtonsConfigurationVBox extends VBox {
 
     public FastEditButtonsConfigurationVBox() {
         load("/fxml/configuration/dates/fastEditButtons/FastEditButtonsConfigurationVBox.fxml", this);
-        initIconButton(addFastEditButtonButton, 30, Icon.ADD_CIRCLE);
+        initIconLabeled(addFastEditButtonButton, 30, Icon.ADD_CIRCLE);
 
         StopWatchAppState stopwatchAppState = CONTEXT.get(StopWatchAppState.class);
         ConfigurationState configurationState = stopwatchAppState.getConfigurationState();

@@ -15,6 +15,7 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.component.stopwatch.measurement.MeasurementInProgressVBox;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
@@ -28,7 +29,7 @@ import java.util.logging.Level;
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class StopwatchRecordVBox extends Pane {
@@ -79,21 +80,21 @@ public class StopwatchRecordVBox extends Pane {
 
         nameLabel.textProperty().bind(stopwatchRecord.getNameProperty());
 
-        initIconButton(startButton, 30, Icon.STOPWATCH);
-        initIconButton(stopButton, 30, Icon.STOPWATCH, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+        initIconLabeled(startButton, 30, Icon.STOPWATCH);
+        IconUtils.initIconLabeled(stopButton, 30, Icon.STOPWATCH, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
 
-        initIconButton(deleteButton, 15, Icon.DELETE);
-        initIconButton(moveButton, 15, Icon.CALENDAR);
-        initIconButton(editNameButton, 15, Icon.PEN);
+        initIconLabeled(deleteButton, 15, Icon.DELETE);
+        initIconLabeled(moveButton, 15, Icon.CALENDAR);
+        initIconLabeled(editNameButton, 15, Icon.PEN);
 
         stopButton.disableProperty()
                 .bind(Bindings.not(stopwatchRecord.getHasMeasurementInProgressProperty()));
 
-        initIconButton(trackButton, 20, Icon.CHECK);
+        initIconLabeled(trackButton, 20, Icon.CHECK);
         trackButton.visibleProperty().bind(Bindings.not(stopwatchRecord.getTrackedProperty()));
         trackButton.managedProperty().bind(Bindings.not(stopwatchRecord.getTrackedProperty()));
 
-        initIconButton(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+        IconUtils.initIconLabeled(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
         notTrackButton.visibleProperty().bind(stopwatchRecord.getTrackedProperty());
         notTrackButton.managedProperty().bind(stopwatchRecord.getTrackedProperty());
 

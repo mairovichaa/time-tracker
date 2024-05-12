@@ -12,7 +12,7 @@ import java.util.List;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 public class SidebarVBox extends VBox {
     public final static Double SIDEBAR_WIDTH = 200d;
@@ -45,12 +45,12 @@ public class SidebarVBox extends VBox {
 
         appState = CONTEXT.get(StopWatchAppState.class);
 
-        initIconButton(stopwatchIconLabel, 20, Icon.STOPWATCH);
-        initIconButton(searchIconLabel, 20, Icon.SEARCH);
-        initIconButton(statisticsIconLabel, 20, Icon.BAR_CHART);
-        initIconButton(reportIconLabel, 20, Icon.SUMMARIZE);
-        initIconButton(configurationIconLabel, 20, Icon.SETTINGS);
-        initIconButton(logoIconLabel, 26, Icon.ALL_INCLUSIVE);
+        initIconLabeled(stopwatchIconLabel, 20, Icon.STOPWATCH);
+        initIconLabeled(searchIconLabel, 20, Icon.SEARCH);
+        initIconLabeled(statisticsIconLabel, 20, Icon.BAR_CHART);
+        initIconLabeled(reportIconLabel, 20, Icon.SUMMARIZE);
+        initIconLabeled(configurationIconLabel, 20, Icon.SETTINGS);
+        initIconLabeled(logoIconLabel, 26, Icon.ALL_INCLUSIVE);
 
         appState.getChosenWorkspaceItemObjectProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {

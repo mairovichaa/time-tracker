@@ -19,6 +19,7 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.controller.search.StopwatchRecordSearchController;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -35,7 +36,7 @@ import static time_tracker.Constants.AMOUNT_OF_RECORDS_TO_SHOW_IN_A_BATCH;
 import static time_tracker.Constants.THRESHOLD_TO_LOAD_NEXT_BATCH;
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class SearchRecordDetailsVBox extends VBox {
@@ -132,10 +133,10 @@ public class SearchRecordDetailsVBox extends VBox {
         searchRecordsDetailsWrapperVBox.setDisable(false);
         searchRecordsDetailsWrapperVBox.setVisible(false);
 
-        initIconButton(fromStartedAtToFinishedAtIconLabel, 20, Icon.LINE_START, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(trackButton, 20, Icon.CHECK);
-        initIconButton(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
-        initIconButton(totalTimeIconLabel, 20, Icon.STOPWATCH, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(fromStartedAtToFinishedAtIconLabel, 20, Icon.LINE_START, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconLabeled(trackButton, 20, Icon.CHECK);
+        IconUtils.initIconLabeled(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+        IconUtils.initIconLabeled(totalTimeIconLabel, 20, Icon.STOPWATCH, List.of("icon-label-black"), List.of("label-icon-black"));
 
     }
 

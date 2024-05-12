@@ -16,7 +16,7 @@ import time_tracker.model.StopwatchRecord;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class ListOfRecordsForChosenDateVBox extends VBox {
@@ -29,7 +29,7 @@ public class ListOfRecordsForChosenDateVBox extends VBox {
 
     public ListOfRecordsForChosenDateVBox() {
         load("/fxml/stopwatch/record/ListOfRecordsForChosenDateVBox.fxml", this);
-        initIconButton(addRecordButton, 30, Icon.ADD_CIRCLE);
+        initIconLabeled(addRecordButton, 30, Icon.ADD_CIRCLE);
 
         var stopWatchAppState = CONTEXT.get(StopWatchAppState.class);
 

@@ -17,6 +17,7 @@ import time_tracker.TimeTrackerApp;
 import time_tracker.Utils;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.config.properties.StopwatchProperties;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
@@ -31,7 +32,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class SearchRecordPane extends Pane {
@@ -82,19 +83,19 @@ public class SearchRecordPane extends Pane {
         bindTotalTime();
         measurementsChangesListener = bindAmountOfMeasurements();
 
-        initIconButton(trackButton, 20, Icon.CHECK);
+        initIconLabeled(trackButton, 20, Icon.CHECK);
         trackButton.visibleProperty().bind(Bindings.not(this.record.getTrackedProperty()));
         trackButton.managedProperty().bind(Bindings.not(this.record.getTrackedProperty()));
 
-        initIconButton(goToDateIconLabel, 12, Icon.INPUT);
+        initIconLabeled(goToDateIconLabel, 12, Icon.INPUT);
 
-        initIconButton(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
+        IconUtils.initIconLabeled(notTrackButton, 20, Icon.CHECK, List.of("icon-button", "icon-button-green"), List.of("button-icon-green"));
         notTrackButton.visibleProperty().bind(this.record.getTrackedProperty());
         notTrackButton.managedProperty().bind(this.record.getTrackedProperty());
 
-        initIconButton(totalTimeIconLabel, 20, Icon.STOPWATCH, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(totalTimeIconLabel, 20, Icon.STOPWATCH, List.of("icon-label-black"), List.of("label-icon-black"));
 
-        initIconButton(deleteButton, 15, Icon.DELETE);
+        initIconLabeled(deleteButton, 15, Icon.DELETE);
     }
 
     @NonNull

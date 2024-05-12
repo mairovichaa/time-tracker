@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 import lombok.extern.java.Log;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.config.properties.StopwatchProperties.FastEditButtonProperties;
 import time_tracker.controller.configuration.ConfigurationController;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 import static time_tracker.component.common.Confirmation.requireConfirmation;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class FastEditButtonEntryPane extends Pane {
@@ -36,8 +37,8 @@ public class FastEditButtonEntryPane extends Pane {
         load("/fxml/configuration/dates/fastEditButtons/FastEditButtonEntryPane.fxml", this);
         this.properties = properties;
 
-        initIconButton(deleteButton, 15, Icon.DELETE);
-        initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
+        initIconLabeled(deleteButton, 15, Icon.DELETE);
+        IconUtils.initIconLabeled(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
 
         fastButtonNameText.setText(properties.getName());
         String formattedTime = properties.getExpected().toLowerCase();

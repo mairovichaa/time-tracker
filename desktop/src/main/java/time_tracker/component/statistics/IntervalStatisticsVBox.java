@@ -11,6 +11,7 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.common.annotation.NonNull;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.model.StopWatchAppState;
 import time_tracker.model.StopwatchRecord;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class IntervalStatisticsVBox extends VBox {
@@ -125,10 +126,10 @@ public class IntervalStatisticsVBox extends VBox {
         timeToWorkLeftLabel.textProperty()
                 .set(Utils.formatDuration(timeToWorkLeft));
 
-        initIconButton(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
     }
 
     private Predicate<LocalDate> createDateFilter(

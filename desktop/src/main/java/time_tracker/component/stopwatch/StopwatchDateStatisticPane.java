@@ -9,13 +9,14 @@ import lombok.extern.java.Log;
 import time_tracker.Utils;
 import time_tracker.component.common.DialogFactory;
 import time_tracker.component.common.Icon;
+import time_tracker.component.common.IconUtils;
 import time_tracker.model.StopWatchAppState;
 
 import java.util.List;
 
 import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
-import static time_tracker.component.common.IconButton.initIconButton;
+import static time_tracker.component.common.IconUtils.initIconLabeled;
 
 @Log
 public class StopwatchDateStatisticPane extends Pane {
@@ -75,13 +76,13 @@ public class StopwatchDateStatisticPane extends Pane {
                     }
                 });
 
-        initIconButton(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(overtimeIconLabel, 16, Icon.WORKSPACE_PREMIUM, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(totalAmountOfTimeIconLabel, 16, Icon.TASK_ALT, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(timeToWorkLeftIconLabel, 16, Icon.CONSTRUCTION, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(expectedIconLabel, 16, Icon.SCHEDULE, List.of("icon-label-black"), List.of("label-icon-black"));
 
-        initIconButton(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-black"), List.of("label-icon-black"));
-        initIconButton(trackedLabel, 20, Icon.CHECK, List.of("icon-label-green"), List.of("label-icon-green"));
+        IconUtils.initIconLabeled(nonTrackedLabel, 20, Icon.CHECK, List.of("icon-label-black"), List.of("label-icon-black"));
+        IconUtils.initIconLabeled(trackedLabel, 20, Icon.CHECK, List.of("icon-label-green"), List.of("label-icon-green"));
         dayData.getTracked()
                 .addListener((observable, oldValue, newValue) -> refreshTracked(newValue));
         refreshTracked(dayData.isTracked());
@@ -142,7 +143,7 @@ public class StopwatchDateStatisticPane extends Pane {
                     }
                 });
 
-        initIconButton(editButton, 15, Icon.PEN);
+        initIconLabeled(editButton, 15, Icon.PEN);
 
         editButton.setOnMouseClicked(e -> {
             log.fine("Edit button is clicked for dayData = " + dayData.getId());
