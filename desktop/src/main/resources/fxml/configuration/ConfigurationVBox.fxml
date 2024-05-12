@@ -4,13 +4,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import time_tracker.component.configuration.ConfigurationMenuVBox?>
+<?import time_tracker.component.configuration.dates.fastEditButtons.FastEditButtonsConfigurationVBox?>
+<?import time_tracker.component.configuration.defaultRecordNames.DefaultRecordConfigurationVBox?>
+<?import time_tracker.component.configuration.stopwatch.DayStatisticDefaultVBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
     <padding>
         <Insets top="16" right="0" bottom="0" left="10"/>
     </padding>
     <HBox spacing="10">
-        <ConfigurationMenuVBox fx:id="configurationMenuVBox"/>
-        <VBox fx:id="wrapperVBox"/>
-    </HBox>
+        <ConfigurationMenuVBox/>
 
+        <!-- VBox isn't required - just to group configuration items -->
+        <VBox>
+            <DefaultRecordConfigurationVBox fx:id="defaultRecordConfigurationVBox" visible="false" managed="false"/>
+            <FastEditButtonsConfigurationVBox fx:id="fastEditButtonsConfigurationVBox" visible="false" managed="false"/>
+            <DayStatisticDefaultVBox fx:id="dayStatisticDefaultVBox" visible="false" managed="false"/>
+        </VBox>
+    </HBox>
 </fx:root>

@@ -2,66 +2,56 @@ package time_tracker.component.configuration;
 
 import io.github.palexdev.materialfx.controls.MFXListView;
 import io.github.palexdev.materialfx.controls.cell.MFXListCell;
+import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import time_tracker.common.annotation.NonNull;
-import time_tracker.component.configuration.dates.fastEditButtons.FastEditButtonsConfigurationVBox;
-import time_tracker.component.configuration.defaultRecordNames.DefaultRecordConfigurationVBox;
-import time_tracker.component.configuration.stopwatch.DayStatisticDefaultVBox;
+import time_tracker.model.StopWatchAppState;
+import time_tracker.model.configuration.ConfigurationItem;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
+import static java.util.stream.Collectors.toCollection;
+import static time_tracker.TimeTrackerApp.CONTEXT;
 import static time_tracker.component.Utils.load;
 
 public class ConfigurationMenuVBox extends VBox {
 
     @FXML
-    protected MFXListView<String> configurationListView;
+    protected MFXListView<ConfigurationItem> configurationListView;
 
     public ConfigurationMenuVBox() {
         load("/fxml/configuration/ConfigurationMenuVBox.fxml", this);
-    }
+        ObservableList<ConfigurationItem> configurationItems = Arrays.stream(ConfigurationItem.values())
+                .collect(toCollection(FXCollections::observableArrayList));
 
-    public void init(@NonNull final VBox configurationVBox) {
-        var defaultRecordNamesWrapperVBox = new DefaultRecordConfigurationVBox();
-        var fastEditButtonsConfigurationVBox = new FastEditButtonsConfigurationVBox();
-        var dayStatisticDefaultVBox = new DayStatisticDefaultVBox();
+        configurationListView.setItems(configurationItems);
+        StopWatchAppState stopwatchAppState = CONTEXT.get(StopWatchAppState.class);
 
-        List<String> defaultRecordsSorted = Arrays.asList("stopwatch.dayStatistic.default", "dates.fastEditButtons", "defaultRecords");
-        Collections.sort(defaultRecordsSorted);
-        ObservableList<String> defaultRecords = FXCollections.observableArrayList(defaultRecordsSorted);
-        configurationListView.setItems(defaultRecords);
         configurationListView.getSelectionModel().selectionProperty()
-                .addListener((MapChangeListener<Integer, String>) change -> {
+                .addListener((MapChangeListener<Integer, ConfigurationItem>) change -> {
                             if (change.wasAdded()) {
-                                configurationVBox.getChildren().clear();
-
-                                String valueAdded = change.getValueAdded();
-                                switch (valueAdded) {
-                                    case "defaultRecords" -> configurationVBox.getChildren().add(defaultRecordNamesWrapperVBox);
-                                    case "stopwatch.dayStatistic.default" ->
-                                            configurationVBox.getChildren().add(dayStatisticDefaultVBox);
-                                    case "dates.fastEditButtons" ->
-                                            configurationVBox.getChildren().add(fastEditButtonsConfigurationVBox);
-                                    default -> configurationVBox.getChildren().add(new Text("TODO add edit node"));
-                                }
+                                ConfigurationItem valueAdded = change.getValueAdded();
+                                stopwatchAppState.getConfigurationState()
+                                        .getChosenItem()
+                                        .setValue(valueAdded);
                             }
                         }
                 );
-
-        configurationListView.getSelectionModel().selectIndex(0);
+        stopwatchAppState.getConfigurationState()
+                .getChosenItem()
+                .addListener((observable, oldValue, newValue) -> {
+                    int indexOfConfigurationState = configurationItems.indexOf(newValue);
+                    configurationListView.getSelectionModel().selectIndex(indexOfConfigurationState);
+                });
+        configurationListView.setConverter(FunctionalStringConverter.to(ConfigurationItem::getName));
         configurationListView.setCellFactory(item ->
         {
-            if (item.equals(defaultRecords.get(0))) {
+            if (item.equals(configurationItems.get(0))) {
                 return new MFXListCell<>(configurationListView, item) {
                     @Override
-                    // Properties
                     protected void initialize() {
                         super.initialize();
                         getStyleClass().add("mfx-list-cell-first");
@@ -69,11 +59,10 @@ public class ConfigurationMenuVBox extends VBox {
                 };
             }
 
-            int lastIndex = defaultRecords.size() - 1;
-            if (item.equals(defaultRecords.get(lastIndex))) {
+            int lastIndex = configurationItems.size() - 1;
+            if (item.equals(configurationItems.get(lastIndex))) {
                 return new MFXListCell<>(configurationListView, item) {
                     @Override
-                    // Properties
                     protected void initialize() {
                         super.initialize();
                         getStyleClass().add("mfx-list-cell-last");
